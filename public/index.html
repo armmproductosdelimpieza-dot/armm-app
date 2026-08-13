@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ARMM - Productos de Limpieza</title>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+
+  <header class="bg-blue-900 text-white p-4 sticky top-0 z-50 shadow-md">
+    <div class="max-w-5xl mx-auto flex justify-between items-center">
+      <div>
+        <h1 class="text-2xl font-bold">ARMM</h1>
+        <p class="text-xs text-green-400">PRODUCTOS Y ACCESORIOS DE LIMPIEZA</p>
+      </div>
+      <div class="flex gap-2">
+        <button onclick="toggleModal('modalCuenta')" class="bg-green-600 hover:bg-green-700 text-white text-xs px-3 py-2 rounded font-bold">
+          🎁 Crear Cuenta (30% DESC)
+        </button>
+        <button onclick="toggleModal('modalCarrito')" class="bg-white text-blue-900 px-3 py-2 rounded text-xs font-bold">
+          🛒 Carrito (<span id="cartCount">0</span>)
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="bg-green-100 border-l-4 border-green-500 text-green-900 p-3 max-w-5xl mx-auto my-4 text-xs">
+    📍 <strong>Zonas de entrega:</strong> Tonalá, Guadalajara Centro, Tlaquepaque, Zapopan. | <strong>Envío GRATIS</strong> desde $200 MXN.
+  </div>
+
+  <main class="max-w-5xl mx-auto p-4">
+    <section>
+      <h2 class="text-xl font-bold text-blue-900 mb-4">Catálogo de Productos</h2>
+      <div id="gridProductos" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+    </section>
+  </main>
+
+  <!-- Modal Cuenta -->
+  <div id="modalCuenta" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center p-4 z-50">
+    <div class="bg-white p-6 rounded max-w-sm w-full">
+      <h3 class="font-bold text-blue-900 mb-2">Crear Cuenta</h3>
+      <p class="text-xs text-gray-600 mb-4">Ingresa tu nombre para obtener 30% de descuento automático.</p>
+      <input type="text" id="userNombre" placeholder="Tu Nombre" class="border w-full p-2 mb-3 text-xs rounded">
+      <button onclick="registrarUsuario()" class="bg-green-600 text-white text-xs w-full p-2 rounded font-bold">Obtener Descuento</button>
+      <button onclick="toggleModal('modalCuenta')" class="mt-2 text-xs text-gray-500 w-full">Cerrar</button>
+    </div>
+  </div>
+
+  <!-- Modal Carrito -->
+  <div id="modalCarrito" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center p-4 z-50">
+    <div class="bg-white p-6 rounded max-w-md w-full">
+      <h3 class="font-bold text-blue-900 mb-4">Resumen del Pedido</h3>
+      <div id="itemsCarrito" class="divide-y mb-4 text-xs"></div>
+      <div class="bg-gray-100 p-3 rounded text-xs space-y-1 mb-4">
+        <div class="flex justify-between"><span>Subtotal:</span><span id="subtotal">$0.00</span></div>
+        <div class="flex justify-between text-green-600"><span>Descuento (30%):</span><span id="descuento">-$0.00</span></div>
+        <div class="flex justify-between font-bold"><span>Total:</span><span id="total">$0.00</span></div>
+      </div>
+      <select id="metodoPago" class="border w-full p-2 rounded text-xs mb-4">
+        <option value="Efectivo">Efectivo</option>
+        <option value="Transferencia">Transferencia</option>
+        <option value="Tarjeta">Tarjeta</option>
+        <option value="Mercado Pago">Mercado Pago</option>
+      </select>
+      <button onclick="enviarPedidoWhatsApp()" class="bg-green-600 text-white font-bold w-full p-2 rounded text-xs">
+        📲 Confirmar por WhatsApp
+      </button>
+      <button onclick="toggleModal('modalCarrito')" class="mt-2 text-xs text-gray-500 w-full">Seguir Comprando</button>
+    </div>
+  </div>
+
+  <script>
+    const socket = io();
+    let productos = [];
+    let carrito = [];
+    let tieneDescuento = false;
+
+    socket.on('inventario_actualizado', (data) => {
+      productos = data;
+      renderCatalogo();
+    });
+
+    function renderCatalogo() {
+      const grid = document.getElementById('gridProductos');
+      grid.innerHTML = productos.map(p => {
+        const opciones = Object.entries(p.precios)
+          .map(([pres, prec]) => `<option value="${pres}:${prec}">${pres} - $${prec} MXN</option>`).join('');
+        return `
+          <div class="bg-white p-4 rounded border shadow-sm flex flex-col justify-between">
+            <div>
+              <span class="text-[10px] bg-blue-100 text-blue-900 font-bold px-2 py-1 rounded">${p.categoria}</span>
+              <h3 class="font-bold text-sm mt-2">${p.nombre}</h3>
+            </div>
+            <div class="mt-4">
+              <select id="sel-${p.id}" class="border w-full p-1 text-xs rounded mb-2">${opciones}</select>
+              <button onclick="agregarAlCarrito(${p.id})" class="bg-blue-900 text-white text-xs w-full py-2 rounded font-bold">
+                + Agregar
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function agregarAlCarrito(id) {
+      const prod = productos.find(p => p.id === id);
+      const [pres, prec] = document.getElementById(`sel-${id}`).value.split(':');
+      carrito.push({ nombre: prod.nombre, presentacion: pres, precio: parseFloat(prec) });
+      actualizarCarrito();
+    }
+
+    function actualizarCarrito() {
+      document.getElementById('cartCount').innerText = carrito.length;
+      let sub = carrito.reduce((a, b) => a + b.precio, 0);
+      let desc = tieneDescuento ? sub * 0.30 : 0;
+      let tot = sub - desc;
+
+      document.getElementById('subtotal').innerText = `$${sub.toFixed(2)}`;
+      document.getElementById('descuento').innerText = `-$${desc.toFixed(2)}`;
+      document.getElementById('total').innerText = `$${tot.toFixed(2)}`;
+
+      document.getElementById('itemsCarrito').innerHTML = carrito.map((item, i) => `
+        <div class="py-2 flex justify-between">
+          <div><p class="font-bold">${item.nombre}</p><p class="text-gray-500">${item.presentacion} - $${item.precio}</p></div>
+          <button onclick="eliminarCarrito(${i})" class="text-red-500 font-bold">X</button>
+        </div>
+      `).join('');
+    }
+
+    function eliminarCarrito(i) {
+      carrito.splice(i, 1);
+      actualizarCarrito();
+    }
+
+    function registrarUsuario() {
+      if (document.getElementById('userNombre').value) {
+        tieneDescuento = true;
+        alert('¡30% de descuento aplicado!');
+        toggleModal('modalCuenta');
+        actualizarCarrito();
+      }
+    }
+
+    function enviarPedidoWhatsApp() {
+      if (!carrito.length) return alert('Carrito vacío');
+      const pago = document.getElementById('metodoPago').value;
+      let msg = `*NUEVO PEDIDO ARMM*\n`;
+      carrito.forEach(c => msg += `- ${c.nombre} (${c.presentacion}): $${c.precio}\n`);
+      msg += `\n*Pago:* ${pago}\n*Total:* ${document.getElementById('total').innerText}`;
+      
+      // Número con código internacional México: 5213351097726
+      window.open(`https://wa.me/5213351097726?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+
+    function toggleModal(id) { document.getElementById(id).classList.toggle('hidden'); }
+  </script>
+</body>
+</html>
