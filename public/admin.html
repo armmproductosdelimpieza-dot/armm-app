@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel de Administración ARMM</title>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-200 font-sans p-4">
+
+  <!-- Login simple -->
+  <div id="loginBox" class="max-w-md mx-auto bg-white p-6 rounded shadow mt-10">
+    <h2 class="text-lg font-bold text-blue-900 mb-4">Acceso Administrador ARMM</h2>
+    <input type="password" id="passInput" placeholder="Contraseña de Admin" class="border w-full p-2 mb-4 text-sm rounded">
+    <button onclick="login()" class="bg-blue-900 text-white font-bold w-full p-2 rounded text-sm">Entrar</button>
+  </div>
+
+  <!-- Panel Admin Privado -->
+  <div id="adminPanel" class="max-w-4xl mx-auto bg-white p-6 rounded shadow hidden">
+    <h2 class="text-xl font-bold text-red-600 mb-4">Panel de Control ARMM</h2>
+
+    <form id="formProducto" class="bg-gray-50 p-4 rounded border mb-6 space-y-3">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <input type="text" id="prodNombre" placeholder="Nombre (ej. Cloro)" class="border p-2 text-sm rounded" required>
+        <input type="text" id="prodCategoria" placeholder="Categoría (ej. CLOROS)" class="border p-2 text-sm rounded" required>
+      </div>
+
+      <p class="text-xs font-bold text-gray-700">Precios por Presentación:</p>
+      <div class="grid grid-cols-3 gap-2">
+        <input type="number" step="0.01" id="p1L" placeholder="Precio 1 Litro ($)" class="border p-2 text-sm rounded">
+        <input type="number" step="0.01" id="p5L" placeholder="Precio 5 Litros ($)" class="border p-2 text-sm rounded">
+        <input type="number" step="0.01" id="p20L" placeholder="Precio 20 Litros ($)" class="border p-2 text-sm rounded">
+      </div>
+
+      <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold w-full p-2 rounded text-sm">
+        💾 Guardar Producto en Tiempo Real
+      </button>
+    </form>
+
+    <table class="w-full text-left text-xs border-collapse">
+      <thead>
+        <tr class="bg-gray-200">
+          <th class="p-2">Producto</th>
+          <th class="p-2">Categoría</th>
+          <th class="p-2">Precios</th>
+          <th class="p-2">Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="tablaAdmin"></tbody>
+    </table>
+  </div>
+
+  <script>
+    const socket = io();
+    let productos = [];
+
+    function login() {
+      const pass = document.getElementById('passInput').value;
+      if (pass === 'armm123') { // Contraseña por defecto
+        document.getElementById('loginBox').classList.add('hidden');
+        document.getElementById('adminPanel').classList.remove('hidden');
+      } else {
+        alert('Contraseña incorrecta');
+      }
+    }
+
+    socket.on('inventario_actualizado', (data) => {
+      productos = data;
+      renderAdmin();
+    });
+
+    function renderAdmin() {
+      document.getElementById('tablaAdmin').innerHTML = productos.map(p => `
+        <tr class="border-b">
+          <td class="p-2 font-bold">${p.nombre}</td>
+          <td class="p-2">${p.categoria}</td>
+          <td class="p-2">${JSON.stringify(p.precios)}</td>
+          <td class="p-2">
+            <button onclick="eliminarProd(${p.id})" class="bg-red-500 text-white px-2 py-1 rounded">Borrar</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    document.getElementById('formProducto').addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const precios = {};
+      const p1 = document.getElementById('p1L').value;
+      const p5 = document.getElementById('p5L').value;
+      const p20 = document.getElementById('p20L').value;
+
+      if (p1) precios["1L"] = parseFloat(p1);
+      if (p5) precios["5L"] = parseFloat(p5);
+      if (p20) precios["20L"] = parseFloat(p20);
+
+      fetch('/api/admin/producto', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: Date.now(),
+          nombre: document.getElementById('prodNombre').value,
+          categoria: document.getElementById('prodCategoria').value,
+          precios: precios
+        })
+      }).then(() => {
+        document.getElementById('formProducto').reset();
+      });
+    });
+
+    function eliminarProd(id) {
+      fetch(`/api/admin/producto/${id}`, { method: 'DELETE' });
+    }
+  </script>
+</body>
+</html>
