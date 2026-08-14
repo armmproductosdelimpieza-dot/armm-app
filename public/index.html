@@ -7,107 +7,214 @@
   <script src="/socket.io/socket.io.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    .glass-card { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+    /* EFECTOS DE PROFUNDIDAD Y FLUIDEZ ESTILO SQUARESPACE */
+    .glass-card {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+    }
+
+    .card-3d {
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .card-3d:hover {
+      transform: translateY(-6px) scale(1.01);
+      box-shadow: 0 25px 50px -12px rgba(16, 185, 129, 0.15);
+      border-color: rgba(16, 185, 129, 0.3);
+    }
+
+    /* ANIMACIÓN AL PRESIONAR BOTONES */
+    .btn-bounce {
+      transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .btn-bounce:active {
+      transform: scale(0.94);
+    }
+
+    /* TRANSIÓN DEL PANEL LATERAL */
+    .drawer-transition {
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* SCROLL SUAVE */
+    html {
+      scroll-behavior: smooth;
+    }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans min-h-screen">
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen selection:bg-emerald-500 selection:text-slate-950">
 
-  <!-- ENCABEZADO Y BARRA DE NAVEGACIÓN -->
-  <header class="border-b border-slate-800 p-4 sticky top-0 bg-slate-950/90 backdrop-blur-md z-40">
-    <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-4">
+  <!-- CINTA DE BENEFICIOS DE ENVÍO Y PAGO (FLUIDA) -->
+  <div class="bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-600 text-slate-950 px-4 py-2 text-center font-black text-xs tracking-wide shadow-lg flex flex-wrap justify-center items-center gap-4">
+    <span class="flex items-center gap-1.5">🚚 <strong>ENVÍO GRATIS</strong> a partir de $200 MXN</span>
+    <span class="hidden sm:inline text-slate-900">•</span>
+    <span class="flex items-center gap-1.5">💳 <strong>PAGO CONTRA ENTREGA</strong> con Terminal bancaria o Efectivo</span>
+  </div>
+
+  <!-- ENCABEZADO CON CRISTALIZACIÓN -->
+  <header class="border-b border-slate-800/80 p-4 sticky top-0 bg-slate-950/80 backdrop-blur-xl z-30">
+    <div class="max-w-7xl mx-auto flex justify-between items-center gap-4">
       
       <!-- LOGO -->
-      <div>
-        <h1 class="text-2xl font-black text-white tracking-wider">ARMM</h1>
+      <div class="cursor-pointer" onclick="window.scrollTo({top:0})">
+        <h1 class="text-2xl font-black text-white tracking-wider flex items-center gap-1">
+          ARMM <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        </h1>
         <p class="text-[10px] text-emerald-400 font-bold tracking-widest uppercase">Productos y Accesorios de Limpieza</p>
       </div>
 
-      <!-- BOTONES DE NAVEGACIÓN -->
+      <!-- BOTONES DE ACCIÓN -->
       <div class="flex items-center gap-3">
-        <a href="https://wa.me/523351097726" target="_blank" class="bg-emerald-950/60 border border-emerald-500/30 text-emerald-400 px-4 py-2 rounded-full text-xs font-bold flex items-center gap-2 hover:bg-emerald-900/50 transition-all">
+        <!-- Contacto directo -->
+        <a href="https://wa.me/523351097726" target="_blank" class="btn-bounce bg-emerald-950/60 border border-emerald-500/30 text-emerald-400 px-4 py-2 rounded-full text-xs font-bold flex items-center gap-2 hover:bg-emerald-900/50">
           💬 (33 5109 7726)
         </a>
 
-        <button onclick="toggleCarritoModal()" class="bg-emerald-950/60 border border-emerald-500/30 text-emerald-400 px-4 py-2 rounded-full text-xs font-bold flex items-center gap-2 hover:bg-emerald-900/50 transition-all">
+        <!-- Carrito -->
+        <button onclick="toggleCarritoModal()" class="btn-bounce bg-emerald-950/60 border border-emerald-500/30 text-emerald-400 px-4 py-2 rounded-full text-xs font-bold flex items-center gap-2 hover:bg-emerald-900/50">
           🛒 Carrito <span id="cantCarritoBadge" class="bg-emerald-500 text-slate-950 px-2 py-0.5 rounded-full text-[10px] font-black">0</span>
         </button>
 
-        <!-- 1. BOTÓN CUANDO NO HAY SESIÓN -->
-        <button id="btnAuthPublico" onclick="abrirModalAuth()" class="bg-blue-900/40 border border-blue-500/40 text-blue-300 px-4 py-2 rounded-full text-xs font-bold hover:bg-blue-800/50 transition-all">
+        <!-- 1. SIN SESIÓN: BOTÓN REGISTRARSE -->
+        <button id="btnAuthPublico" onclick="abrirModalAuth()" class="btn-bounce bg-blue-900/40 border border-blue-500/40 text-blue-300 px-4 py-2 rounded-full text-xs font-bold hover:bg-blue-800/50">
           Registrarse / Iniciar Sesión
         </button>
 
-        <!-- 2. MONITO INTERACTIVO (CUANDO SÍ HAY SESIÓN) -->
-        <div id="menuUsuarioLogueado" class="relative hidden">
-          <button onclick="toggleMenuUsuario()" class="bg-slate-800 border border-slate-700 text-white px-3.5 py-1.5 rounded-full text-xs font-bold flex items-center gap-2 hover:bg-slate-700 transition-all">
-            <div class="w-6 h-6 bg-emerald-500 text-slate-950 rounded-full flex items-center justify-center font-black">
-              👤
-            </div>
-            <span id="lblNombreUsuario">Mi Cuenta</span>
-            <span class="text-[10px] text-slate-400">▼</span>
-          </button>
-
-          <!-- DESPLEGABLE DE CUENTA -->
-          <div id="dropdownCuenta" class="absolute right-0 mt-2 w-64 glass-card bg-slate-900/95 border border-slate-700 rounded-2xl p-4 shadow-2xl z-50 hidden space-y-3 text-left">
-            <div class="border-b border-slate-800 pb-2">
-              <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Sesión Activa</p>
-              <p id="usrMenuNombre" class="text-sm font-bold text-white">Nombre Cliente</p>
-            </div>
-
-            <div class="space-y-1 text-xs text-slate-300">
-              <p><strong class="text-slate-400">Teléfono:</strong> <span id="usrMenuTel">--</span></p>
-              <p><strong class="text-slate-400">Correo:</strong> <span id="usrMenuCorreo">--</span></p>
-              <p><strong class="text-slate-400">Dirección:</strong> <span id="usrMenuDir">Sin dirección</span></p>
-            </div>
-
-            <div class="border-t border-slate-800 pt-2 space-y-2">
-              <button onclick="cerrarSesionCliente()" class="w-full bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white border border-red-500/30 py-1.5 rounded-xl text-xs font-bold transition-all">
-                🚪 Cerrar Sesión
-              </button>
-            </div>
+        <!-- 2. CON SESIÓN: BOTÓN DE MONITO QUE DESPLAZA EL PANEL TIPO MERCADO LIBRE -->
+        <button id="btnMonitoUsuario" onclick="abrirPanelUsuario()" class="btn-bounce hidden bg-slate-800 border border-slate-700 text-white px-3.5 py-1.5 rounded-full text-xs font-bold flex items-center gap-2.5 hover:bg-slate-700">
+          <div class="w-7 h-7 bg-emerald-500 text-slate-950 rounded-full flex items-center justify-center font-black text-sm shadow-md">
+            👤
           </div>
-        </div>
-
+          <span id="lblNombreUsuario">Mi Cuenta</span>
+        </button>
       </div>
     </div>
   </header>
 
-  <!-- CATÁLOGO -->
+  <!-- CATÁLOGO PRINCIPAL -->
   <main class="max-w-7xl mx-auto p-6 space-y-8">
-    <div>
-      <h2 class="text-xl font-bold text-white">Catálogo de Productos</h2>
-      <p class="text-xs text-slate-400">Selecciona tus productos para realizar un pedido.</p>
+    <div class="flex flex-col md:flex-row justify-between md:items-end gap-4 border-b border-slate-800/60 pb-4">
+      <div>
+        <h2 class="text-2xl font-black text-white tracking-tight">Catálogo de Productos</h2>
+        <p class="text-xs text-slate-400">Selecciona la presentación ideal para tu hogar o negocio.</p>
+      </div>
+      <div class="flex items-center gap-2 text-xs text-emerald-400 bg-emerald-950/40 border border-emerald-500/20 px-3 py-1.5 rounded-xl">
+        <span>💳 Aceptamos pago con tarjeta al entregar</span>
+      </div>
     </div>
 
+    <!-- REJILLA DE PRODUCTOS ANIMADA -->
     <div id="contenedorProductos" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
   </main>
 
-  <!-- MODAL REGISTRO / INICIAR SESIÓN -->
+  <!-- ========================================== -->
+  <!-- PANEL LATERAL DE USUARIO ESTILO MERCADO LIBRE -->
+  <!-- ========================================== -->
+  <div id="overlayPanel" onclick="cerrarPanelUsuario()" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden opacity-0 transition-opacity duration-300"></div>
+
+  <aside id="panelUsuarioML" class="fixed top-0 right-0 h-full w-full max-w-sm bg-slate-900 border-l border-slate-800 z-50 transform translate-x-full drawer-transition flex flex-col justify-between shadow-2xl">
+    
+    <!-- ENCABEZADO TIPO MERCADO LIBRE (VERDE ARMM) -->
+    <div class="bg-gradient-to-br from-emerald-600 to-teal-700 p-6 text-slate-950 space-y-4 relative">
+      <button onclick="cerrarPanelUsuario()" class="absolute top-4 right-4 text-slate-950/70 hover:text-slate-950 font-black text-lg btn-bounce">✕</button>
+      
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 bg-slate-950 text-emerald-400 rounded-full flex items-center justify-center font-black text-xl shadow-lg border border-emerald-400/30">
+          👤
+        </div>
+        <div>
+          <h3 id="mlNombreUsuario" class="font-black text-lg leading-tight">Nombre Usuario</h3>
+          <p class="text-xs font-semibold text-slate-950/80">Mi Perfil ARMM ›</p>
+        </div>
+      </div>
+
+      <!-- TARJETA DE MÉTODO DE PAGO PREFERIDO -->
+      <div class="bg-slate-950/20 border border-slate-950/10 rounded-2xl p-3 flex items-center justify-between text-xs font-bold text-slate-950">
+        <span class="flex items-center gap-2">💳 Pago al Recibir (Terminal)</span>
+        <span class="text-[10px] bg-slate-950 text-emerald-400 px-2 py-0.5 rounded-full">Activo</span>
+      </div>
+    </div>
+
+    <!-- CUERPO DE OPCIONES DEL PANEL -->
+    <div class="p-4 space-y-6 overflow-y-auto flex-1 text-xs">
+      
+      <!-- SECCIÓN: MI ACTIVIDAD -->
+      <div class="space-y-1">
+        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider px-3 mb-2">Mi Actividad</p>
+        
+        <button onclick="alert('Mostrando tus pedidos recientes...')" class="w-full flex items-center justify-between p-3 rounded-2xl hover:bg-slate-800/80 text-slate-200 font-bold btn-bounce transition-all">
+          <span class="flex items-center gap-3 text-sm">🛍️ Mis Compras</span>
+          <span class="text-slate-500">›</span>
+        </button>
+
+        <button onclick="alert('Tus productos favoritos')" class="w-full flex items-center justify-between p-3 rounded-2xl hover:bg-slate-800/80 text-slate-200 font-bold btn-bounce transition-all">
+          <span class="flex items-center gap-3 text-sm">❤️ Favoritos</span>
+          <span class="text-slate-500">›</span>
+        </button>
+
+        <button onclick="alert('Historial de búsqueda')" class="w-full flex items-center justify-between p-3 rounded-2xl hover:bg-slate-800/80 text-slate-200 font-bold btn-bounce transition-all">
+          <span class="flex items-center gap-3 text-sm">🕒 Historial</span>
+          <span class="text-slate-500">›</span>
+        </button>
+      </div>
+
+      <hr class="border-slate-800">
+
+      <!-- SECCIÓN: DATOS DE LA CUENTA -->
+      <div class="space-y-1">
+        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-wider px-3 mb-2">Información Guardada</p>
+        
+        <div class="p-3 bg-slate-950/60 rounded-2xl border border-slate-800/80 space-y-1 text-slate-400">
+          <p><strong class="text-slate-200">Teléfono:</strong> <span id="mlTel">--</span></p>
+          <p><strong class="text-slate-200">Correo:</strong> <span id="mlCorreo">--</span></p>
+          <p><strong class="text-slate-200">Dirección:</strong> <span id="mlDir">--</span></p>
+        </div>
+      </div>
+
+      <hr class="border-slate-800">
+
+      <!-- SECCIÓN: AYUDA Y SOPORTE -->
+      <div class="space-y-1">
+        <a href="https://wa.me/523351097726" target="_blank" class="w-full flex items-center justify-between p-3 rounded-2xl hover:bg-slate-800/80 text-slate-200 font-bold btn-bounce transition-all">
+          <span class="flex items-center gap-3 text-sm">🎧 Ayuda y Soporte WhatsApp</span>
+          <span class="text-slate-500">›</span>
+        </a>
+      </div>
+
+    </div>
+
+    <!-- CERRAR SESIÓN -->
+    <div class="p-4 border-t border-slate-800 bg-slate-950/50">
+      <button onclick="cerrarSesionCliente()" class="w-full btn-bounce bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white border border-red-500/20 py-3 rounded-2xl font-bold transition-all text-xs flex items-center justify-center gap-2">
+        🚪 Cerrar Sesión
+      </button>
+    </div>
+  </aside>
+
+  <!-- MODAL INICIAR SESIÓN / REGISTRO -->
   <div id="modalAuth" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
-    <div class="glass-card bg-slate-900 border border-slate-700 p-6 rounded-3xl max-w-sm w-full space-y-4 relative">
-      <button onclick="cerrarModalAuth()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold">✕</button>
+    <div class="glass-card bg-slate-900 border border-slate-700 p-6 rounded-3xl max-w-sm w-full space-y-4 relative shadow-2xl">
+      <button onclick="cerrarModalAuth()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold btn-bounce">✕</button>
       
       <div class="flex gap-2 border-b border-slate-800 pb-3">
         <button id="tabLogin" onclick="switchAuthTab('login')" class="flex-1 font-bold text-xs pb-1 border-b-2 border-emerald-500 text-emerald-400">Iniciar Sesión</button>
         <button id="tabRegistro" onclick="switchAuthTab('registro')" class="flex-1 font-bold text-xs pb-1 border-b-2 border-transparent text-slate-400">Registrarse</button>
       </div>
 
-      <!-- FORMULARIO INICIO SESIÓN -->
       <form id="formLogin" onsubmit="procesarLogin(event)" class="space-y-3 text-xs">
-        <input type="text" id="loginIdentificador" placeholder="Correo o Teléfono" required class="w-full bg-slate-950 border border-slate-700 text-white p-2.5 rounded-xl">
-        <input type="password" id="loginPassword" placeholder="Contraseña" required class="w-full bg-slate-950 border border-slate-700 text-white p-2.5 rounded-xl">
-        <button type="submit" id="btnSubmitLogin" class="w-full bg-emerald-500 text-slate-950 font-bold py-2.5 rounded-xl hover:bg-emerald-400 transition-all">Ingresar</button>
-        <button type="button" onclick="solicitarAyudaPassword()" class="w-full text-center text-[11px] text-amber-400 hover:underline pt-1">¿Olvidaste tu contraseña? Solicitar ayuda</button>
+        <input type="text" id="loginIdentificador" placeholder="Correo o Teléfono" required class="w-full bg-slate-950 border border-slate-700 text-white p-3 rounded-xl focus:outline-none focus:border-emerald-500">
+        <input type="password" id="loginPassword" placeholder="Contraseña" required class="w-full bg-slate-950 border border-slate-700 text-white p-3 rounded-xl focus:outline-none focus:border-emerald-500">
+        <button type="submit" class="btn-bounce w-full bg-emerald-500 text-slate-950 font-bold py-3 rounded-xl hover:bg-emerald-400 transition-all">Ingresar</button>
       </form>
 
-      <!-- FORMULARIO REGISTRO -->
       <form id="formRegistro" onsubmit="procesarRegistro(event)" class="space-y-3 text-xs hidden">
-        <input type="text" id="regNombre" placeholder="Nombre Completo" required class="w-full bg-slate-950 border border-slate-700 text-white p-2.5 rounded-xl">
-        <input type="tel" id="regTelefono" placeholder="Teléfono WhatsApp (10 dígitos)" required class="w-full bg-slate-950 border border-slate-700 text-white p-2.5 rounded-xl">
-        <input type="email" id="regCorreo" placeholder="Correo Electrónico (Opcional)" class="w-full bg-slate-950 border border-slate-700 text-white p-2.5 rounded-xl">
-        <input type="text" id="regDireccion" placeholder="Dirección de Entrega" required class="w-full bg-slate-950 border border-slate-700 text-white p-2.5 rounded-xl">
-        <input type="password" id="regPassword" placeholder="Crea una Contraseña" required class="w-full bg-slate-950 border border-slate-700 text-white p-2.5 rounded-xl">
-        <button type="submit" id="btnSubmitReg" class="w-full bg-emerald-500 text-slate-950 font-bold py-2.5 rounded-xl hover:bg-emerald-400 transition-all">Crear Cuenta</button>
+        <input type="text" id="regNombre" placeholder="Nombre Completo" required class="w-full bg-slate-950 border border-slate-700 text-white p-3 rounded-xl focus:outline-none focus:border-emerald-500">
+        <input type="tel" id="regTelefono" placeholder="Teléfono WhatsApp (10 dígitos)" required class="w-full bg-slate-950 border border-slate-700 text-white p-3 rounded-xl focus:outline-none focus:border-emerald-500">
+        <input type="email" id="regCorreo" placeholder="Correo Electrónico" class="w-full bg-slate-950 border border-slate-700 text-white p-3 rounded-xl focus:outline-none focus:border-emerald-500">
+        <input type="text" id="regDireccion" placeholder="Dirección de Entrega" required class="w-full bg-slate-950 border border-slate-700 text-white p-3 rounded-xl focus:outline-none focus:border-emerald-500">
+        <input type="password" id="regPassword" placeholder="Crea una Contraseña" required class="w-full bg-slate-950 border border-slate-700 text-white p-3 rounded-xl focus:outline-none focus:border-emerald-500">
+        <button type="submit" class="btn-bounce w-full bg-emerald-500 text-slate-950 font-bold py-3 rounded-xl hover:bg-emerald-400 transition-all">Crear Cuenta</button>
       </form>
     </div>
   </div>
@@ -121,12 +228,12 @@
       actualizarBarraUsuario();
     });
 
-    // ESCUCHAR INVENTARIO
     socket.on('inventario_actualizado', data => {
       productosCatalogo = data;
       renderCatalogo();
     });
 
+    // RENDER DEL CATÁLOGO CON TARJETAS 3D Y ANIMACIONES
     function renderCatalogo() {
       const container = document.getElementById('contenedorProductos');
       if (!productosCatalogo.length) {
@@ -135,58 +242,81 @@
       }
 
       container.innerHTML = productosCatalogo.map(p => `
-        <div class="glass-card p-5 rounded-3xl space-y-3 text-left">
-          <p class="text-[10px] text-emerald-400 uppercase tracking-widest font-bold">${p.categoria || 'Limpieza'}</p>
-          <h3 class="text-lg font-bold text-white">${p.nombre}</h3>
-          <div class="space-y-1 text-xs text-slate-300">
-            <p>1 Litro: <strong class="text-emerald-400">$${p.precios['1L'] || 0}</strong></p>
-            <p>5 Litros: <strong class="text-emerald-400">$${p.precios['5L'] || 0}</strong></p>
-            <p>20 Litros: <strong class="text-emerald-400">$${p.precios['20L'] || 0}</strong></p>
+        <div class="glass-card card-3d p-6 rounded-3xl space-y-4 text-left relative overflow-hidden group">
+          <div class="absolute -right-8 -top-8 w-24 h-24 bg-emerald-500/10 rounded-full blur-xl group-hover:bg-emerald-500/20 transition-all"></div>
+          
+          <div class="flex justify-between items-start">
+            <span class="text-[10px] text-emerald-400 uppercase tracking-widest font-black bg-emerald-950/80 border border-emerald-500/30 px-2.5 py-1 rounded-full">${p.categoria || 'Limpieza'}</span>
+            <span class="text-[11px] text-slate-400">🚚 Envío Gratis disponible</span>
           </div>
+
+          <h3 class="text-xl font-bold text-white group-hover:text-emerald-400 transition-colors">${p.nombre}</h3>
+          
+          <div class="space-y-2 text-xs text-slate-300 bg-slate-950/50 p-3 rounded-2xl border border-slate-800/60">
+            <div class="flex justify-between"><span>1 Litro:</span> <strong class="text-emerald-400 font-bold">$${p.precios['1L'] || 0} MXN</strong></div>
+            <div class="flex justify-between"><span>5 Litros:</span> <strong class="text-emerald-400 font-bold">$${p.precios['5L'] || 0} MXN</strong></div>
+            <div class="flex justify-between"><span>20 Litros:</span> <strong class="text-emerald-400 font-bold">$${p.precios['20L'] || 0} MXN</strong></div>
+          </div>
+
+          <button onclick="alert('Producto agregado al carrito')" class="btn-bounce w-full bg-emerald-500 text-slate-950 font-black py-3 rounded-2xl hover:bg-emerald-400 transition-all text-xs flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/10">
+            🛒 Agregar al Carrito
+          </button>
         </div>
       `).join('');
     }
 
-    // CONTROL DE INTERFAZ DEL USUARIO (MONITO VS BOTÓN INICIAR SESIÓN)
+    // CONTROL DEL ESTADO DEL USUARIO
     function actualizarBarraUsuario() {
       const btnAuth = document.getElementById('btnAuthPublico');
-      const menuUsr = document.getElementById('menuUsuarioLogueado');
+      const btnMonito = document.getElementById('btnMonitoUsuario');
 
       if (usuarioActual) {
         btnAuth.classList.add('hidden');
-        menuUsr.classList.remove('hidden');
+        btnMonito.classList.remove('hidden');
 
         const primerNombre = usuarioActual.nombre ? usuarioActual.nombre.split(' ')[0] : 'Cliente';
         document.getElementById('lblNombreUsuario').innerText = primerNombre;
-        document.getElementById('usrMenuNombre').innerText = usuarioActual.nombre;
-        document.getElementById('usrMenuTel').innerText = usuarioActual.telefono || '--';
-        document.getElementById('usrMenuCorreo').innerText = usuarioActual.correo || 'No especificado';
-        document.getElementById('usrMenuDir').innerText = usuarioActual.direccion || 'Sin dirección';
+        
+        // Llenar datos en el panel lateral deslizable
+        document.getElementById('mlNombreUsuario').innerText = usuarioActual.nombre;
+        document.getElementById('mlTel').innerText = usuarioActual.telefono || '--';
+        document.getElementById('mlCorreo').innerText = usuarioActual.correo || 'No especificado';
+        document.getElementById('mlDir').innerText = usuarioActual.direccion || 'Sin dirección';
       } else {
         btnAuth.classList.remove('hidden');
-        menuUsr.classList.add('hidden');
+        btnMonito.classList.add('hidden');
       }
     }
 
-    function toggleMenuUsuario() {
-      document.getElementById('dropdownCuenta').classList.toggle('hidden');
+    // CONTROL DEL PANEL DESLIZABLE TIPO MERCADO LIBRE
+    function abrirPanelUsuario() {
+      const panel = document.getElementById('panelUsuarioML');
+      const overlay = document.getElementById('overlayPanel');
+      overlay.classList.remove('hidden');
+      setTimeout(() => {
+        overlay.classList.remove('opacity-0');
+        panel.classList.remove('translate-x-full');
+      }, 10);
     }
 
-    window.addEventListener('click', (e) => {
-      const menu = document.getElementById('menuUsuarioLogueado');
-      if (menu && !menu.contains(e.target)) {
-        document.getElementById('dropdownCuenta')?.classList.add('hidden');
-      }
-    });
+    function cerrarPanelUsuario() {
+      const panel = document.getElementById('panelUsuarioML');
+      const overlay = document.getElementById('overlayPanel');
+      panel.classList.add('translate-x-full');
+      overlay.classList.add('opacity-0');
+      setTimeout(() => {
+        overlay.classList.add('hidden');
+      }, 300);
+    }
 
     function cerrarSesionCliente() {
       localStorage.removeItem('usuario_armm');
       usuarioActual = null;
+      cerrarPanelUsuario();
       actualizarBarraUsuario();
-      document.getElementById('dropdownCuenta').classList.add('hidden');
     }
 
-    // MODAL Y TABS
+    // MODAL AUTH
     function abrirModalAuth() { document.getElementById('modalAuth').classList.remove('hidden'); }
     function cerrarModalAuth() { document.getElementById('modalAuth').classList.add('hidden'); }
 
@@ -204,10 +334,8 @@
       }
     }
 
-    // PROCESAR REGISTRO FLUIDO
     function procesarRegistro(e) {
       e.preventDefault();
-      
       const nuevoCliente = {
         nombre: document.getElementById('regNombre').value.trim(),
         telefono: document.getElementById('regTelefono').value.trim(),
@@ -216,20 +344,15 @@
         password: document.getElementById('regPassword').value
       };
 
-      // Guardado local inmediato y actualización gráfica
       usuarioActual = nuevoCliente;
       localStorage.setItem('usuario_armm', JSON.stringify(usuarioActual));
-
-      // Notificar al servidor backend
       socket.emit('registro_cliente', nuevoCliente);
 
-      // Cierre suave del modal y cambio al monito
       actualizarBarraUsuario();
       cerrarModalAuth();
       document.getElementById('formRegistro').reset();
     }
 
-    // PROCESAR INICIO DE SESIÓN FLUIDO
     function procesarLogin(e) {
       e.preventDefault();
       const id = document.getElementById('loginIdentificador').value.trim();
@@ -243,20 +366,9 @@
           cerrarModalAuth();
           document.getElementById('formLogin').reset();
         } else {
-          alert(respuesta?.mensaje || 'Datos de acceso incorrectos.');
+          alert(respuesta?.mensaje || 'Datos incorrectos.');
         }
       });
-    }
-
-    function solicitarAyudaPassword() {
-      const id = document.getElementById('loginIdentificador').value.trim();
-      if (!id) {
-        alert('Ingresa tu teléfono o correo en la casilla arriba para solicitar la ayuda.');
-        return;
-      }
-      socket.emit('solicitar_ayuda_password', { identificador: id });
-      alert('Solicitud enviada. El administrador te contactará por WhatsApp.');
-      cerrarModalAuth();
     }
   </script>
 </body>
