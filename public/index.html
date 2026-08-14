@@ -36,11 +36,6 @@
             Registrarse / Mi Cuenta
           </button>
         </div>
-
-        <!-- ACCESO ADMIN -->
-        <a href="/admin" class="text-xs bg-slate-800 text-slate-300 border border-slate-700 px-3 py-1.5 rounded-full hover:bg-slate-700 hover:text-white transition-all">
-          Admin
-        </a>
       </div>
     </div>
   </nav>
@@ -116,7 +111,7 @@
         </form>
       </div>
 
-      <!-- VISTA 2: PERFIL ACTIVO (SI YA TIENE SESIÓN) -->
+      <!-- VISTA 2: PERFIL ACTIVO -->
       <div id="vistaPerfilActivo" class="hidden space-y-6">
         <div class="border-b border-slate-800 pb-4 flex justify-between items-center">
           <div>
@@ -145,13 +140,11 @@
     let productos = [];
     let clienteActual = JSON.parse(localStorage.getItem('armm_cliente')) || null;
 
-    // Conexión y recepción del inventario actualizado
     socket.on('inventario_actualizado', (data) => {
       productos = data;
       renderProductos();
     });
 
-    // Comprobar estado inicial del cliente
     actualizarBotonPerfil();
 
     function renderProductos() {
@@ -219,11 +212,9 @@
         })
       };
 
-      // 1. Guardar localmente
       clienteActual = nuevoCliente;
       localStorage.setItem('armm_cliente', JSON.stringify(nuevoCliente));
 
-      // 2. Transmitir al Servidor y al Panel de Admin por Sockets
       socket.emit('nuevo_registro_cliente', nuevoCliente);
 
       actualizarBotonPerfil();
