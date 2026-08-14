@@ -21,7 +21,7 @@
 </head>
 <body class="bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 text-slate-100 font-sans min-h-screen relative">
 
-  <!-- FORMULARIO DE LOGIN (SE MUESTRA PRIMERO) -->
+  <!-- FORMULARIO DE LOGIN -->
   <div id="loginSection" class="min-h-screen flex items-center justify-center p-4">
     <div class="glass-card p-8 rounded-3xl max-w-md w-full space-y-6 text-center">
       <div class="space-y-2">
@@ -31,7 +31,7 @@
       <form onsubmit="validarAcceso(event)" class="space-y-4 text-left">
         <div>
           <label class="text-xs text-slate-400 block mb-1">Contraseña de Administrador</label>
-          <input type="password" id="adminPassword" required placeholder="ARMM123" class="w-full bg-slate-900/80 border border-slate-700 text-white px-4 py-2.5 rounded-xl text-sm focus:border-emerald-500 focus:outline-none">
+          <input type="password" id="adminPassword" required placeholder="••••••••" class="w-full bg-slate-900/80 border border-slate-700 text-white px-4 py-2.5 rounded-xl text-sm focus:border-emerald-500 focus:outline-none">
         </div>
         <p id="errorMsg" class="text-xs text-red-400 hidden">Contraseña incorrecta. Inténtalo de nuevo.</p>
         <button type="submit" class="w-full bg-emerald-500 text-slate-950 font-bold py-3 rounded-xl text-sm hover:bg-emerald-400 transition-all shadow-lg shadow-emerald-500/20">
@@ -133,19 +133,30 @@
   </div>
 
   <script>
-    // CAMBIA ESTA CONTRASEÑA POR LA QUE TÚ QUIERAS USAR PARA ENTRAR
-    const ADMIN_PASSWORD = "armmadmin2026";
+    // Hash SHA-256 de la contraseña 'ARMM123' (la clave no aparece en texto plano)
+    const HASH_CORRECTO = "2d0cceea4f469aa734bd16ebcaea7d7b3da14bfb2fe2126dc61d670b865531d0";
 
-    // Comprobar si ya inició sesión previamente
+    // Función para convertir texto en hash SHA-256
+    async function calcularHash(cadena) {
+      const buffer = new TextEncoder().encode(cadena);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    // Comprobar si la sesión sigue activa
     if (sessionStorage.getItem('adminAutenticado') === 'true') {
       mostrarPanel();
     }
 
-    function validarAcceso(e) {
+    async function validarAcceso(e) {
       e.preventDefault();
-      const pass = document.getElementById('adminPassword').value;
-      if (pass === ADMIN_PASSWORD) {
+      const passIngresada = document.getElementById('adminPassword').value;
+      const hashIngresado = await calcularHash(passIngresada);
+
+      if (hashIngresado === HASH_CORRECTO) {
         sessionStorage.setItem('adminAutenticado', 'true');
+        document.getElementById('errorMsg').classList.add('hidden');
         mostrarPanel();
       } else {
         document.getElementById('errorMsg').classList.remove('hidden');
@@ -169,6 +180,7 @@
     let productos = [];
 
     function iniciarSocket() {
+      if (socket) return;
       socket = io();
 
       socket.on('inventario_actualizado', (data) => {
