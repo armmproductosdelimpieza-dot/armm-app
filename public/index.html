@@ -8,531 +8,252 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     .glass-card { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
-    .glass-nav { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
   </style>
 </head>
-<body class="bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 text-slate-100 font-sans min-h-screen relative">
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen">
 
-  <!-- NAVEGACIÓN PRINCIPAL -->
-  <nav class="glass-nav fixed top-0 left-0 w-full z-50 px-6 py-4">
-    <div class="max-w-7xl mx-auto flex justify-between items-center">
+  <!-- ENCABEZADO Y BARRA DE NAVEGACIÓN -->
+  <header class="border-b border-slate-800 p-4 sticky top-0 bg-slate-950/90 backdrop-blur-md z-40">
+    <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-4">
+      
+      <!-- LOGO / NOMBRE -->
       <div>
-        <span class="text-2xl font-black tracking-widest text-white">ARMM</span>
-        <p class="text-[10px] text-emerald-400 font-bold uppercase tracking-wider">Productos y Accesorios de Limpieza</p>
+        <h1 class="text-2xl font-black text-white tracking-wider">ARMM</h1>
+        <p class="text-[10px] text-emerald-400 font-bold tracking-widest uppercase">Productos y Accesorios de Limpieza</p>
       </div>
 
+      <!-- BANNER DE ACCIONES RÁPIDAS Y SESIÓN -->
       <div class="flex items-center gap-3">
-        <!-- BOTÓN WHATSAPP -->
-        <a href="https://wa.me/523351097726" target="_blank" class="hidden sm:flex bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-3 py-1.5 rounded-full text-xs font-bold items-center gap-1.5 hover:bg-emerald-500/20">
+        <!-- Contacto WhatsApp -->
+        <a href="https://wa.me/523351097726" target="_blank" class="bg-emerald-950/60 border border-emerald-500/30 text-emerald-400 px-4 py-2 rounded-full text-xs font-bold flex items-center gap-2 hover:bg-emerald-900/50 transition-all">
           💬 (33 5109 7726)
         </a>
 
-        <!-- BOTÓN CARRITO -->
-        <button onclick="abrirCarrito()" class="relative bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-3.5 py-1.5 rounded-full hover:bg-emerald-500 hover:text-slate-950 font-bold text-xs transition-all flex items-center gap-2">
-          <span>🛒 Carrito</span>
-          <span id="cantCarrito" class="bg-emerald-500 text-slate-950 px-2 py-0.5 rounded-full text-[10px]">0</span>
+        <!-- Botón Carrito -->
+        <button onclick="toggleCarritoModal()" class="bg-emerald-950/60 border border-emerald-500/30 text-emerald-400 px-4 py-2 rounded-full text-xs font-bold flex items-center gap-2 hover:bg-emerald-900/50 transition-all">
+          🛒 Carrito <span id="cantCarritoBadge" class="bg-emerald-500 text-slate-950 px-2 py-0.5 rounded-full text-[10px] font-black">0</span>
         </button>
 
-        <!-- BOTÓN REGISTRARSE / INICIAR SESIÓN -->
-        <div id="userProfileBtn">
-          <button onclick="abrirModalAuth()" class="text-xs bg-blue-500/20 text-blue-400 border border-blue-500/30 px-3.5 py-1.5 rounded-full font-bold hover:bg-blue-500 hover:text-white transition-all">
-            Registrarse / Iniciar Sesión
+        <!-- 1. BOTÓN CUANDO NO HAY SESIÓN INICIADA -->
+        <button id="btnAuthPublico" onclick="abrirModalAuth()" class="bg-blue-900/40 border border-blue-500/40 text-blue-300 px-4 py-2 rounded-full text-xs font-bold hover:bg-blue-800/50 transition-all">
+          Registrarse / Iniciar Sesión
+        </button>
+
+        <!-- 2. MENÚ INTERACTIVO CON MONITO (CUANDO YA INICIÓ SESIÓN) -->
+        <div id="menuUsuarioLogueado" class="relative hidden">
+          <button onclick="toggleMenuUsuario()" class="bg-slate-800 border border-slate-700 text-white px-3.5 py-1.5 rounded-full text-xs font-bold flex items-center gap-2 hover:bg-slate-700 transition-all">
+            <div class="w-6 h-6 bg-emerald-500 text-slate-950 rounded-full flex items-center justify-center font-black">
+              👤
+            </div>
+            <span id="lblNombreUsuario">Mi Cuenta</span>
+            <span class="text-[10px] text-slate-400">▼</span>
           </button>
-        </div>
-      </div>
-    </div>
-  </nav>
 
-  <!-- CONTENIDO PRINCIPAL -->
-  <main class="max-w-7xl mx-auto pt-28 px-6 pb-20 space-y-16">
-    
-    <div class="text-center space-y-4 max-w-3xl mx-auto pt-4">
-      <h1 class="text-4xl md:text-6xl font-black text-white tracking-tight">ARMM</h1>
-      <p class="text-emerald-400 text-sm font-bold uppercase tracking-widest">PRODUCTOS Y ACCESORIOS DE LIMPIEZA</p>
-      <p class="text-slate-400 text-sm">Realiza tus pedidos directamente desde nuestro portal web y da seguimiento a tu entrega en tiempo real.</p>
-    </div>
+          <!-- DESPLEGABLE DE CUENTA DEL CLIENTE -->
+          <div id="dropdownCuenta" class="absolute right-0 mt-2 w-64 glass-card bg-slate-900/95 border border-slate-700 rounded-2xl p-4 shadow-2xl z-50 hidden space-y-3 text-left">
+            <div class="border-b border-slate-800 pb-2">
+              <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Sesión Activa</p>
+              <p id="usrMenuNombre" class="text-sm font-bold text-white">Nombre Cliente</p>
+            </div>
 
-    <!-- CATÁLOGO -->
-    <section class="space-y-6">
-      <h2 class="text-xl font-bold text-white flex items-center gap-2">🛒 Catálogo de Productos</h2>
-      <div id="gridProductos" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-    </section>
+            <div class="space-y-1 text-xs text-slate-300">
+              <p><strong class="text-slate-400">Teléfono:</strong> <span id="usrMenuTel">--</span></p>
+              <p><strong class="text-slate-400">Correo:</strong> <span id="usrMenuCorreo">--</span></p>
+              <p><strong class="text-slate-400">Dirección:</strong> <span id="usrMenuDir">Sin dirección</span></p>
+            </div>
 
-    <!-- RESEÑAS -->
-    <section class="space-y-6 border-t border-slate-800 pt-12">
-      <div class="flex justify-between items-center">
-        <div>
-          <h2 class="text-xl font-bold text-white">⭐ Reseñas y Opiniones de Clientes</h2>
-          <p class="text-xs text-slate-400">Conoce la experiencia de nuestros compradores</p>
-        </div>
-        <button onclick="abrirModalResena()" class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-4 py-2 rounded-xl text-xs font-bold hover:bg-emerald-500 hover:text-slate-950 transition-all">
-          + Escribir Opinión
-        </button>
-      </div>
-      <div id="gridResenas" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-    </section>
-  </main>
-
-  <!-- MODAL CARRITO DE COMPRAS -->
-  <div id="modalCarrito" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
-    <div class="glass-card p-6 rounded-3xl max-w-lg w-full space-y-6 relative max-h-[90vh] overflow-y-auto">
-      <button onclick="cerrarCarrito()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold">✕</button>
-      <h3 class="text-lg font-bold text-white">Tu Carrito de Compras</h3>
-
-      <div id="listaCarrito" class="space-y-3 text-xs border-y border-slate-800 py-4"></div>
-
-      <div class="flex justify-between items-center text-sm font-bold text-white">
-        <span>Total:</span>
-        <span id="totalCarrito" class="text-emerald-400 text-lg">$0 MXN</span>
-      </div>
-
-      <div class="space-y-2 text-left">
-        <label class="text-xs text-slate-400">Método de Pago:</label>
-        <select id="metodoPago" onchange="evaluarMetodoPago()" class="w-full bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl text-xs">
-          <option value="Efectivo contra entrega">Efectivo contra entrega</option>
-          <option value="Transferencia SPEI">Transferencia SPEI</option>
-        </select>
-
-        <div id="infoSpei" class="hidden bg-slate-900/80 p-3 rounded-xl border border-slate-800 text-[11px] space-y-2">
-          <p class="text-emerald-400 font-bold">Datos SPEI ARMM:</p>
-          <p>CLABE: 012180000000000000 | Banco: BBVA</p>
-          <a href="https://wa.me/523351097726?text=Hola%20ARMM,%20adjunto%20mi%20comprobante%20de%20pago%20SPEI" target="_blank" class="inline-block text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-3 py-1.5 rounded-lg hover:bg-emerald-500 hover:text-slate-950 font-bold transition-all">
-            Enviar comprobante del SPEI por WhatsApp
-          </a>
-        </div>
-      </div>
-
-      <button onclick="procesarBotonRealizarPedido()" class="w-full bg-emerald-500 text-slate-950 font-bold py-3 rounded-xl text-xs hover:bg-emerald-400 transition-all">
-        Realizar Pedido
-      </button>
-    </div>
-  </div>
-
-  <!-- MODAL CHECKOUT RÁPIDO SI NO TIENE CUENTA -->
-  <div id="modalCheckout" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
-    <div class="glass-card p-6 rounded-3xl max-w-md w-full space-y-5 relative">
-      <button onclick="cerrarCheckout()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold">✕</button>
-      <h3 class="text-lg font-bold text-white">Datos de Envío para tu Pedido</h3>
-
-      <form onsubmit="confirmarPedidoNuevoUsuario(event)" class="space-y-3 text-left">
-        <div class="grid grid-cols-2 gap-2">
-          <input type="text" id="chkNombre" placeholder="Nombre" required class="bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl text-xs">
-          <input type="text" id="chkApellido" placeholder="Apellido" class="bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl text-xs">
-        </div>
-        <input type="tel" id="chkTelefono" placeholder="Teléfono" required class="w-full bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl text-xs">
-        <input type="email" id="chkCorreo" placeholder="Correo (Opcional)" class="w-full bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl text-xs">
-        
-        <div class="relative">
-          <input type="password" id="chkPassword" placeholder="Generar contraseña" required class="w-full bg-slate-900 border border-slate-700 text-white p-2.5 pr-10 rounded-xl text-xs">
-          <button type="button" onclick="toggleEye('chkPassword', 'eyeChk')" class="absolute right-3 top-2.5 text-slate-400 hover:text-white text-xs">
-            <span id="eyeChk">👁️</span>
-          </button>
-        </div>
-
-        <input type="text" id="chkDireccion" placeholder="Dirección completa de entrega" required class="w-full bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl text-xs">
-
-        <button type="submit" class="w-full bg-emerald-500 text-slate-950 font-bold py-3 rounded-xl text-xs hover:bg-emerald-400 transition-all">
-          Confirmar y Guardar Pedido
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- MODAL AUTHENTICACIÓN (REGISTRARSE / INICIAR SESIÓN / OLVIDÉ MI CONTRASEÑA) -->
-  <div id="modalAuth" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
-    <div class="glass-card p-6 rounded-3xl max-w-lg w-full space-y-6 relative max-h-[90vh] overflow-y-auto">
-      <button onclick="cerrarModalAuth()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold">✕</button>
-
-      <!-- BOTONES DE PESTAÑA: REGISTRARSE / INICIAR SESIÓN -->
-      <div id="tabsAuth" class="grid grid-cols-2 gap-2 p-1 bg-slate-900/80 rounded-2xl border border-slate-800">
-        <button id="btnTabLogin" onclick="switchAuthTab('login')" class="py-2 text-xs font-bold rounded-xl transition-all bg-emerald-500 text-slate-950">Iniciar Sesión</button>
-        <button id="btnTabRegister" onclick="switchAuthTab('register')" class="py-2 text-xs font-bold text-slate-400 rounded-xl transition-all hover:text-white">Registrarse</button>
-      </div>
-
-      <!-- VISTA 1: INICIAR SESIÓN -->
-      <div id="vistaAuthLogin" class="space-y-4">
-        <form onsubmit="iniciarSesionCliente(event)" class="space-y-3 text-left">
-          <div>
-            <label class="text-[11px] text-slate-400">Correo o Teléfono:</label>
-            <input type="text" id="loginIdentificador" placeholder="Ingresa tu correo o teléfono" required class="w-full bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl text-xs mt-1">
-          </div>
-          
-          <div>
-            <label class="text-[11px] text-slate-400">Contraseña:</label>
-            <div class="relative mt-1">
-              <input type="password" id="loginPassword" placeholder="Contraseña" required class="w-full bg-slate-900 border border-slate-700 text-white p-2.5 pr-10 rounded-xl text-xs">
-              <button type="button" onclick="toggleEye('loginPassword', 'eyeLog')" class="absolute right-3 top-2.5 text-slate-400 hover:text-white text-xs">
-                <span id="eyeLog">👁️</span>
+            <div class="border-t border-slate-800 pt-2 space-y-2">
+              <button onclick="cerrarSesionCliente()" class="w-full bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white border border-red-500/30 py-1.5 rounded-xl text-xs font-bold transition-all">
+                🚪 Cerrar Sesión
               </button>
             </div>
           </div>
-
-          <div class="flex justify-between items-center text-xs">
-            <button type="button" onclick="switchAuthTab('forgot')" class="text-emerald-400 hover:underline">¿Olvidaste tu contraseña?</button>
-          </div>
-
-          <button type="submit" class="w-full bg-emerald-500 text-slate-950 font-bold py-2.5 rounded-xl text-xs hover:bg-emerald-400 transition-all">Ingresar</button>
-        </form>
-      </div>
-
-      <!-- VISTA 2: REGISTRARSE -->
-      <div id="vistaAuthRegister" class="hidden space-y-4">
-        <form onsubmit="registrarNuevoClienteIndependiente(event)" class="space-y-3 text-left">
-          <div class="grid grid-cols-2 gap-2">
-            <input type="text" id="regNombre" placeholder="Nombre" required class="bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl text-xs">
-            <input type="text" id="regApellido" placeholder="Apellido" class="bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl text-xs">
-          </div>
-          <input type="tel" id="regTelefono" placeholder="Teléfono" required class="w-full bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl text-xs">
-          <input type="email" id="regCorreo" placeholder="Correo electrónico (Opcional)" class="w-full bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl text-xs">
-          <input type="text" id="regDireccion" placeholder="Dirección de entrega" class="w-full bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl text-xs">
-
-          <div class="relative">
-            <input type="password" id="regPassword" placeholder="Generar contraseña" required class="w-full bg-slate-900 border border-slate-700 text-white p-2.5 pr-10 rounded-xl text-xs">
-            <button type="button" onclick="toggleEye('regPassword', 'eyeReg')" class="absolute right-3 top-2.5 text-slate-400 hover:text-white text-xs">
-              <span id="eyeReg">👁️</span>
-            </button>
-          </div>
-
-          <button type="submit" class="w-full bg-emerald-500 text-slate-950 font-bold py-2.5 rounded-xl text-xs hover:bg-emerald-400 transition-all">Crear Cuenta</button>
-        </form>
-      </div>
-
-      <!-- VISTA 3: OLVIDÉ MI CONTRASEÑA -->
-      <div id="vistaAuthForgot" class="hidden space-y-4 text-left">
-        <h3 class="text-sm font-bold text-white">Recuperar Contraseña</h3>
-        <p class="text-xs text-slate-400">Ingresa tus datos registrados para enviar la solicitud al Centro de Ayuda.</p>
-        
-        <form onsubmit="enviarSolicitudRecuperacion(event)" class="space-y-3">
-          <input type="text" id="forNombre" placeholder="Tu Nombre Completo" required class="w-full bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl text-xs">
-          <input type="tel" id="forTelefono" placeholder="Teléfono Registrado" required class="w-full bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl text-xs">
-          <input type="email" id="forCorreo" placeholder="Correo Registrado (Opcional)" class="w-full bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl text-xs">
-
-          <button type="submit" class="w-full bg-emerald-500 text-slate-950 font-bold py-2.5 rounded-xl text-xs hover:bg-emerald-400 transition-all">Enviar a Centro de Ayuda</button>
-          <button type="button" onclick="switchAuthTab('login')" class="w-full bg-slate-800 text-slate-300 font-bold py-2 rounded-xl text-xs">Volver a Iniciar Sesión</button>
-        </form>
-      </div>
-
-      <!-- VISTA 4: PERFIL ACTIVO (USUARIO CON SESIÓN INICIADA) -->
-      <div id="vistaPerfilActivo" class="hidden space-y-4 text-left">
-        <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-          <div>
-            <h3 id="perfilNombre" class="font-bold text-white"></h3>
-            <p id="perfilCorreo" class="text-xs text-slate-400"></p>
-          </div>
-          <button onclick="cerrarSesionCliente()" class="text-[10px] bg-red-500/20 text-red-400 border border-red-500/30 px-3 py-1.5 rounded-full font-bold">Cerrar Sesión</button>
         </div>
 
-        <h4 class="font-bold text-white text-xs">Mis Pedidos y Estado de Entrega:</h4>
-        <div id="contenedorMisPedidos" class="space-y-3"></div>
       </div>
     </div>
-  </div>
+  </header>
 
-  <!-- MODAL NUEVA RESEÑA -->
-  <div id="modalResena" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
-    <div class="glass-card p-6 rounded-3xl max-w-md w-full space-y-4 relative">
-      <button onclick="cerrarModalResena()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold">✕</button>
-      <h3 class="text-lg font-bold text-white">Escribir una Opinión</h3>
-      <form onsubmit="guardarResena(event)" class="space-y-3 text-left">
-        <input type="text" id="resNombre" placeholder="Tu Nombre" required class="w-full bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl text-xs">
-        <select id="resEstrellas" class="w-full bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl text-xs">
-          <option value="5">⭐⭐⭐⭐⭐ (5 Estrellas)</option>
-          <option value="4">⭐⭐⭐⭐ (4 Estrellas)</option>
-          <option value="3">⭐⭐⭐ (3 Estrellas)</option>
-        </select>
-        <textarea id="resComentario" placeholder="Escribe tu opinión aquí..." required class="w-full bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl text-xs h-24"></textarea>
-        <button type="submit" class="w-full bg-emerald-500 text-slate-950 font-bold py-2.5 rounded-xl text-xs">Publicar Reseña</button>
+  <!-- CONTENIDO PRINCIPAL / CATÁLOGO -->
+  <main class="max-w-7xl mx-auto p-6 space-y-8">
+    <div>
+      <h2 class="text-xl font-bold text-white">Catálogo de Productos</h2>
+      <p class="text-xs text-slate-400">Selecciona los productos y presentaciones para tu pedido.</p>
+    </div>
+
+    <div id="contenedorProductos" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- Se llena dinámicamente con Socket.io -->
+    </div>
+  </main>
+
+  <!-- MODAL DE AUTENTICACIÓN (LOGIN / REGISTRO) -->
+  <div id="modalAuth" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
+    <div class="glass-card bg-slate-900 border border-slate-700 p-6 rounded-3xl max-w-sm w-full space-y-4 relative">
+      <button onclick="cerrarModalAuth()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold">✕</button>
+      
+      <div class="flex gap-2 border-b border-slate-800 pb-3">
+        <button id="tabLogin" onclick="switchAuthTab('login')" class="flex-1 font-bold text-xs pb-1 border-b-2 border-emerald-500 text-emerald-400">Iniciar Sesión</button>
+        <button id="tabRegistro" onclick="switchAuthTab('registro')" class="flex-1 font-bold text-xs pb-1 border-b-2 border-transparent text-slate-400">Registrarse</button>
+      </div>
+
+      <!-- FORMULARIO INICIO SESIÓN -->
+      <form id="formLogin" onsubmit="procesarLogin(event)" class="space-y-3 text-xs">
+        <input type="text" id="loginIdentificador" placeholder="Correo o Teléfono" required class="w-full bg-slate-950 border border-slate-700 text-white p-2.5 rounded-xl">
+        <input type="password" id="loginPassword" placeholder="Contraseña" required class="w-full bg-slate-950 border border-slate-700 text-white p-2.5 rounded-xl">
+        <button type="submit" class="w-full bg-emerald-500 text-slate-950 font-bold py-2.5 rounded-xl hover:bg-emerald-400 transition-all">Ingresar</button>
+        <button type="button" onclick="solicitarAyudaPassword()" class="w-full text-center text-[11px] text-amber-400 hover:underline pt-1">¿Olvidaste tu contraseña? Solicitar ayuda</button>
+      </form>
+
+      <!-- FORMULARIO REGISTRO -->
+      <form id="formRegistro" onsubmit="procesarRegistro(event)" class="space-y-3 text-xs hidden">
+        <input type="text" id="regNombre" placeholder="Nombre Completo" required class="w-full bg-slate-950 border border-slate-700 text-white p-2.5 rounded-xl">
+        <input type="tel" id="regTelefono" placeholder="Teléfono WhatsApp (10 dígitos)" required class="w-full bg-slate-950 border border-slate-700 text-white p-2.5 rounded-xl">
+        <input type="email" id="regCorreo" placeholder="Correo Electrónico" class="w-full bg-slate-950 border border-slate-700 text-white p-2.5 rounded-xl">
+        <input type="text" id="regDireccion" placeholder="Dirección de Entrega" required class="w-full bg-slate-950 border border-slate-700 text-white p-2.5 rounded-xl">
+        <input type="password" id="regPassword" placeholder="Crea una Contraseña" required class="w-full bg-slate-950 border border-slate-700 text-white p-2.5 rounded-xl">
+        <button type="submit" class="w-full bg-emerald-500 text-slate-950 font-bold py-2.5 rounded-xl hover:bg-emerald-400 transition-all">Crear Cuenta</button>
       </form>
     </div>
   </div>
 
   <script>
     const socket = io();
-    let productos = [];
-    let carrito = [];
-    let clienteActual = JSON.parse(localStorage.getItem('armm_cliente')) || null;
-    let misPedidos = [];
+    let usuarioActual = JSON.parse(localStorage.getItem('usuario_armm')) || null;
+    let productosCatalogo = [];
 
-    socket.on('inventario_actualizado', data => { productos = data; renderProductos(); });
-    socket.on('lista_pedidos_inicial', data => { misPedidos = data; if (clienteActual) renderMisPedidos(); });
-    socket.on('lista_resenas_inicial', renderResenas);
-
-    socket.on('pedido_actualizado_estado', pedidoUpd => {
-      const idx = misPedidos.findIndex(p => p.id === pedidoUpd.id);
-      if (idx !== -1) misPedidos[idx] = pedidoUpd;
-      if (clienteActual) renderMisPedidos();
+    document.addEventListener('DOMContentLoaded', () => {
+      actualizarBarraUsuario();
     });
 
-    socket.on('pedido_creado_exito', pedido => {
-      misPedidos.unshift(pedido);
-      carrito = [];
-      actualizarCarritoUI();
-      cerrarCarrito();
-      cerrarCheckout();
-      abrirModalAuth();
+    socket.on('inventario_actualizado', data => {
+      productosCatalogo = data;
+      renderCatalogo();
     });
 
-    function toggleEye(inputId, iconId) {
-      const el = document.getElementById(inputId);
-      const icon = document.getElementById(iconId);
-      if (el.type === 'password') {
-        el.type = 'text';
-        icon.innerText = '🙈';
-      } else {
-        el.type = 'password';
-        icon.innerText = '👁️';
+    function renderCatalogo() {
+      const container = document.getElementById('contenedorProductos');
+      if (!productosCatalogo.length) {
+        container.innerHTML = '<p class="text-slate-400 text-xs">Cargando productos...</p>';
+        return;
       }
-    }
 
-    function switchAuthTab(tab) {
-      const btnLog = document.getElementById('btnTabLogin');
-      const btnReg = document.getElementById('btnTabRegister');
-      const tabsHeader = document.getElementById('tabsAuth');
-
-      document.getElementById('vistaAuthLogin').classList.add('hidden');
-      document.getElementById('vistaAuthRegister').classList.add('hidden');
-      document.getElementById('vistaAuthForgot').classList.add('hidden');
-      tabsHeader.classList.remove('hidden');
-
-      if (tab === 'login') {
-        document.getElementById('vistaAuthLogin').classList.remove('hidden');
-        btnLog.className = "py-2 text-xs font-bold rounded-xl transition-all bg-emerald-500 text-slate-950";
-        btnReg.className = "py-2 text-xs font-bold text-slate-400 rounded-xl transition-all hover:text-white";
-      } else if (tab === 'register') {
-        document.getElementById('vistaAuthRegister').classList.remove('hidden');
-        btnReg.className = "py-2 text-xs font-bold rounded-xl transition-all bg-emerald-500 text-slate-950";
-        btnLog.className = "py-2 text-xs font-bold text-slate-400 rounded-xl transition-all hover:text-white";
-      } else if (tab === 'forgot') {
-        tabsHeader.classList.add('hidden');
-        document.getElementById('vistaAuthForgot').classList.remove('hidden');
-      }
-    }
-
-    function renderProductos() {
-      const grid = document.getElementById('gridProductos');
-      grid.innerHTML = productos.map(p => `
-        <div class="glass-card p-6 rounded-3xl space-y-4 flex flex-col justify-between">
-          <div>
-            <span class="text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full font-bold">${p.categoria}</span>
-            <h3 class="font-extrabold text-white text-lg mt-2">${p.nombre}</h3>
+      container.innerHTML = productosCatalogo.map(p => `
+        <div class="glass-card p-5 rounded-3xl space-y-3 text-left">
+          <p class="text-[10px] text-emerald-400 uppercase tracking-widest font-bold">${p.categoria || 'Limpieza'}</p>
+          <h3 class="text-lg font-bold text-white">${p.nombre}</h3>
+          <div class="space-y-1 text-xs text-slate-300">
+            <p>1 Litro: <strong class="text-emerald-400">$${p.precios['1L'] || 0}</strong></p>
+            <p>5 Litros: <strong class="text-emerald-400">$${p.precios['5L'] || 0}</strong></p>
+            <p>20 Litros: <strong class="text-emerald-400">$${p.precios['20L'] || 0}</strong></p>
           </div>
-          <div class="space-y-2">
-            <label class="text-[11px] text-slate-400">Seleccionar Presentación:</label>
-            <select id="pres-${p.id}" class="w-full bg-slate-900 border border-slate-700 text-white p-2 rounded-xl text-xs">
-              ${Object.entries(p.precios).map(([pres, prec]) => `<option value="${pres}">${pres} - $${prec} MXN</option>`).join('')}
-            </select>
-          </div>
-          <button onclick="agregarAlCarrito(${p.id})" class="w-full bg-emerald-500 text-slate-950 font-bold py-2.5 rounded-xl text-xs hover:bg-emerald-400 transition-all">
-            + Agregar al Carrito
-          </button>
         </div>
       `).join('');
     }
 
-    function agregarAlCarrito(id) {
-      const prod = productos.find(p => p.id === id);
-      const presSel = document.getElementById(`pres-${id}`).value;
-      const precio = prod.precios[presSel];
-      carrito.push({ id: prod.id, nombre: prod.nombre, presentacion: presSel, precio });
-      actualizarCarritoUI();
-    }
+    // MANEJO DE SESIÓN Y VISTA DEL MONITO
+    function actualizarBarraUsuario() {
+      const btnAuth = document.getElementById('btnAuthPublico');
+      const menuUsr = document.getElementById('menuUsuarioLogueado');
 
-    function actualizarCarritoUI() {
-      document.getElementById('cantCarrito').innerText = carrito.length;
-      let total = 0;
-      document.getElementById('listaCarrito').innerHTML = carrito.map((item, idx) => {
-        total += item.precio;
-        return `
-          <div class="flex justify-between items-center bg-slate-900/60 p-2.5 rounded-xl border border-slate-800">
-            <div>
-              <p class="font-bold text-white">${item.nombre}</p>
-              <p class="text-[10px] text-slate-400">${item.presentacion} - $${item.precio} MXN</p>
-            </div>
-            <button onclick="carrito.splice(${idx},1); actualizarCarritoUI();" class="text-red-400 text-xs hover:underline">Quitar</button>
-          </div>
-        `;
-      }).join('');
-      document.getElementById('totalCarrito').innerText = `$${total} MXN`;
-    }
+      if (usuarioActual) {
+        btnAuth.classList.add('hidden');
+        menuUsr.classList.remove('hidden');
 
-    function evaluarMetodoPago() {
-      const val = document.getElementById('metodoPago').value;
-      const spei = document.getElementById('infoSpei');
-      if (val === 'Transferencia SPEI') spei.classList.remove('hidden');
-      else spei.classList.add('hidden');
-    }
-
-    function abrirCarrito() { document.getElementById('modalCarrito').classList.remove('hidden'); }
-    function cerrarCarrito() { document.getElementById('modalCarrito').classList.add('hidden'); }
-    function cerrarCheckout() { document.getElementById('modalCheckout').classList.add('hidden'); }
-
-    function procesarBotonRealizarPedido() {
-      if (!carrito.length) return alert('El carrito está vacío');
-      const total = carrito.reduce((s, i) => s + i.precio, 0);
-      const metodoPago = document.getElementById('metodoPago').value;
-
-      if (clienteActual) {
-        socket.emit('realizar_pedido', { cliente: clienteActual, productos: carrito, total, metodoPago });
+        document.getElementById('lblNombreUsuario').innerText = usuarioActual.nombre.split(' ')[0];
+        document.getElementById('usrMenuNombre').innerText = usuarioActual.nombre;
+        document.getElementById('usrMenuTel').innerText = usuarioActual.telefono || '--';
+        document.getElementById('usrMenuCorreo').innerText = usuarioActual.correo || 'No especificado';
+        document.getElementById('usrMenuDir').innerText = usuarioActual.direccion || 'Sin dirección';
       } else {
-        cerrarCarrito();
-        document.getElementById('modalCheckout').classList.remove('hidden');
+        btnAuth.classList.remove('hidden');
+        menuUsr.classList.add('hidden');
       }
     }
 
-    function confirmarPedidoNuevoUsuario(e) {
-      e.preventDefault();
-      const nuevoCliente = {
-        nombre: document.getElementById('chkNombre').value,
-        apellido: document.getElementById('chkApellido').value || '',
-        correo: document.getElementById('chkCorreo').value || '',
-        telefono: document.getElementById('chkTelefono').value,
-        password: document.getElementById('chkPassword').value,
-        direccion: document.getElementById('chkDireccion').value
-      };
-
-      clienteActual = nuevoCliente;
-      localStorage.setItem('armm_cliente', JSON.stringify(nuevoCliente));
-
-      const total = carrito.reduce((s, i) => s + i.precio, 0);
-      const metodoPago = document.getElementById('metodoPago').value;
-
-      socket.emit('realizar_pedido', { cliente: nuevoCliente, productos: carrito, total, metodoPago });
+    function toggleMenuUsuario() {
+      document.getElementById('dropdownCuenta').classList.toggle('hidden');
     }
 
-    function abrirModalAuth() {
-      document.getElementById('modalAuth').classList.remove('hidden');
-      if (clienteActual) {
-        document.getElementById('tabsAuth').classList.add('hidden');
-        document.getElementById('vistaAuthLogin').classList.add('hidden');
-        document.getElementById('vistaAuthRegister').classList.add('hidden');
-        document.getElementById('vistaAuthForgot').classList.add('hidden');
-        document.getElementById('vistaPerfilActivo').classList.remove('hidden');
-        
-        document.getElementById('perfilNombre').innerText = `${clienteActual.nombre} ${clienteActual.apellido || ''}`;
-        document.getElementById('perfilCorreo').innerText = clienteActual.correo || clienteActual.telefono;
-        renderMisPedidos();
-      } else {
-        document.getElementById('vistaPerfilActivo').classList.add('hidden');
-        switchAuthTab('login');
-      }
-    }
-
-    function cerrarModalAuth() { document.getElementById('modalAuth').classList.add('hidden'); }
-
-    function registrarNuevoClienteIndependiente(e) {
-      e.preventDefault();
-      const cliente = {
-        nombre: document.getElementById('regNombre').value,
-        apellido: document.getElementById('regApellido').value || '',
-        telefono: document.getElementById('regTelefono').value,
-        correo: document.getElementById('regCorreo').value || '',
-        direccion: document.getElementById('regDireccion').value || '',
-        password: document.getElementById('regPassword').value
-      };
-
-      socket.emit('nuevo_registro_cliente', cliente);
-    }
-
-    socket.on('respuesta_registro', res => {
-      if (res.exito) {
-        clienteActual = res.cliente;
-        localStorage.setItem('armm_cliente', JSON.stringify(clienteActual));
-        alert('¡Cuenta creada exitosamente!');
-        abrirModalAuth();
-      } else alert(res.msj);
-    });
-
-    function iniciarSesionCliente(e) {
-      e.preventDefault();
-      const identificador = document.getElementById('loginIdentificador').value;
-      const pass = document.getElementById('loginPassword').value;
-      socket.emit('validar_login_cliente', { identificador, pass });
-    }
-
-    socket.on('respuesta_login_cliente', res => {
-      if (res.exito) {
-        clienteActual = res.cliente;
-        localStorage.setItem('armm_cliente', JSON.stringify(clienteActual));
-        abrirModalAuth();
-      } else alert(res.msj);
-    });
-
-    function enviarSolicitudRecuperacion(e) {
-      e.preventDefault();
-      const datos = {
-        nombre: document.getElementById('forNombre').value,
-        telefono: document.getElementById('forTelefono').value,
-        correo: document.getElementById('forCorreo').value
-      };
-      socket.emit('solicitar_recuperacion', datos);
-    }
-
-    socket.on('respuesta_recuperacion', res => {
-      if (res.exito) {
-        alert('Solicitud enviada al Centro de Ayuda de ARMM. Nos pondremos en contacto contigo.');
-        switchAuthTab('login');
+    window.addEventListener('click', (e) => {
+      const menu = document.getElementById('menuUsuarioLogueado');
+      if (menu && !menu.contains(e.target)) {
+        document.getElementById('dropdownCuenta')?.classList.add('hidden');
       }
     });
 
     function cerrarSesionCliente() {
-      localStorage.removeItem('armm_cliente');
-      clienteActual = null;
-      abrirModalAuth();
+      localStorage.removeItem('usuario_armm');
+      usuarioActual = null;
+      actualizarBarraUsuario();
+      document.getElementById('dropdownCuenta').classList.add('hidden');
     }
 
-    function renderMisPedidos() {
-      const container = document.getElementById('contenedorMisPedidos');
-      const filtrados = misPedidos.filter(p => 
-        (clienteActual.correo && p.cliente.correo === clienteActual.correo) || 
-        p.cliente.telefono === clienteActual.telefono
-      );
+    // MODAL AUTH
+    function abrirModalAuth() { document.getElementById('modalAuth').classList.remove('hidden'); }
+    function cerrarModalAuth() { document.getElementById('modalAuth').classList.add('hidden'); }
 
-      if (!filtrados.length) {
-        container.innerHTML = '<p class="text-slate-400 text-xs">No tienes pedidos registrados.</p>';
+    function switchAuthTab(tab) {
+      if (tab === 'login') {
+        document.getElementById('formLogin').classList.remove('hidden');
+        document.getElementById('formRegistro').classList.add('hidden');
+        document.getElementById('tabLogin').className = "flex-1 font-bold text-xs pb-1 border-b-2 border-emerald-500 text-emerald-400";
+        document.getElementById('tabRegistro').className = "flex-1 font-bold text-xs pb-1 border-b-2 border-transparent text-slate-400";
+      } else {
+        document.getElementById('formLogin').classList.add('hidden');
+        document.getElementById('formRegistro').classList.remove('hidden');
+        document.getElementById('tabRegistro').className = "flex-1 font-bold text-xs pb-1 border-b-2 border-emerald-500 text-emerald-400";
+        document.getElementById('tabLogin').className = "flex-1 font-bold text-xs pb-1 border-b-2 border-transparent text-slate-400";
+      }
+    }
+
+    function procesarLogin(e) {
+      e.preventDefault();
+      const id = document.getElementById('loginIdentificador').value;
+      const pass = document.getElementById('loginPassword').value;
+
+      socket.emit('login_cliente', { identificador: id, password: pass }, respuesta => {
+        if (respuesta.exito) {
+          usuarioActual = respuesta.cliente;
+          localStorage.setItem('usuario_armm', JSON.stringify(usuarioActual));
+          actualizarBarraUsuario();
+          cerrarModalAuth();
+        } else {
+          alert(respuesta.mensaje || 'Datos incorrectos.');
+        }
+      });
+    }
+
+    function procesarRegistro(e) {
+      e.preventDefault();
+      const nuevoCliente = {
+        nombre: document.getElementById('regNombre').value,
+        telefono: document.getElementById('regTelefono').value,
+        correo: document.getElementById('regCorreo').value,
+        direccion: document.getElementById('regDireccion').value,
+        password: document.getElementById('regPassword').value
+      };
+
+      socket.emit('registro_cliente', nuevoCliente, respuesta => {
+        if (respuesta.exito) {
+          usuarioActual = nuevoCliente;
+          localStorage.setItem('usuario_armm', JSON.stringify(usuarioActual));
+          actualizarBarraUsuario();
+          cerrarModalAuth();
+        } else {
+          alert(respuesta.mensaje || 'Error al registrar.');
+        }
+      });
+    }
+
+    function solicitarAyudaPassword() {
+      const id = document.getElementById('loginIdentificador').value;
+      if (!id) {
+        alert('Escribe tu teléfono o correo en la casilla arriba para solicitar ayuda.');
         return;
       }
-
-      container.innerHTML = filtrados.map(p => `
-        <div class="bg-slate-900 p-3.5 rounded-2xl border border-slate-800 space-y-2 text-xs">
-          <div class="flex justify-between items-center">
-            <span class="font-bold text-emerald-400">${p.id}</span>
-            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${
-              p.estado === 'Entregado' ? 'bg-emerald-500/20 text-emerald-400' :
-              p.estado === 'En camino' ? 'bg-blue-500/20 text-blue-400' :
-              p.estado === 'Preparando' ? 'bg-amber-500/20 text-amber-400' : 'bg-slate-700 text-slate-300'
-            }">${p.estado}</span>
-          </div>
-          <p class="text-slate-300"><span class="text-slate-500">Fecha Estimada:</span> ${p.fechaEstimada}</p>
-          <p class="text-slate-400 text-[11px]">Método: ${p.metodoPago} | Total: $${p.total} MXN</p>
-        </div>
-      `).join('');
-    }
-
-    function renderResenas(resenas) {
-      const grid = document.getElementById('gridResenas');
-      grid.innerHTML = resenas.map(r => `
-        <div class="glass-card p-4 rounded-2xl space-y-2 text-left text-xs">
-          <div class="flex justify-between items-center">
-            <span class="font-bold text-white">${r.nombre}</span>
-            <span class="text-amber-400">${'⭐'.repeat(r.estrellas)}</span>
-          </div>
-          <p class="text-slate-300">${r.comentario}</p>
-          <span class="text-[10px] text-slate-500 block">${r.fecha}</span>
-        </div>
-      `).join('');
-    }
-
-    function abrirModalResena() { document.getElementById('modalResena').classList.remove('hidden'); }
-    function cerrarModalResena() { document.getElementById('modalResena').classList.add('hidden'); }
-
-    function guardarResena(e) {
-      e.preventDefault();
-      socket.emit('nueva_resena', {
-        nombre: document.getElementById('resNombre').value,
-        estrellas: document.getElementById('resEstrellas').value,
-        comentario: document.getElementById('resComentario').value
-      });
-      cerrarModalResena();
+      socket.emit('solicitar_ayuda_password', { identificador: id });
+      alert('Solicitud enviada al administrador. Se te notificará por WhatsApp.');
+      cerrarModalAuth();
     }
   </script>
 </body>
