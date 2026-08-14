@@ -16,30 +16,28 @@
   <header class="border-b border-slate-800 p-4 sticky top-0 bg-slate-950/90 backdrop-blur-md z-40">
     <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-4">
       
-      <!-- LOGO / NOMBRE -->
+      <!-- LOGO -->
       <div>
         <h1 class="text-2xl font-black text-white tracking-wider">ARMM</h1>
         <p class="text-[10px] text-emerald-400 font-bold tracking-widest uppercase">Productos y Accesorios de Limpieza</p>
       </div>
 
-      <!-- BANNER DE ACCIONES RÁPIDAS Y SESIÓN -->
+      <!-- BOTONES DE NAVEGACIÓN -->
       <div class="flex items-center gap-3">
-        <!-- Contacto WhatsApp -->
         <a href="https://wa.me/523351097726" target="_blank" class="bg-emerald-950/60 border border-emerald-500/30 text-emerald-400 px-4 py-2 rounded-full text-xs font-bold flex items-center gap-2 hover:bg-emerald-900/50 transition-all">
           💬 (33 5109 7726)
         </a>
 
-        <!-- Botón Carrito -->
         <button onclick="toggleCarritoModal()" class="bg-emerald-950/60 border border-emerald-500/30 text-emerald-400 px-4 py-2 rounded-full text-xs font-bold flex items-center gap-2 hover:bg-emerald-900/50 transition-all">
           🛒 Carrito <span id="cantCarritoBadge" class="bg-emerald-500 text-slate-950 px-2 py-0.5 rounded-full text-[10px] font-black">0</span>
         </button>
 
-        <!-- 1. BOTÓN CUANDO NO HAY SESIÓN INICIADA -->
+        <!-- 1. BOTÓN CUANDO NO HAY SESIÓN -->
         <button id="btnAuthPublico" onclick="abrirModalAuth()" class="bg-blue-900/40 border border-blue-500/40 text-blue-300 px-4 py-2 rounded-full text-xs font-bold hover:bg-blue-800/50 transition-all">
           Registrarse / Iniciar Sesión
         </button>
 
-        <!-- 2. MENÚ INTERACTIVO CON MONITO (CUANDO YA INICIÓ SESIÓN) -->
+        <!-- 2. MONITO INTERACTIVO (CUANDO SÍ HAY SESIÓN) -->
         <div id="menuUsuarioLogueado" class="relative hidden">
           <button onclick="toggleMenuUsuario()" class="bg-slate-800 border border-slate-700 text-white px-3.5 py-1.5 rounded-full text-xs font-bold flex items-center gap-2 hover:bg-slate-700 transition-all">
             <div class="w-6 h-6 bg-emerald-500 text-slate-950 rounded-full flex items-center justify-center font-black">
@@ -49,7 +47,7 @@
             <span class="text-[10px] text-slate-400">▼</span>
           </button>
 
-          <!-- DESPLEGABLE DE CUENTA DEL CLIENTE -->
+          <!-- DESPLEGABLE DE CUENTA -->
           <div id="dropdownCuenta" class="absolute right-0 mt-2 w-64 glass-card bg-slate-900/95 border border-slate-700 rounded-2xl p-4 shadow-2xl z-50 hidden space-y-3 text-left">
             <div class="border-b border-slate-800 pb-2">
               <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Sesión Activa</p>
@@ -74,19 +72,17 @@
     </div>
   </header>
 
-  <!-- CONTENIDO PRINCIPAL / CATÁLOGO -->
+  <!-- CATÁLOGO -->
   <main class="max-w-7xl mx-auto p-6 space-y-8">
     <div>
       <h2 class="text-xl font-bold text-white">Catálogo de Productos</h2>
-      <p class="text-xs text-slate-400">Selecciona los productos y presentaciones para tu pedido.</p>
+      <p class="text-xs text-slate-400">Selecciona tus productos para realizar un pedido.</p>
     </div>
 
-    <div id="contenedorProductos" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <!-- Se llena dinámicamente con Socket.io -->
-    </div>
+    <div id="contenedorProductos" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
   </main>
 
-  <!-- MODAL DE AUTENTICACIÓN (LOGIN / REGISTRO) -->
+  <!-- MODAL REGISTRO / INICIAR SESIÓN -->
   <div id="modalAuth" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
     <div class="glass-card bg-slate-900 border border-slate-700 p-6 rounded-3xl max-w-sm w-full space-y-4 relative">
       <button onclick="cerrarModalAuth()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold">✕</button>
@@ -100,7 +96,7 @@
       <form id="formLogin" onsubmit="procesarLogin(event)" class="space-y-3 text-xs">
         <input type="text" id="loginIdentificador" placeholder="Correo o Teléfono" required class="w-full bg-slate-950 border border-slate-700 text-white p-2.5 rounded-xl">
         <input type="password" id="loginPassword" placeholder="Contraseña" required class="w-full bg-slate-950 border border-slate-700 text-white p-2.5 rounded-xl">
-        <button type="submit" class="w-full bg-emerald-500 text-slate-950 font-bold py-2.5 rounded-xl hover:bg-emerald-400 transition-all">Ingresar</button>
+        <button type="submit" id="btnSubmitLogin" class="w-full bg-emerald-500 text-slate-950 font-bold py-2.5 rounded-xl hover:bg-emerald-400 transition-all">Ingresar</button>
         <button type="button" onclick="solicitarAyudaPassword()" class="w-full text-center text-[11px] text-amber-400 hover:underline pt-1">¿Olvidaste tu contraseña? Solicitar ayuda</button>
       </form>
 
@@ -108,10 +104,10 @@
       <form id="formRegistro" onsubmit="procesarRegistro(event)" class="space-y-3 text-xs hidden">
         <input type="text" id="regNombre" placeholder="Nombre Completo" required class="w-full bg-slate-950 border border-slate-700 text-white p-2.5 rounded-xl">
         <input type="tel" id="regTelefono" placeholder="Teléfono WhatsApp (10 dígitos)" required class="w-full bg-slate-950 border border-slate-700 text-white p-2.5 rounded-xl">
-        <input type="email" id="regCorreo" placeholder="Correo Electrónico" class="w-full bg-slate-950 border border-slate-700 text-white p-2.5 rounded-xl">
+        <input type="email" id="regCorreo" placeholder="Correo Electrónico (Opcional)" class="w-full bg-slate-950 border border-slate-700 text-white p-2.5 rounded-xl">
         <input type="text" id="regDireccion" placeholder="Dirección de Entrega" required class="w-full bg-slate-950 border border-slate-700 text-white p-2.5 rounded-xl">
         <input type="password" id="regPassword" placeholder="Crea una Contraseña" required class="w-full bg-slate-950 border border-slate-700 text-white p-2.5 rounded-xl">
-        <button type="submit" class="w-full bg-emerald-500 text-slate-950 font-bold py-2.5 rounded-xl hover:bg-emerald-400 transition-all">Crear Cuenta</button>
+        <button type="submit" id="btnSubmitReg" class="w-full bg-emerald-500 text-slate-950 font-bold py-2.5 rounded-xl hover:bg-emerald-400 transition-all">Crear Cuenta</button>
       </form>
     </div>
   </div>
@@ -125,6 +121,7 @@
       actualizarBarraUsuario();
     });
 
+    // ESCUCHAR INVENTARIO
     socket.on('inventario_actualizado', data => {
       productosCatalogo = data;
       renderCatalogo();
@@ -150,7 +147,7 @@
       `).join('');
     }
 
-    // MANEJO DE SESIÓN Y VISTA DEL MONITO
+    // CONTROL DE INTERFAZ DEL USUARIO (MONITO VS BOTÓN INICIAR SESIÓN)
     function actualizarBarraUsuario() {
       const btnAuth = document.getElementById('btnAuthPublico');
       const menuUsr = document.getElementById('menuUsuarioLogueado');
@@ -159,7 +156,8 @@
         btnAuth.classList.add('hidden');
         menuUsr.classList.remove('hidden');
 
-        document.getElementById('lblNombreUsuario').innerText = usuarioActual.nombre.split(' ')[0];
+        const primerNombre = usuarioActual.nombre ? usuarioActual.nombre.split(' ')[0] : 'Cliente';
+        document.getElementById('lblNombreUsuario').innerText = primerNombre;
         document.getElementById('usrMenuNombre').innerText = usuarioActual.nombre;
         document.getElementById('usrMenuTel').innerText = usuarioActual.telefono || '--';
         document.getElementById('usrMenuCorreo').innerText = usuarioActual.correo || 'No especificado';
@@ -188,7 +186,7 @@
       document.getElementById('dropdownCuenta').classList.add('hidden');
     }
 
-    // MODAL AUTH
+    // MODAL Y TABS
     function abrirModalAuth() { document.getElementById('modalAuth').classList.remove('hidden'); }
     function cerrarModalAuth() { document.getElementById('modalAuth').classList.add('hidden'); }
 
@@ -206,53 +204,58 @@
       }
     }
 
+    // PROCESAR REGISTRO FLUIDO
+    function procesarRegistro(e) {
+      e.preventDefault();
+      
+      const nuevoCliente = {
+        nombre: document.getElementById('regNombre').value.trim(),
+        telefono: document.getElementById('regTelefono').value.trim(),
+        correo: document.getElementById('regCorreo').value.trim() || 'No especificado',
+        direccion: document.getElementById('regDireccion').value.trim(),
+        password: document.getElementById('regPassword').value
+      };
+
+      // Guardado local inmediato y actualización gráfica
+      usuarioActual = nuevoCliente;
+      localStorage.setItem('usuario_armm', JSON.stringify(usuarioActual));
+
+      // Notificar al servidor backend
+      socket.emit('registro_cliente', nuevoCliente);
+
+      // Cierre suave del modal y cambio al monito
+      actualizarBarraUsuario();
+      cerrarModalAuth();
+      document.getElementById('formRegistro').reset();
+    }
+
+    // PROCESAR INICIO DE SESIÓN FLUIDO
     function procesarLogin(e) {
       e.preventDefault();
-      const id = document.getElementById('loginIdentificador').value;
+      const id = document.getElementById('loginIdentificador').value.trim();
       const pass = document.getElementById('loginPassword').value;
 
       socket.emit('login_cliente', { identificador: id, password: pass }, respuesta => {
-        if (respuesta.exito) {
+        if (respuesta && respuesta.exito) {
           usuarioActual = respuesta.cliente;
           localStorage.setItem('usuario_armm', JSON.stringify(usuarioActual));
           actualizarBarraUsuario();
           cerrarModalAuth();
+          document.getElementById('formLogin').reset();
         } else {
-          alert(respuesta.mensaje || 'Datos incorrectos.');
-        }
-      });
-    }
-
-    function procesarRegistro(e) {
-      e.preventDefault();
-      const nuevoCliente = {
-        nombre: document.getElementById('regNombre').value,
-        telefono: document.getElementById('regTelefono').value,
-        correo: document.getElementById('regCorreo').value,
-        direccion: document.getElementById('regDireccion').value,
-        password: document.getElementById('regPassword').value
-      };
-
-      socket.emit('registro_cliente', nuevoCliente, respuesta => {
-        if (respuesta.exito) {
-          usuarioActual = nuevoCliente;
-          localStorage.setItem('usuario_armm', JSON.stringify(usuarioActual));
-          actualizarBarraUsuario();
-          cerrarModalAuth();
-        } else {
-          alert(respuesta.mensaje || 'Error al registrar.');
+          alert(respuesta?.mensaje || 'Datos de acceso incorrectos.');
         }
       });
     }
 
     function solicitarAyudaPassword() {
-      const id = document.getElementById('loginIdentificador').value;
+      const id = document.getElementById('loginIdentificador').value.trim();
       if (!id) {
-        alert('Escribe tu teléfono o correo en la casilla arriba para solicitar ayuda.');
+        alert('Ingresa tu teléfono o correo en la casilla arriba para solicitar la ayuda.');
         return;
       }
       socket.emit('solicitar_ayuda_password', { identificador: id });
-      alert('Solicitud enviada al administrador. Se te notificará por WhatsApp.');
+      alert('Solicitud enviada. El administrador te contactará por WhatsApp.');
       cerrarModalAuth();
     }
   </script>
