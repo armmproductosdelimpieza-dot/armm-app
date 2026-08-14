@@ -36,7 +36,7 @@
       <div id="contenedorPedidosAdmin" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
     </section>
 
-    <!-- SECCIÓN NUEVA: CENTRO DE AYUDA (RECUPERACIÓN DE CONTRASEÑAS) -->
+    <!-- SECCIÓN CENTRO DE AYUDA (RECUPERACIÓN DE CONTRASEÑAS) CON ACCIONES DE WHATSAPP -->
     <section class="glass-card p-6 rounded-3xl space-y-4 text-left">
       <h2 class="text-lg font-bold text-white flex items-center gap-2">🆘 Centro de Ayuda (Solicitudes de Contraseña)</h2>
       <div id="contenedorAyudaAdmin" class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs"></div>
@@ -63,13 +63,41 @@
       <div id="contenedorPreciosAdmin" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
     </section>
 
-    <!-- SECCIÓN 4: LISTA DE CLIENTES REGISTRADOS (ACORDEÓN LIMPIO) -->
+    <!-- SECCIÓN 4: LISTA DE CLIENTES REGISTRADOS -->
     <section class="glass-card p-6 rounded-3xl space-y-4 text-left">
       <h2 class="text-lg font-bold text-white">👥 Clientes Registrados</h2>
       <div id="contenedorClientesAdmin" class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs"></div>
     </section>
 
   </main>
+
+  <!-- MENÚ DESPLEGABLE / MODAL PARA DAR ACCESO (INGRESO DE CUENTA Y CONTRASEÑA) -->
+  <div id="modalDarAcceso" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
+    <div class="glass-card p-6 rounded-3xl max-w-sm w-full space-y-4 relative text-left">
+      <button onclick="cerrarModalAcceso()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold">✕</button>
+      <h3 class="text-sm font-bold text-white">🔑 Asignar Datos de Acceso</h3>
+      <p class="text-[11px] text-slate-400">Ingresa la cuenta y contraseña que se enviarán por WhatsApp al cliente.</p>
+
+      <input type="hidden" id="accTelefono">
+      <input type="hidden" id="accNombre">
+      <input type="hidden" id="accId">
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="text-[10px] text-slate-400">Cuenta / Usuario:</label>
+          <input type="text" id="accCuenta" placeholder="Ej. cliente@correo.com o teléfono" class="w-full bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl text-xs mt-1">
+        </div>
+        <div>
+          <label class="text-[10px] text-slate-400">Contraseña:</label>
+          <input type="text" id="accPassword" placeholder="Ej. ARMM2026*" class="w-full bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl text-xs mt-1">
+        </div>
+
+        <button onclick="enviarAccesoWhatsApp()" class="w-full bg-emerald-500 text-slate-950 font-bold py-2.5 rounded-xl hover:bg-emerald-400 transition-all text-xs">
+          Enviar por WhatsApp
+        </button>
+      </div>
+    </div>
+  </div>
 
   <script>
     const socket = io();
@@ -145,6 +173,7 @@
       alert('Pedido actualizado correctamente.');
     }
 
+    // RENDERIZADO DEL CENTRO DE AYUDA CON BOTONES DE DAR / DENEGAR ACCESO
     function renderAyudaAdmin() {
       const container = document.getElementById('contenedorAyudaAdmin');
       if (!ayuda.length) {
@@ -153,7 +182,7 @@
       }
 
       container.innerHTML = ayuda.map(a => `
-        <div class="bg-slate-900 p-4 rounded-2xl border ${a.esValido ? 'border-emerald-500/40' : 'border-red-500/40'} space-y-2">
+        <div class="bg-slate-900 p-4 rounded-2xl border ${a.esValido ? 'border-emerald-500/40' : 'border-red-500/40'} space-y-3">
           <div class="flex justify-between items-center">
             <span class="font-bold text-white">${a.id}</span>
             <span class="px-2 py-0.5 text-[10px] rounded-full font-bold ${a.esValido ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'}">
@@ -163,12 +192,69 @@
           <p class="text-slate-300"><strong>Nombre Enviado:</strong> ${a.nombre}</p>
           <p class="text-slate-300"><strong>Teléfono:</strong> ${a.telefono}</p>
           <p class="text-slate-300"><strong>Correo:</strong> ${a.correo}</p>
-          <div class="p-2 bg-slate-950 rounded-xl mt-2 border border-slate-800">
+          <div class="p-2 bg-slate-950 rounded-xl border border-slate-800">
             <p class="text-xs text-amber-400 font-bold">Contraseña en Sistema: ${a.passwordActual}</p>
           </div>
+
+          <!-- BOTONES DE ACCIÓN EN EL CENTRO DE AYUDA -->
+          <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-800">
+            <button onclick="abrirModalDarAcceso('${a.telefono}', '${a.nombre}', '${a.id}', '${a.correo !== 'No especificado' ? a.correo : a.telefono}', '${a.passwordActual}')" class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500 hover:text-slate-950 font-bold py-2 rounded-xl text-xs transition-all">
+              ✓ Dar Acceso
+            </button>
+            <button onclick="denegarAccesoWhatsApp('${a.telefono}', '${a.nombre}', '${a.id}')" class="bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500 hover:text-white font-bold py-2 rounded-xl text-xs transition-all">
+              ✕ Denegar Acceso
+            </button>
+          </div>
+
           <p class="text-[10px] text-slate-500">${a.fecha}</p>
         </div>
       `).join('');
+    }
+
+    // FUNCIONES DEL MENÚ DESPLEGABLE Y WHATSAPP
+    function abrirModalDarAcceso(telefono, nombre, id, correo, passActual) {
+      document.getElementById('accTelefono').value = telefono;
+      document.getElementById('accNombre').value = nombre;
+      document.getElementById('accId').value = id;
+      document.getElementById('accCuenta').value = correo;
+      document.getElementById('accPassword').value = passActual !== 'No coincide con ningún usuario' ? passActual : '';
+      document.getElementById('modalDarAcceso').classList.remove('hidden');
+    }
+
+    function cerrarModalAcceso() {
+      document.getElementById('modalDarAcceso').classList.add('hidden');
+    }
+
+    function enviarAccesoWhatsApp() {
+      const tel = document.getElementById('accTelefono').value;
+      const nombre = document.getElementById('accNombre').value;
+      const id = document.getElementById('accId').value;
+      const cuenta = document.getElementById('accCuenta').value;
+      const pass = document.getElementById('accPassword').value;
+
+      if (!cuenta || !pass) {
+        alert('Por favor completa los campos de Cuenta y Contraseña.');
+        return;
+      }
+
+      let numLimpio = tel.replace(/\D/g, '');
+      if (numLimpio.length === 10) numLimpio = '52' + numLimpio;
+
+      const mensaje = `Hola ${nombre}, te informamos que tu solicitud (${id}) en ARMM ha sido APROBADA. Ya puedes acceder a tu cuenta.\n\nCuenta: ${cuenta}\nContraseña: ${pass}`;
+      const url = `https://api.whatsapp.com/send?phone=${numLimpio}&text=${encodeURIComponent(mensaje)}`;
+
+      window.open(url, '_blank');
+      cerrarModalAcceso();
+    }
+
+    function denegarAccesoWhatsApp(telefono, nombre, id) {
+      let numLimpio = telefono.replace(/\D/g, '');
+      if (numLimpio.length === 10) numLimpio = '52' + numLimpio;
+
+      const mensaje = `Hola ${nombre}, te informamos que tu solicitud de acceso (${id}) en ARMM ha sido DENEGADA por discrepancia de datos. Si requieres asistencia por favor contáctanos directamente.`;
+      const url = `https://api.whatsapp.com/send?phone=${numLimpio}&text=${encodeURIComponent(mensaje)}`;
+
+      window.open(url, '_blank');
     }
 
     function agregarProductoAdmin(e) {
@@ -223,7 +309,6 @@
       alert('Precios actualizados');
     }
 
-    // LISTA DE CLIENTES DESPLEGABLE (LIMPIA)
     function renderClientesAdmin() {
       const container = document.getElementById('contenedorClientesAdmin');
       if (!clientes.length) {
