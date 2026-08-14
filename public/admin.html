@@ -3,287 +3,291 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ARMM Admin - Panel de Control</title>
+  <title>ARMM Admin - Gestión de Inventario y Usuarios</title>
   <script src="/socket.io/socket.io.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    .glass-card { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+    body {
+      background: radial-gradient(circle at 50% 0%, #0f172a 0%, #020617 100%);
+      background-attachment: fixed;
+    }
+    .glass-admin {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .btn-action {
+      transition: transform 0.15s ease;
+    }
+    .btn-action:active {
+      transform: scale(0.95);
+    }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans min-h-screen p-6">
+<body class="text-slate-100 font-sans min-h-screen selection:bg-emerald-500 selection:text-slate-950 p-6">
 
-  <!-- ACCESO ADMIN -->
-  <div id="loginAdmin" class="max-w-md mx-auto mt-20 glass-card p-6 rounded-3xl text-center space-y-4">
-    <h2 class="text-xl font-bold text-white">Panel Administrador ARMM</h2>
-    <input type="password" id="passAdmin" placeholder="Contraseña de Admin" class="w-full bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl text-xs">
-    <button onclick="validarAdmin()" class="w-full bg-emerald-500 text-slate-950 font-bold py-2.5 rounded-xl text-xs">Ingresar</button>
-  </div>
-
-  <!-- PANEL DE GESTIÓN PRINCIPAL -->
-  <main id="panelAdmin" class="max-w-7xl mx-auto space-y-10 hidden">
-    
-    <div class="flex justify-between items-center border-b border-slate-800 pb-4">
-      <div>
-        <h1 class="text-2xl font-black text-white tracking-wide">Administración ARMM</h1>
-        <p class="text-xs text-emerald-400 font-bold">Gestión Integral de Pedidos y Accesos</p>
-      </div>
-      <button onclick="location.reload()" class="text-xs bg-slate-800 text-slate-300 px-3.5 py-1.5 rounded-xl hover:bg-slate-700">Salir</button>
+  <!-- ENCABEZADO ADMIN -->
+  <header class="max-w-7xl mx-auto flex justify-between items-center border-b border-slate-800 pb-4 mb-8">
+    <div>
+      <h1 class="text-2xl font-black text-white flex items-center gap-2">
+        🛠️ ARMM <span class="text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2.5 py-0.5 rounded-full uppercase">Panel Administrador</span>
+      </h1>
+      <p class="text-xs text-slate-400">Gestión de productos, categorías, pedidos y usuarios en tiempo real.</p>
     </div>
+    <button onclick="abrirModalCategorias()" class="btn-action bg-teal-600 hover:bg-teal-500 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-2 shadow-lg">
+      🏷️ Gestionar Categorías
+    </button>
+  </header>
 
-    <!-- SECCIÓN 1: PEDIDOS ENTRANTES -->
-    <section class="space-y-4">
-      <h2 class="text-lg font-bold text-white flex items-center gap-2">📦 Lista de Pedidos Entrantes</h2>
-      <div id="contenedorPedidosAdmin" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-    </section>
+  <main class="max-w-7xl mx-auto space-y-10">
 
-    <!-- SECCIÓN CENTRO DE AYUDA (SOLICITUDES DE CONTRASEÑA DE LA FOTO) -->
-    <section class="glass-card p-6 rounded-3xl space-y-4 text-left">
-      <h2 class="text-lg font-bold text-white flex items-center gap-2">🆘 Centro de Ayuda (Solicitudes de Contraseña)</h2>
-      <div id="contenedorAyudaAdmin" class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs"></div>
-    </section>
+    <!-- SECCIÓN 1: AGREGAR NUEVO PRODUCTO -->
+    <section class="glass-admin p-6 rounded-3xl space-y-4">
+      <h2 class="text-lg font-bold text-white flex items-center gap-2">➕ Agregar Nuevo Producto</h2>
+      
+      <form onsubmit="guardarNuevoProducto(event)" class="grid grid-cols-1 md:grid-cols-6 gap-3 text-xs">
+        <input type="text" id="nuevoNombre" placeholder="Nombre del producto" required class="md:col-span-2 bg-slate-950 border border-slate-800 text-white p-3 rounded-xl focus:outline-none focus:border-emerald-500">
+        
+        <select id="nuevoCategoria" required class="bg-slate-950 border border-slate-800 text-white p-3 rounded-xl focus:outline-none focus:border-emerald-500">
+          <!-- Opciones dinámicas -->
+        </select>
 
-    <!-- SECCIÓN 2: AGREGAR NUEVO PRODUCTO AL INVENTARIO -->
-    <section class="glass-card p-6 rounded-3xl space-y-4 text-left">
-      <h2 class="text-lg font-bold text-white">➕ Agregar Nuevo Producto al Inventario</h2>
-      <form onsubmit="agregarProductoAdmin(event)" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3 text-xs">
-        <input type="text" id="admNombre" placeholder="Nombre Producto" required class="bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl">
-        <input type="text" id="admCat" placeholder="Categoría" required class="bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl">
-        <input type="number" id="admP1L" placeholder="Precio 1L ($)" required class="bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl">
-        <input type="number" id="admP5L" placeholder="Precio 5L ($)" required class="bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl">
-        <input type="number" id="admP20L" placeholder="Precio 20L ($)" required class="bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl">
-        <button type="submit" class="lg:col-span-5 bg-emerald-500 text-slate-950 font-bold py-2.5 rounded-xl hover:bg-emerald-400 transition-all">
-          Guardar Producto en Catálogo
+        <input type="number" id="precio1L" placeholder="Precio 1L ($)" required class="bg-slate-950 border border-slate-800 text-white p-3 rounded-xl focus:outline-none focus:border-emerald-500">
+        <input type="number" id="precio5L" placeholder="Precio 5L ($)" required class="bg-slate-950 border border-slate-800 text-white p-3 rounded-xl focus:outline-none focus:border-emerald-500">
+        <input type="number" id="precio20L" placeholder="Precio 20L ($)" required class="bg-slate-950 border border-slate-800 text-white p-3 rounded-xl focus:outline-none focus:border-emerald-500">
+
+        <button type="submit" class="btn-action md:col-span-6 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold py-3 rounded-xl transition-all shadow-lg shadow-emerald-500/10">
+          Guardar y Publicar en Tienda
         </button>
       </form>
     </section>
 
-    <!-- SECCIÓN 3: PRECIOS DEL CATÁLOGO -->
-    <section class="glass-card p-6 rounded-3xl space-y-4 text-left">
-      <h2 class="text-lg font-bold text-white">🏷️ Modificar Precios de Productos Existentes</h2>
-      <div id="contenedorPreciosAdmin" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+    <!-- SECCIÓN 2: CATÁLOGO Y EDICIÓN DE PRODUCTOS EN TIEMPO REAL -->
+    <section class="glass-admin p-6 rounded-3xl space-y-6">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-4">
+        <div>
+          <h2 class="text-lg font-bold text-white">📦 Catálogo de Productos</h2>
+          <p class="text-xs text-slate-400">Modifica nombres, precios o categorías directamente. Los cambios impactan en tiempo real.</p>
+        </div>
+      </div>
+
+      <div id="tablaProductos" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Tarjetas dinámicas de edición de producto -->
+      </div>
     </section>
 
-    <!-- SECCIÓN 4: CLIENTES REGISTRADOS -->
-    <section class="glass-card p-6 rounded-3xl space-y-4 text-left">
-      <h2 class="text-lg font-bold text-white">👥 Clientes Registrados</h2>
-      <div id="contenedorClientesAdmin" class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs"></div>
+    <!-- SECCIÓN 3: USUARIOS REGISTRADOS EN TIEMPO REAL -->
+    <section class="glass-admin p-6 rounded-3xl space-y-4">
+      <h2 class="text-lg font-bold text-white flex items-center gap-2">👥 Clientes Registrados</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs text-slate-300">
+          <thead class="bg-slate-950/80 text-emerald-400 uppercase text-[10px] tracking-wider border-b border-slate-800">
+            <tr>
+              <th class="p-3">Nombre</th>
+              <th class="p-3">Teléfono</th>
+              <th class="p-3">Correo</th>
+              <th class="p-3">Dirección</th>
+            </tr>
+          </thead>
+          <tbody id="tablaUsuarios" class="divide-y divide-slate-800/60">
+            <!-- Renderizado dinámico de usuarios -->
+          </tbody>
+        </table>
+      </div>
     </section>
 
   </main>
 
-  <!-- MENÚ DESPLEGABLE / MODAL QUE PIDES PARA ASIGNAR CUENTA Y CONTRASEÑA -->
-  <div id="modalDarAcceso" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
-    <div class="glass-card bg-slate-900 border border-slate-700 p-6 rounded-3xl max-w-sm w-full space-y-4 relative text-left">
-      <button onclick="cerrarModalAcceso()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold">✕</button>
-      <h3 class="text-sm font-bold text-white">🔑 Asignar Datos de Acceso al Cliente</h3>
-      <p class="text-[11px] text-slate-400">Ingresa la cuenta y contraseña que se adjuntarán en el mensaje predeterminado de WhatsApp.</p>
+  <!-- MODAL DE GESTIÓN DE CATEGORÍAS -->
+  <div id="modalCategorias" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
+    <div class="glass-admin bg-slate-900 border border-slate-700 p-6 rounded-3xl max-w-md w-full space-y-4 relative shadow-2xl">
+      <button onclick="cerrarModalCategorias()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold btn-action">✕</button>
+      
+      <h3 class="text-md font-bold text-white">🏷️ Gestión de Categorías</h3>
 
-      <input type="hidden" id="accTelefono">
-      <input type="hidden" id="accNombre">
-      <input type="hidden" id="accId">
+      <!-- AGREGAR CATEGORÍA -->
+      <form onsubmit="agregarCategoria(event)" class="flex gap-2">
+        <input type="text" id="nuevaCatNombre" placeholder="Nueva categoría..." required class="flex-1 bg-slate-950 border border-slate-800 text-white p-2.5 rounded-xl text-xs focus:outline-none focus:border-emerald-500">
+        <button type="submit" class="btn-action bg-emerald-500 text-slate-950 font-bold px-4 py-2.5 rounded-xl text-xs">Agregar</button>
+      </form>
 
-      <div class="space-y-3 text-xs">
-        <div>
-          <label class="text-[10px] text-slate-400">Cuenta / Usuario:</label>
-          <input type="text" id="accCuenta" placeholder="Ej. cliente@correo.com o teléfono" class="w-full bg-slate-950 border border-slate-700 text-white p-2.5 rounded-xl text-xs mt-1">
-        </div>
-        <div>
-          <label class="text-[10px] text-slate-400">Contraseña:</label>
-          <input type="text" id="accPassword" placeholder="Ej. ARMM2026*" class="w-full bg-slate-950 border border-slate-700 text-white p-2.5 rounded-xl text-xs mt-1">
-        </div>
+      <hr class="border-slate-800">
 
-        <button onclick="enviarAccesoWhatsApp()" class="w-full bg-emerald-500 text-slate-950 font-bold py-2.5 rounded-xl hover:bg-emerald-400 transition-all text-xs">
-          Enviar por WhatsApp
-        </button>
+      <!-- LISTA Y EDICIÓN DE CATEGORÍAS -->
+      <div id="listaCategorias" class="space-y-2 max-h-60 overflow-y-auto text-xs">
+        <!-- Renderizado de categorías -->
       </div>
     </div>
   </div>
 
   <script>
     const socket = io();
-    let pedidos = [];
-    let inventario = [];
-    let clientes = [];
-    let ayuda = [];
 
-    function validarAdmin() {
-      if (document.getElementById('passAdmin').value === 'ARMM123') {
-        document.getElementById('loginAdmin').classList.add('hidden');
-        document.getElementById('panelAdmin').classList.remove('hidden');
-      } else alert('Contraseña incorrecta');
-    }
+    let categorias = ['Limpieza General', 'Aromatizantes', 'Jarcuería', 'Desinfectantes'];
+    let productos = [];
+    let usuarios = [];
 
-    socket.on('lista_pedidos_inicial', data => { pedidos = data; renderPedidosAdmin(); });
-    socket.on('inventario_actualizado', data => { inventario = data; renderPreciosAdmin(); });
-    socket.on('lista_clientes_inicial', data => { clientes = data; renderClientesAdmin(); });
-    socket.on('lista_ayuda_inicial', data => { ayuda = data; renderAyudaAdmin(); });
+    document.addEventListener('DOMContentLoaded', () => {
+      renderSelectCategorias();
+    });
 
-    function renderPedidosAdmin() {
-      const container = document.getElementById('contenedorPedidosAdmin');
-      if (!pedidos.length) {
-        container.innerHTML = '<p class="text-slate-400 text-xs">No hay pedidos registrados.</p>';
-        return;
-      }
+    // RECEPCIÓN EN TIEMPO REAL
+    socket.on('inventario_actualizado', data => {
+      productos = data;
+      renderProductosAdmin();
+    });
 
-      container.innerHTML = pedidos.map(p => `
-        <div class="glass-card p-5 rounded-3xl space-y-3 text-xs text-left">
-          <div class="flex justify-between items-center">
-            <span class="font-bold text-emerald-400 text-sm">${p.id}</span>
-            <span class="text-[10px] text-slate-400">${p.fechaRegistro}</span>
-          </div>
-          <div class="bg-slate-900/80 p-3 rounded-xl space-y-1 text-slate-300">
-            <p><strong class="text-white">Cliente:</strong> ${p.cliente.nombre}</p>
-            <p><strong class="text-white">Teléfono:</strong> ${p.cliente.telefono}</p>
-            <p><strong class="text-white">Dirección:</strong> ${p.cliente.direccion}</p>
-          </div>
-          <div class="bg-slate-950 p-3 rounded-xl space-y-1 text-[11px]">
-            <p class="font-bold text-emerald-400 mt-2 text-xs">Total: $${p.total} MXN</p>
-          </div>
+    socket.on('lista_usuarios_actualizada', data => {
+      usuarios = data;
+      renderUsuariosAdmin();
+    });
+
+    socket.on('nuevo_cliente_registrado', cliente => {
+      usuarios.push(cliente);
+      renderUsuariosAdmin();
+    });
+
+    // RENDER DE CATEGORÍAS EN SELECT Y MODAL
+    function renderSelectCategorias() {
+      const select = document.getElementById('nuevoCategoria');
+      select.innerHTML = categorias.map(c => `<option value="${c}">${c}</option>`).join('');
+
+      const contenedorLista = document.getElementById('listaCategorias');
+      contenedorLista.innerHTML = categorias.map((c, index) => `
+        <div class="flex items-center justify-between p-2 bg-slate-950 rounded-xl border border-slate-800">
+          <input type="text" value="${c}" onchange="editarCategoria(${index}, this.value)" class="bg-transparent text-white focus:outline-none focus:border-emerald-500 w-full font-semibold">
+          <button onclick="eliminarCategoria(${index})" class="text-red-400 hover:text-red-300 font-bold px-2">✕</button>
         </div>
       `).join('');
     }
 
-    // RENDER DEL CENTRO DE AYUDA CON BOTONES DE DAR Y DENEGAR ACCESO
-    function renderAyudaAdmin() {
-      const container = document.getElementById('contenedorAyudaAdmin');
-      if (!ayuda.length) {
-        container.innerHTML = '<p class="text-slate-400">No hay solicitudes activas.</p>';
+    function agregarCategoria(e) {
+      e.preventDefault();
+      const input = document.getElementById('nuevaCatNombre');
+      const val = input.value.trim();
+      if (val && !categorias.includes(val)) {
+        categorias.push(val);
+        input.value = '';
+        renderSelectCategorias();
+        socket.emit('actualizar_categorias', categorias);
+      }
+    }
+
+    function editarCategoria(index, nuevoNombre) {
+      if (nuevoNombre.trim()) {
+        categorias[index] = nuevoNombre.trim();
+        renderSelectCategorias();
+        socket.emit('actualizar_categorias', categorias);
+      }
+    }
+
+    function eliminarCategoria(index) {
+      categorias.splice(index, 1);
+      renderSelectCategorias();
+      socket.emit('actualizar_categorias', categorias);
+    }
+
+    // RENDER Y EDICIÓN DE PRODUCTOS
+    function renderProductosAdmin() {
+      const container = document.getElementById('tablaProductos');
+      if (!productos.length) {
+        container.innerHTML = '<p class="text-slate-500 text-xs col-span-3">No hay productos registrados.</p>';
         return;
       }
 
-      container.innerHTML = ayuda.map(a => `
-        <div class="bg-slate-900 p-4 rounded-2xl border ${a.esValido ? 'border-emerald-500/40' : 'border-red-500/40'} space-y-3">
-          <div class="flex justify-between items-center">
-            <span class="font-bold text-white">${a.id}</span>
-            <span class="px-2 py-0.5 text-[10px] rounded-full font-bold ${a.esValido ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'}">
-              ${a.esValido ? '✓ Coincide' : '✕ No Coincide'}
-            </span>
-          </div>
-          <p class="text-slate-300"><strong>Nombre Enviado:</strong> ${a.nombre}</p>
-          <p class="text-slate-300"><strong>Teléfono:</strong> ${a.telefono}</p>
-          <p class="text-slate-300"><strong>Correo:</strong> ${a.correo}</p>
-          <div class="p-2 bg-slate-950 rounded-xl border border-slate-800">
-            <p class="text-xs text-amber-400 font-bold">Contraseña en Sistema: ${a.passwordActual}</p>
+      container.innerHTML = productos.map((p, index) => `
+        <div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl space-y-3">
+          <div class="space-y-1">
+            <label class="text-[10px] text-slate-500 uppercase font-bold">Nombre</label>
+            <input type="text" value="${p.nombre}" onchange="actualizarProductoField(${index}, 'nombre', this.value)" class="w-full bg-slate-900 border border-slate-800 text-white p-2 rounded-xl text-xs font-bold focus:border-emerald-500 focus:outline-none">
           </div>
 
-          <!-- BOTONES SOLICITADOS -->
-          <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-800">
-            <button onclick="abrirModalDarAcceso('${a.telefono}', '${a.nombre}', '${a.id}', '${a.correo !== 'No especificado' ? a.correo : a.telefono}', '${a.passwordActual}')" class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500 hover:text-slate-950 font-bold py-2 rounded-xl text-xs transition-all">
-              ✓ Dar Acceso
-            </button>
-            <button onclick="denegarAccesoWhatsApp('${a.telefono}', '${a.nombre}', '${a.id}')" class="bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500 hover:text-white font-bold py-2 rounded-xl text-xs transition-all">
-              ✕ Denegar Acceso
-            </button>
+          <div class="space-y-1">
+            <label class="text-[10px] text-slate-500 uppercase font-bold">Categoría</label>
+            <select onchange="actualizarProductoField(${index}, 'categoria', this.value)" class="w-full bg-slate-900 border border-slate-800 text-white p-2 rounded-xl text-xs focus:border-emerald-500 focus:outline-none">
+              ${categorias.map(c => `<option value="${c}" ${p.categoria === c ? 'selected' : ''}>${c}</option>`).join('')}
+            </select>
           </div>
 
-          <p class="text-[10px] text-slate-500">${a.fecha}</p>
+          <div class="grid grid-cols-3 gap-2 text-xs">
+            <div>
+              <label class="text-[10px] text-slate-500 font-bold">Precio 1L</label>
+              <input type="number" value="${p.precios['1L'] || 0}" onchange="actualizarPrecioField(${index}, '1L', this.value)" class="w-full bg-slate-900 border border-slate-800 text-emerald-400 p-2 rounded-xl font-bold focus:border-emerald-500 focus:outline-none">
+            </div>
+            <div>
+              <label class="text-[10px] text-slate-500 font-bold">Precio 5L</label>
+              <input type="number" value="${p.precios['5L'] || 0}" onchange="actualizarPrecioField(${index}, '5L', this.value)" class="w-full bg-slate-900 border border-slate-800 text-emerald-400 p-2 rounded-xl font-bold focus:border-emerald-500 focus:outline-none">
+            </div>
+            <div>
+              <label class="text-[10px] text-slate-500 font-bold">Precio 20L</label>
+              <input type="number" value="${p.precios['20L'] || 0}" onchange="actualizarPrecioField(${index}, '20L', this.value)" class="w-full bg-slate-900 border border-slate-800 text-emerald-400 p-2 rounded-xl font-bold focus:border-emerald-500 focus:outline-none">
+            </div>
+          </div>
+
+          <button onclick="eliminarProducto(${index})" class="btn-action w-full bg-red-500/10 hover:bg-red-500 text-red-400 hover:text-white border border-red-500/20 py-2 rounded-xl font-bold text-xs transition-all">
+            🗑️ Eliminar Producto
+          </button>
         </div>
       `).join('');
     }
 
-    // FUNCIONES DE CONTROL DE ACCESO
-    function abrirModalDarAcceso(telefono, nombre, id, correo, passActual) {
-      document.getElementById('accTelefono').value = telefono;
-      document.getElementById('accNombre').value = nombre;
-      document.getElementById('accId').value = id;
-      document.getElementById('accCuenta').value = correo;
-      document.getElementById('accPassword').value = passActual !== 'No coincide con ningún usuario' ? passActual : '';
-      document.getElementById('modalDarAcceso').classList.remove('hidden');
+    function actualizarProductoField(index, campo, valor) {
+      productos[index][campo] = valor;
+      socket.emit('actualizar_inventario', productos);
     }
 
-    function cerrarModalAcceso() {
-      document.getElementById('modalDarAcceso').classList.add('hidden');
+    function actualizarPrecioField(index, presentacion, valor) {
+      productos[index].precios[presentacion] = parseFloat(valor) || 0;
+      socket.emit('actualizar_inventario', productos);
     }
 
-    function enviarAccesoWhatsApp() {
-      const tel = document.getElementById('accTelefono').value;
-      const nombre = document.getElementById('accNombre').value;
-      const id = document.getElementById('accId').value;
-      const cuenta = document.getElementById('accCuenta').value;
-      const pass = document.getElementById('accPassword').value;
-
-      if (!cuenta || !pass) {
-        alert('Ingresa la cuenta y la contraseña.');
-        return;
-      }
-
-      let numLimpio = tel.replace(/\D/g, '');
-      if (numLimpio.length === 10) numLimpio = '52' + numLimpio;
-
-      const mensaje = `Hola ${nombre}, te informamos que tu solicitud (${id}) en ARMM ha sido APROBADA. Ya puedes acceder.\n\nCuenta: ${cuenta}\nContraseña: ${pass}`;
-      const url = `https://api.whatsapp.com/send?phone=${numLimpio}&text=${encodeURIComponent(mensaje)}`;
-
-      window.open(url, '_blank');
-      cerrarModalAcceso();
-    }
-
-    function denegarAccesoWhatsApp(telefono, nombre, id) {
-      let numLimpio = telefono.replace(/\D/g, '');
-      if (numLimpio.length === 10) numLimpio = '52' + numLimpio;
-
-      const mensaje = `Hola ${nombre}, te informamos que tu solicitud de acceso (${id}) en ARMM ha sido DENEGADA. Si consideras que es un error, contáctanos.`;
-      const url = `https://api.whatsapp.com/send?phone=${numLimpio}&text=${encodeURIComponent(mensaje)}`;
-
-      window.open(url, '_blank');
-    }
-
-    function agregarProductoAdmin(e) {
+    function guardarNuevoProducto(e) {
       e.preventDefault();
       const nuevo = {
-        nombre: document.getElementById('admNombre').value,
-        categoria: document.getElementById('admCat').value,
+        id: Date.now(),
+        nombre: document.getElementById('nuevoNombre').value.trim(),
+        categoria: document.getElementById('nuevoCategoria').value,
         precios: {
-          "1L": parseFloat(document.getElementById('admP1L').value),
-          "5L": parseFloat(document.getElementById('admP5L').value),
-          "20L": parseFloat(document.getElementById('admP20L').value)
+          '1L': parseFloat(document.getElementById('precio1L').value) || 0,
+          '5L': parseFloat(document.getElementById('precio5L').value) || 0,
+          '20L': parseFloat(document.getElementById('precio20L').value) || 0,
         }
       };
-      socket.emit('agregar_nuevo_producto', nuevo);
+
+      productos.push(nuevo);
+      socket.emit('actualizar_inventario', productos);
       e.target.reset();
-      alert('Producto guardado');
     }
 
-    function renderPreciosAdmin() {
-      const container = document.getElementById('contenedorPreciosAdmin');
-      container.innerHTML = inventario.map(p => `
-        <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-800 space-y-2 text-xs">
-          <p class="font-bold text-white text-sm">${p.nombre}</p>
-          <div class="grid grid-cols-3 gap-2">
-            <div><label class="text-[10px] text-slate-400">1L ($):</label><input type="number" id="p1L-${p.id}" value="${p.precios['1L'] || 0}" class="w-full bg-slate-950 border border-slate-700 p-1.5 rounded-lg text-white"></div>
-            <div><label class="text-[10px] text-slate-400">5L ($):</label><input type="number" id="p5L-${p.id}" value="${p.precios['5L'] || 0}" class="w-full bg-slate-950 border border-slate-700 p-1.5 rounded-lg text-white"></div>
-            <div><label class="text-[10px] text-slate-400">20L ($):</label><input type="number" id="p20L-${p.id}" value="${p.precios['20L'] || 0}" class="w-full bg-slate-950 border border-slate-700 p-1.5 rounded-lg text-white"></div>
-          </div>
-          <button onclick="guardarPrecioProd(${p.id})" class="w-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 py-1.5 rounded-xl font-bold hover:bg-emerald-500 hover:text-slate-950 transition-all">Actualizar Precios</button>
-        </div>
-      `).join('');
+    function eliminarProducto(index) {
+      if (confirm('¿Deseas eliminar este producto del catálogo?')) {
+        productos.splice(index, 1);
+        socket.emit('actualizar_inventario', productos);
+      }
     }
 
-    function guardarPrecioProd(id) {
-      const precios = {
-        "1L": parseFloat(document.getElementById(`p1L-${id}`).value),
-        "5L": parseFloat(document.getElementById(`p5L-${id}`).value),
-        "20L": parseFloat(document.getElementById(`p20L-${id}`).value)
-      };
-      socket.emit('actualizar_precios', { id, precios });
-      alert('Precios actualizados');
-    }
-
-    function renderClientesAdmin() {
-      const container = document.getElementById('contenedorClientesAdmin');
-      if (!clientes.length) {
-        container.innerHTML = '<p class="text-slate-400">Sin clientes registrados.</p>';
+    // RENDER USUARIOS
+    function renderUsuariosAdmin() {
+      const tbody = document.getElementById('tablaUsuarios');
+      if (!usuarios.length) {
+        tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-slate-500 text-center">No hay clientes registrados aún.</td></tr>';
         return;
       }
 
-      container.innerHTML = clientes.map((c, idx) => `
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
-          <div class="p-3.5 font-bold text-white flex justify-between items-center">
-            <span>👤 ${c.nombre}</span>
-            <span class="text-[10px] text-emerald-400">${c.telefono}</span>
-          </div>
-        </div>
+      tbody.innerHTML = usuarios.map(u => `
+        <tr class="hover:bg-slate-900/50">
+          <td class="p-3 font-bold text-white">${u.nombre}</td>
+          <td class="p-3 text-emerald-400">${u.telefono}</td>
+          <td class="p-3">${u.correo || '--'}</td>
+          <td class="p-3">${u.direccion || '--'}</td>
+        </tr>
       `).join('');
     }
+
+    // MODAL CONTROL
+    function abrirModalCategorias() { document.getElementById('modalCategorias').classList.remove('hidden'); }
+    function cerrarModalCategorias() { document.getElementById('modalCategorias').classList.add('hidden'); }
   </script>
 </body>
 </html>
+
