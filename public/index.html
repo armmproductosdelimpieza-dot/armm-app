@@ -22,7 +22,7 @@
       </div>
 
       <div class="flex items-center gap-3">
-        <!-- BOTÓN WHATSAPP DE SOPORTE -->
+        <!-- BOTÓN WHATSAPP -->
         <a href="https://wa.me/523351097726" target="_blank" class="hidden sm:flex bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-3 py-1.5 rounded-full text-xs font-bold items-center gap-1.5 hover:bg-emerald-500/20">
           💬 (33 5109 7726)
         </a>
@@ -33,10 +33,10 @@
           <span id="cantCarrito" class="bg-emerald-500 text-slate-950 px-2 py-0.5 rounded-full text-[10px]">0</span>
         </button>
 
-        <!-- BOTÓN MI CUENTA -->
+        <!-- BOTÓN REGISTRARSE / INICIAR SESIÓN -->
         <div id="userProfileBtn">
           <button onclick="abrirModalAuth()" class="text-xs bg-blue-500/20 text-blue-400 border border-blue-500/30 px-3.5 py-1.5 rounded-full font-bold hover:bg-blue-500 hover:text-white transition-all">
-            Ingresar / Mi Cuenta
+            Registrarse / Iniciar Sesión
           </button>
         </div>
       </div>
@@ -46,20 +46,19 @@
   <!-- CONTENIDO PRINCIPAL -->
   <main class="max-w-7xl mx-auto pt-28 px-6 pb-20 space-y-16">
     
-    <!-- ENCABEZADO Y HERO -->
     <div class="text-center space-y-4 max-w-3xl mx-auto pt-4">
       <h1 class="text-4xl md:text-6xl font-black text-white tracking-tight">ARMM</h1>
       <p class="text-emerald-400 text-sm font-bold uppercase tracking-widest">PRODUCTOS Y ACCESORIOS DE LIMPIEZA</p>
       <p class="text-slate-400 text-sm">Realiza tus pedidos directamente desde nuestro portal web y da seguimiento a tu entrega en tiempo real.</p>
     </div>
 
-    <!-- CATÁLOGO DE PRODUCTOS -->
+    <!-- CATÁLOGO -->
     <section class="space-y-6">
       <h2 class="text-xl font-bold text-white flex items-center gap-2">🛒 Catálogo de Productos</h2>
       <div id="gridProductos" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </section>
 
-    <!-- SECCIÓN DE RESEÑAS Y OPINIONES -->
+    <!-- RESEÑAS -->
     <section class="space-y-6 border-t border-slate-800 pt-12">
       <div class="flex justify-between items-center">
         <div>
@@ -70,7 +69,6 @@
           + Escribir Opinión
         </button>
       </div>
-
       <div id="gridResenas" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
     </section>
   </main>
@@ -88,7 +86,6 @@
         <span id="totalCarrito" class="text-emerald-400 text-lg">$0 MXN</span>
       </div>
 
-      <!-- SELECCIÓN MÉTODO DE PAGO -->
       <div class="space-y-2 text-left">
         <label class="text-xs text-slate-400">Método de Pago:</label>
         <select id="metodoPago" onchange="evaluarMetodoPago()" class="w-full bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl text-xs">
@@ -96,7 +93,6 @@
           <option value="Transferencia SPEI">Transferencia SPEI</option>
         </select>
 
-        <!-- ENVIAR COMPROBANTE SPEI POR WHATSAPP -->
         <div id="infoSpei" class="hidden bg-slate-900/80 p-3 rounded-xl border border-slate-800 text-[11px] space-y-2">
           <p class="text-emerald-400 font-bold">Datos SPEI ARMM:</p>
           <p>CLABE: 012180000000000000 | Banco: BBVA</p>
@@ -112,21 +108,20 @@
     </div>
   </div>
 
-  <!-- MODAL CHECKOUT CON ICONO DE OJO EN CONTRASEÑA -->
+  <!-- MODAL CHECKOUT RÁPIDO SI NO TIENE CUENTA -->
   <div id="modalCheckout" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
     <div class="glass-card p-6 rounded-3xl max-w-md w-full space-y-5 relative">
       <button onclick="cerrarCheckout()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold">✕</button>
-      <h3 class="text-lg font-bold text-white">Datos de Envío y Crear Cuenta</h3>
+      <h3 class="text-lg font-bold text-white">Datos de Envío para tu Pedido</h3>
 
       <form onsubmit="confirmarPedidoNuevoUsuario(event)" class="space-y-3 text-left">
         <div class="grid grid-cols-2 gap-2">
           <input type="text" id="chkNombre" placeholder="Nombre" required class="bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl text-xs">
-          <input type="text" id="chkApellido" placeholder="Apellido" required class="bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl text-xs">
+          <input type="text" id="chkApellido" placeholder="Apellido" class="bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl text-xs">
         </div>
-        <input type="email" id="chkCorreo" placeholder="Correo electrónico" required class="w-full bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl text-xs">
         <input type="tel" id="chkTelefono" placeholder="Teléfono" required class="w-full bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl text-xs">
+        <input type="email" id="chkCorreo" placeholder="Correo (Opcional)" class="w-full bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl text-xs">
         
-        <!-- CONTRASEÑA CON ÍCONO DE OJO 👁️ -->
         <div class="relative">
           <input type="password" id="chkPassword" placeholder="Generar contraseña" required class="w-full bg-slate-900 border border-slate-700 text-white p-2.5 pr-10 rounded-xl text-xs">
           <button type="button" onclick="toggleEye('chkPassword', 'eyeChk')" class="absolute right-3 top-2.5 text-slate-400 hover:text-white text-xs">
@@ -143,34 +138,88 @@
     </div>
   </div>
 
-  <!-- MODAL AUTH Y RASTREO DE PEDIDOS -->
+  <!-- MODAL AUTHENTICACIÓN (REGISTRARSE / INICIAR SESIÓN / OLVIDÉ MI CONTRASEÑA) -->
   <div id="modalAuth" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
     <div class="glass-card p-6 rounded-3xl max-w-lg w-full space-y-6 relative max-h-[90vh] overflow-y-auto">
       <button onclick="cerrarModalAuth()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold">✕</button>
 
+      <!-- BOTONES DE PESTAÑA: REGISTRARSE / INICIAR SESIÓN -->
+      <div id="tabsAuth" class="grid grid-cols-2 gap-2 p-1 bg-slate-900/80 rounded-2xl border border-slate-800">
+        <button id="btnTabLogin" onclick="switchAuthTab('login')" class="py-2 text-xs font-bold rounded-xl transition-all bg-emerald-500 text-slate-950">Iniciar Sesión</button>
+        <button id="btnTabRegister" onclick="switchAuthTab('register')" class="py-2 text-xs font-bold text-slate-400 rounded-xl transition-all hover:text-white">Registrarse</button>
+      </div>
+
+      <!-- VISTA 1: INICIAR SESIÓN -->
       <div id="vistaAuthLogin" class="space-y-4">
-        <h3 class="text-base font-bold text-white">Iniciar Sesión</h3>
         <form onsubmit="iniciarSesionCliente(event)" class="space-y-3 text-left">
-          <input type="email" id="loginCorreo" placeholder="Correo" required class="w-full bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl text-xs">
+          <div>
+            <label class="text-[11px] text-slate-400">Correo o Teléfono:</label>
+            <input type="text" id="loginIdentificador" placeholder="Ingresa tu correo o teléfono" required class="w-full bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl text-xs mt-1">
+          </div>
           
-          <div class="relative">
-            <input type="password" id="loginPassword" placeholder="Contraseña" required class="w-full bg-slate-900 border border-slate-700 text-white p-2.5 pr-10 rounded-xl text-xs">
-            <button type="button" onclick="toggleEye('loginPassword', 'eyeLog')" class="absolute right-3 top-2.5 text-slate-400 hover:text-white text-xs">
-              <span id="eyeLog">👁️</span>
-            </button>
+          <div>
+            <label class="text-[11px] text-slate-400">Contraseña:</label>
+            <div class="relative mt-1">
+              <input type="password" id="loginPassword" placeholder="Contraseña" required class="w-full bg-slate-900 border border-slate-700 text-white p-2.5 pr-10 rounded-xl text-xs">
+              <button type="button" onclick="toggleEye('loginPassword', 'eyeLog')" class="absolute right-3 top-2.5 text-slate-400 hover:text-white text-xs">
+                <span id="eyeLog">👁️</span>
+              </button>
+            </div>
           </div>
 
-          <button type="submit" class="w-full bg-emerald-500 text-slate-950 font-bold py-2.5 rounded-xl text-xs">Ingresar</button>
+          <div class="flex justify-between items-center text-xs">
+            <button type="button" onclick="switchAuthTab('forgot')" class="text-emerald-400 hover:underline">¿Olvidaste tu contraseña?</button>
+          </div>
+
+          <button type="submit" class="w-full bg-emerald-500 text-slate-950 font-bold py-2.5 rounded-xl text-xs hover:bg-emerald-400 transition-all">Ingresar</button>
         </form>
       </div>
 
+      <!-- VISTA 2: REGISTRARSE -->
+      <div id="vistaAuthRegister" class="hidden space-y-4">
+        <form onsubmit="registrarNuevoClienteIndependiente(event)" class="space-y-3 text-left">
+          <div class="grid grid-cols-2 gap-2">
+            <input type="text" id="regNombre" placeholder="Nombre" required class="bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl text-xs">
+            <input type="text" id="regApellido" placeholder="Apellido" class="bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl text-xs">
+          </div>
+          <input type="tel" id="regTelefono" placeholder="Teléfono" required class="w-full bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl text-xs">
+          <input type="email" id="regCorreo" placeholder="Correo electrónico (Opcional)" class="w-full bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl text-xs">
+          <input type="text" id="regDireccion" placeholder="Dirección de entrega" class="w-full bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl text-xs">
+
+          <div class="relative">
+            <input type="password" id="regPassword" placeholder="Generar contraseña" required class="w-full bg-slate-900 border border-slate-700 text-white p-2.5 pr-10 rounded-xl text-xs">
+            <button type="button" onclick="toggleEye('regPassword', 'eyeReg')" class="absolute right-3 top-2.5 text-slate-400 hover:text-white text-xs">
+              <span id="eyeReg">👁️</span>
+            </button>
+          </div>
+
+          <button type="submit" class="w-full bg-emerald-500 text-slate-950 font-bold py-2.5 rounded-xl text-xs hover:bg-emerald-400 transition-all">Crear Cuenta</button>
+        </form>
+      </div>
+
+      <!-- VISTA 3: OLVIDÉ MI CONTRASEÑA -->
+      <div id="vistaAuthForgot" class="hidden space-y-4 text-left">
+        <h3 class="text-sm font-bold text-white">Recuperar Contraseña</h3>
+        <p class="text-xs text-slate-400">Ingresa tus datos registrados para enviar la solicitud al Centro de Ayuda.</p>
+        
+        <form onsubmit="enviarSolicitudRecuperacion(event)" class="space-y-3">
+          <input type="text" id="forNombre" placeholder="Tu Nombre Completo" required class="w-full bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl text-xs">
+          <input type="tel" id="forTelefono" placeholder="Teléfono Registrado" required class="w-full bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl text-xs">
+          <input type="email" id="forCorreo" placeholder="Correo Registrado (Opcional)" class="w-full bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl text-xs">
+
+          <button type="submit" class="w-full bg-emerald-500 text-slate-950 font-bold py-2.5 rounded-xl text-xs hover:bg-emerald-400 transition-all">Enviar a Centro de Ayuda</button>
+          <button type="button" onclick="switchAuthTab('login')" class="w-full bg-slate-800 text-slate-300 font-bold py-2 rounded-xl text-xs">Volver a Iniciar Sesión</button>
+        </form>
+      </div>
+
+      <!-- VISTA 4: PERFIL ACTIVO (USUARIO CON SESIÓN INICIADA) -->
       <div id="vistaPerfilActivo" class="hidden space-y-4 text-left">
         <div class="flex justify-between items-center border-b border-slate-800 pb-3">
           <div>
             <h3 id="perfilNombre" class="font-bold text-white"></h3>
             <p id="perfilCorreo" class="text-xs text-slate-400"></p>
           </div>
-          <button onclick="cerrarSesionCliente()" class="text-[10px] bg-red-500/20 text-red-400 px-2 py-1 rounded-full">Cerrar Sesión</button>
+          <button onclick="cerrarSesionCliente()" class="text-[10px] bg-red-500/20 text-red-400 border border-red-500/30 px-3 py-1.5 rounded-full font-bold">Cerrar Sesión</button>
         </div>
 
         <h4 class="font-bold text-white text-xs">Mis Pedidos y Estado de Entrega:</h4>
@@ -232,6 +281,30 @@
       } else {
         el.type = 'password';
         icon.innerText = '👁️';
+      }
+    }
+
+    function switchAuthTab(tab) {
+      const btnLog = document.getElementById('btnTabLogin');
+      const btnReg = document.getElementById('btnTabRegister');
+      const tabsHeader = document.getElementById('tabsAuth');
+
+      document.getElementById('vistaAuthLogin').classList.add('hidden');
+      document.getElementById('vistaAuthRegister').classList.add('hidden');
+      document.getElementById('vistaAuthForgot').classList.add('hidden');
+      tabsHeader.classList.remove('hidden');
+
+      if (tab === 'login') {
+        document.getElementById('vistaAuthLogin').classList.remove('hidden');
+        btnLog.className = "py-2 text-xs font-bold rounded-xl transition-all bg-emerald-500 text-slate-950";
+        btnReg.className = "py-2 text-xs font-bold text-slate-400 rounded-xl transition-all hover:text-white";
+      } else if (tab === 'register') {
+        document.getElementById('vistaAuthRegister').classList.remove('hidden');
+        btnReg.className = "py-2 text-xs font-bold rounded-xl transition-all bg-emerald-500 text-slate-950";
+        btnLog.className = "py-2 text-xs font-bold text-slate-400 rounded-xl transition-all hover:text-white";
+      } else if (tab === 'forgot') {
+        tabsHeader.classList.add('hidden');
+        document.getElementById('vistaAuthForgot').classList.remove('hidden');
       }
     }
 
@@ -310,8 +383,8 @@
       e.preventDefault();
       const nuevoCliente = {
         nombre: document.getElementById('chkNombre').value,
-        apellido: document.getElementById('chkApellido').value,
-        correo: document.getElementById('chkCorreo').value,
+        apellido: document.getElementById('chkApellido').value || '',
+        correo: document.getElementById('chkCorreo').value || '',
         telefono: document.getElementById('chkTelefono').value,
         password: document.getElementById('chkPassword').value,
         direccion: document.getElementById('chkDireccion').value
@@ -329,22 +402,90 @@
     function abrirModalAuth() {
       document.getElementById('modalAuth').classList.remove('hidden');
       if (clienteActual) {
+        document.getElementById('tabsAuth').classList.add('hidden');
         document.getElementById('vistaAuthLogin').classList.add('hidden');
+        document.getElementById('vistaAuthRegister').classList.add('hidden');
+        document.getElementById('vistaAuthForgot').classList.add('hidden');
         document.getElementById('vistaPerfilActivo').classList.remove('hidden');
-        document.getElementById('perfilNombre').innerText = `${clienteActual.nombre} ${clienteActual.apellido}`;
-        document.getElementById('perfilCorreo').innerText = clienteActual.correo;
+        
+        document.getElementById('perfilNombre').innerText = `${clienteActual.nombre} ${clienteActual.apellido || ''}`;
+        document.getElementById('perfilCorreo').innerText = clienteActual.correo || clienteActual.telefono;
         renderMisPedidos();
       } else {
-        document.getElementById('vistaAuthLogin').classList.remove('hidden');
         document.getElementById('vistaPerfilActivo').classList.add('hidden');
+        switchAuthTab('login');
       }
     }
 
     function cerrarModalAuth() { document.getElementById('modalAuth').classList.add('hidden'); }
 
+    function registrarNuevoClienteIndependiente(e) {
+      e.preventDefault();
+      const cliente = {
+        nombre: document.getElementById('regNombre').value,
+        apellido: document.getElementById('regApellido').value || '',
+        telefono: document.getElementById('regTelefono').value,
+        correo: document.getElementById('regCorreo').value || '',
+        direccion: document.getElementById('regDireccion').value || '',
+        password: document.getElementById('regPassword').value
+      };
+
+      socket.emit('nuevo_registro_cliente', cliente);
+    }
+
+    socket.on('respuesta_registro', res => {
+      if (res.exito) {
+        clienteActual = res.cliente;
+        localStorage.setItem('armm_cliente', JSON.stringify(clienteActual));
+        alert('¡Cuenta creada exitosamente!');
+        abrirModalAuth();
+      } else alert(res.msj);
+    });
+
+    function iniciarSesionCliente(e) {
+      e.preventDefault();
+      const identificador = document.getElementById('loginIdentificador').value;
+      const pass = document.getElementById('loginPassword').value;
+      socket.emit('validar_login_cliente', { identificador, pass });
+    }
+
+    socket.on('respuesta_login_cliente', res => {
+      if (res.exito) {
+        clienteActual = res.cliente;
+        localStorage.setItem('armm_cliente', JSON.stringify(clienteActual));
+        abrirModalAuth();
+      } else alert(res.msj);
+    });
+
+    function enviarSolicitudRecuperacion(e) {
+      e.preventDefault();
+      const datos = {
+        nombre: document.getElementById('forNombre').value,
+        telefono: document.getElementById('forTelefono').value,
+        correo: document.getElementById('forCorreo').value
+      };
+      socket.emit('solicitar_recuperacion', datos);
+    }
+
+    socket.on('respuesta_recuperacion', res => {
+      if (res.exito) {
+        alert('Solicitud enviada al Centro de Ayuda de ARMM. Nos pondremos en contacto contigo.');
+        switchAuthTab('login');
+      }
+    });
+
+    function cerrarSesionCliente() {
+      localStorage.removeItem('armm_cliente');
+      clienteActual = null;
+      abrirModalAuth();
+    }
+
     function renderMisPedidos() {
       const container = document.getElementById('contenedorMisPedidos');
-      const filtrados = misPedidos.filter(p => p.cliente.correo === clienteActual.correo);
+      const filtrados = misPedidos.filter(p => 
+        (clienteActual.correo && p.cliente.correo === clienteActual.correo) || 
+        p.cliente.telefono === clienteActual.telefono
+      );
 
       if (!filtrados.length) {
         container.innerHTML = '<p class="text-slate-400 text-xs">No tienes pedidos registrados.</p>';
@@ -365,27 +506,6 @@
           <p class="text-slate-400 text-[11px]">Método: ${p.metodoPago} | Total: $${p.total} MXN</p>
         </div>
       `).join('');
-    }
-
-    function iniciarSesionCliente(e) {
-      e.preventDefault();
-      const correo = document.getElementById('loginCorreo').value;
-      const pass = document.getElementById('loginPassword').value;
-      socket.emit('validar_login_cliente', { correo, pass });
-    }
-
-    socket.on('respuesta_login_cliente', res => {
-      if (res.exito) {
-        clienteActual = res.cliente;
-        localStorage.setItem('armm_cliente', JSON.stringify(clienteActual));
-        abrirModalAuth();
-      } else alert('Credenciales incorrectas');
-    });
-
-    function cerrarSesionCliente() {
-      localStorage.removeItem('armm_cliente');
-      clienteActual = null;
-      abrirModalAuth();
     }
 
     function renderResenas(resenas) {
