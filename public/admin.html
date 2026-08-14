@@ -133,28 +133,20 @@
   </div>
 
   <script>
-    // Hash SHA-256 de la contraseña 'ARMM123' (la clave no aparece en texto plano)
-    const HASH_CORRECTO = "2d0cceea4f469aa734bd16ebcaea7d7b3da14bfb2fe2126dc61d670b865531d0";
+    // CONTRASEÑA DIRECTA DE ACCESO
+    const ADMIN_PASSWORD = "ARMM123";
 
-    // Función para convertir texto en hash SHA-256
-    async function calcularHash(cadena) {
-      const buffer = new TextEncoder().encode(cadena);
-      const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
-      const hashArray = Array.from(new Uint8Array(hashBuffer));
-      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-    }
-
-    // Comprobar si la sesión sigue activa
+    // Comprobar si la sesión ya fue iniciada previamente
     if (sessionStorage.getItem('adminAutenticado') === 'true') {
       mostrarPanel();
     }
 
-    async function validarAcceso(e) {
+    function validarAcceso(e) {
       e.preventDefault();
       const passIngresada = document.getElementById('adminPassword').value;
-      const hashIngresado = await calcularHash(passIngresada);
 
-      if (hashIngresado === HASH_CORRECTO) {
+      // Compara ignorando espacios en blanco accidentales
+      if (passIngresada.trim() === ADMIN_PASSWORD) {
         sessionStorage.setItem('adminAutenticado', 'true');
         document.getElementById('errorMsg').classList.add('hidden');
         mostrarPanel();
