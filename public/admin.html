@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ARMM Admin - Gestión de Pedidos</title>
+  <title>ARMM Admin - Panel de Control</title>
   <script src="/socket.io/socket.io.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
@@ -12,32 +12,64 @@
 </head>
 <body class="bg-slate-950 text-slate-100 font-sans min-h-screen p-6">
 
-  <!-- INGRESO ADMIN -->
+  <!-- ACCESO ADMIN -->
   <div id="loginAdmin" class="max-w-md mx-auto mt-20 glass-card p-6 rounded-3xl text-center space-y-4">
     <h2 class="text-xl font-bold text-white">Panel Administrador ARMM</h2>
     <input type="password" id="passAdmin" placeholder="Contraseña de Admin" class="w-full bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl text-xs">
     <button onclick="validarAdmin()" class="w-full bg-emerald-500 text-slate-950 font-bold py-2.5 rounded-xl text-xs">Ingresar</button>
   </div>
 
-  <!-- PANEL -->
-  <main id="panelAdmin" class="max-w-7xl mx-auto space-y-8 hidden">
+  <!-- PANEL DE GESTIÓN COMPLETO -->
+  <main id="panelAdmin" class="max-w-7xl mx-auto space-y-10 hidden">
+    
     <div class="flex justify-between items-center border-b border-slate-800 pb-4">
       <div>
-        <h1 class="text-2xl font-black text-white">Administración de Pedidos</h1>
+        <h1 class="text-2xl font-black text-white tracking-wide">Administración de Pedidos</h1>
         <p class="text-xs text-emerald-400 font-bold">Seguimiento en Tiempo Real</p>
       </div>
-      <button onclick="location.reload()" class="text-xs bg-slate-800 text-slate-300 px-3 py-1.5 rounded-xl">Salir</button>
+      <button onclick="location.reload()" class="text-xs bg-slate-800 text-slate-300 px-3.5 py-1.5 rounded-xl hover:bg-slate-700">Salir</button>
     </div>
 
+    <!-- SECCIÓN 1: PEDIDOS ENTRANTES (IDÉNTICO A LA CAPTURA) -->
     <section class="space-y-4">
-      <h2 class="text-lg font-bold text-white">📦 Lista de Pedidos Entrantes</h2>
+      <h2 class="text-lg font-bold text-white flex items-center gap-2">📦 Lista de Pedidos Entrantes</h2>
       <div id="contenedorPedidosAdmin" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
     </section>
+
+    <!-- SECCIÓN 2: AGREGAR NUEVO PRODUCTO AL INVENTARIO -->
+    <section class="glass-card p-6 rounded-3xl space-y-4 text-left">
+      <h2 class="text-lg font-bold text-white">➕ Agregar Nuevo Producto al Inventario</h2>
+      <form onsubmit="agregarProductoAdmin(event)" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3 text-xs">
+        <input type="text" id="admNombre" placeholder="Nombre Producto" required class="bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl">
+        <input type="text" id="admCat" placeholder="Categoría" required class="bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl">
+        <input type="number" id="admP1L" placeholder="Precio 1L ($)" required class="bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl">
+        <input type="number" id="admP5L" placeholder="Precio 5L ($)" required class="bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl">
+        <input type="number" id="admP20L" placeholder="Precio 20L ($)" required class="bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl">
+        <button type="submit" class="lg:col-span-5 bg-emerald-500 text-slate-950 font-bold py-2.5 rounded-xl hover:bg-emerald-400 transition-all">
+          Guardar Producto en Catálogo
+        </button>
+      </form>
+    </section>
+
+    <!-- SECCIÓN 3: ACTUALIZAR PRECIOS DEL CATÁLOGO -->
+    <section class="glass-card p-6 rounded-3xl space-y-4 text-left">
+      <h2 class="text-lg font-bold text-white">🏷️ Modificar Precios de Productos Existentes</h2>
+      <div id="contenedorPreciosAdmin" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+    </section>
+
+    <!-- SECCIÓN 4: LISTA DE CLIENTES REGISTRADOS -->
+    <section class="glass-card p-6 rounded-3xl space-y-4 text-left">
+      <h2 class="text-lg font-bold text-white">👥 Clientes Registrados</h2>
+      <div id="contenedorClientesAdmin" class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs"></div>
+    </section>
+
   </main>
 
   <script>
     const socket = io();
     let pedidos = [];
+    let inventario = [];
+    let clientes = [];
 
     function validarAdmin() {
       if (document.getElementById('passAdmin').value === 'ARMM123') {
@@ -47,7 +79,10 @@
     }
 
     socket.on('lista_pedidos_inicial', data => { pedidos = data; renderPedidosAdmin(); });
+    socket.on('inventario_actualizado', data => { inventario = data; renderPreciosAdmin(); });
+    socket.on('lista_clientes_inicial', data => { clientes = data; renderClientesAdmin(); });
 
+    // RENDERIZADO DE PEDIDOS (Formato exacto de la pantalla)
     function renderPedidosAdmin() {
       const container = document.getElementById('contenedorPedidosAdmin');
       if (!pedidos.length) {
@@ -89,11 +124,11 @@
 
               <div>
                 <label class="text-[10px] text-slate-400">Fecha Estimada:</label>
-                <input type="text" id="fecha-${p.id}" value="${p.fechaEstimada}" placeholder="Ej: Mañana 4:00 PM" class="w-full bg-slate-900 border border-slate-700 text-white p-2 rounded-xl text-xs">
+                <input type="text" id="fecha-${p.id}" value="${p.fechaEstimada}" placeholder="Ej: 20/04/2026" class="w-full bg-slate-900 border border-slate-700 text-white p-2 rounded-xl text-xs">
               </div>
             </div>
 
-            <button onclick="guardarCambiosPedido('${p.id}')" class="w-full bg-blue-500/20 text-blue-400 border border-blue-500/30 hover:bg-blue-500 hover:text-white font-bold py-2 rounded-xl text-xs transition-all">
+            <button onclick="guardarCambiosPedido('${p.id}')" class="w-full bg-blue-600/30 text-blue-300 border border-blue-500/40 hover:bg-blue-600 hover:text-white font-bold py-2.5 rounded-xl text-xs transition-all">
               Actualizar Estado y Notificar
             </button>
           </div>
@@ -105,7 +140,75 @@
       const nuevoEstado = document.getElementById(`estado-${pedidoId}`).value;
       const fechaEstimada = document.getElementById(`fecha-${pedidoId}`).value;
       socket.emit('actualizar_estado_pedido', { pedidoId, nuevoEstado, fechaEstimada });
-      alert('Pedido actualizado con éxito');
+      alert('Pedido actualizado correctamente.');
+    }
+
+    function agregarProductoAdmin(e) {
+      e.preventDefault();
+      const nuevo = {
+        nombre: document.getElementById('admNombre').value,
+        categoria: document.getElementById('admCat').value,
+        precios: {
+          "1L": parseFloat(document.getElementById('admP1L').value),
+          "5L": parseFloat(document.getElementById('admP5L').value),
+          "20L": parseFloat(document.getElementById('admP20L').value)
+        }
+      };
+      socket.emit('agregar_nuevo_producto', nuevo);
+      e.target.reset();
+      alert('Producto agregado al inventario');
+    }
+
+    function renderPreciosAdmin() {
+      const container = document.getElementById('contenedorPreciosAdmin');
+      container.innerHTML = inventario.map(p => `
+        <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-800 space-y-2 text-xs">
+          <p class="font-bold text-white text-sm">${p.nombre}</p>
+          <div class="grid grid-cols-3 gap-2">
+            <div>
+              <label class="text-[10px] text-slate-400">1L ($):</label>
+              <input type="number" id="p1L-${p.id}" value="${p.precios['1L'] || 0}" class="w-full bg-slate-950 border border-slate-700 p-1.5 rounded-lg text-white">
+            </div>
+            <div>
+              <label class="text-[10px] text-slate-400">5L ($):</label>
+              <input type="number" id="p5L-${p.id}" value="${p.precios['5L'] || 0}" class="w-full bg-slate-950 border border-slate-700 p-1.5 rounded-lg text-white">
+            </div>
+            <div>
+              <label class="text-[10px] text-slate-400">20L ($):</label>
+              <input type="number" id="p20L-${p.id}" value="${p.precios['20L'] || 0}" class="w-full bg-slate-950 border border-slate-700 p-1.5 rounded-lg text-white">
+            </div>
+          </div>
+          <button onclick="guardarPrecioProd(${p.id})" class="w-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 py-1.5 rounded-xl font-bold hover:bg-emerald-500 hover:text-slate-950 transition-all">
+            Actualizar Precios
+          </button>
+        </div>
+      `).join('');
+    }
+
+    function guardarPrecioProd(id) {
+      const precios = {
+        "1L": parseFloat(document.getElementById(`p1L-${id}`).value),
+        "5L": parseFloat(document.getElementById(`p5L-${id}`).value),
+        "20L": parseFloat(document.getElementById(`p20L-${id}`).value)
+      };
+      socket.emit('actualizar_precios', { id, precios });
+      alert('Precios actualizados');
+    }
+
+    function renderClientesAdmin() {
+      const container = document.getElementById('contenedorClientesAdmin');
+      if (!clientes.length) {
+        container.innerHTML = '<p class="text-slate-400">No hay clientes registrados aún.</p>';
+        return;
+      }
+      container.innerHTML = clientes.map(c => `
+        <div class="bg-slate-900 p-3 rounded-2xl border border-slate-800 space-y-1">
+          <p class="font-bold text-white">${c.nombre} ${c.apellido}</p>
+          <p class="text-slate-400 text-[11px]">${c.correo}</p>
+          <p class="text-emerald-400 text-[11px]">${c.telefono}</p>
+          <p class="text-slate-500 text-[10px]">${c.direccion}</p>
+        </div>
+      `).join('');
     }
   </script>
 </body>
