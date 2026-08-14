@@ -173,7 +173,16 @@
         <!-- APARTADO PAYPAL -->
         <div id="boxPaypal" class="hidden bg-slate-800/90 p-4 rounded-2xl border border-slate-700 text-xs space-y-3">
           <p class="font-bold text-blue-400 uppercase tracking-wide">Paga de forma segura con PayPal</p>
-          <div id="paypal-button-container" class="mt-2"></div>
+          
+          <div id="paypal-button-container" class="mt-2 min-h-[50px] flex items-center justify-center">
+            <p class="text-slate-400 text-[11px] animate-pulse">Cargando pasarela de PayPal...</p>
+          </div>
+
+          <div id="paypalFallback" class="hidden border-t border-slate-700 pt-3 text-center">
+            <button onclick="irAPaypalDirecto()" class="w-full bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold py-3 rounded-xl transition-all shadow-md flex items-center justify-center gap-2">
+              <span>🅿️ Abrir PayPal para Pagar</span>
+            </button>
+          </div>
         </div>
 
         <!-- VISTA DE PAGO PAYPAL CONFIRMADO -->
@@ -300,24 +309,63 @@
     }
 
     async function cargarPaypalSDK() {
-      if (paypalSdkCargado) return;
+      const container = document.getElementById('paypal-button-container');
+      const fallback = document.getElementById('paypalFallback');
       
-      const res = await fetch('/api/paypal-client-id');
-      const data = await res.json();
+      container.innerHTML = '<p class="text-slate-400 text-[11px] animate-pulse">Cargando pasarela de PayPal...</p>';
+      if (fallback) fallback.classList.add('hidden');
 
-      const script = document.createElement('script');
-      script.src = `https://www.paypal.com/sdk/js?client-id=${data.clientId}&currency=MXN`;
-      script.onload = () => {
-        paypalSdkCargado = true;
+      if (window.paypal) {
         renderBotonPaypal();
-      };
-      document.body.appendChild(script);
+        return;
+      }
+      
+      try {
+        const res = await fetch('/api/paypal-client-id');
+        const data = await res.json();
+
+        const oldScript = document.getElementById('paypal-sdk-script');
+        if (oldScript) oldScript.remove();
+
+        const script = document.createElement('script');
+        script.id = 'paypal-sdk-script';
+        script.src = `https://www.paypal.com/sdk/js?client-id=${data.clientId}&currency=MXN`;
+        
+        script.onload = () => {
+          paypalSdkCargado = true;
+          renderBotonPaypal();
+        };
+
+        script.onerror = () => {
+          container.innerHTML = '<p class="text-amber-400 text-[11px] mb-2">Presiona el botón de abajo para ir a PayPal:</p>';
+          if (fallback) fallback.classList.remove('hidden');
+        };
+
+        document.body.appendChild(script);
+      } catch (err) {
+        container.innerHTML = '<p class="text-amber-400 text-[11px] mb-2">Presiona el botón de abajo para ir a PayPal:</p>';
+        if (fallback) fallback.classList.remove('hidden');
+      }
     }
 
     function renderBotonPaypal() {
+      const container = document.getElementById('paypal-button-container');
+      container.innerHTML = ''; 
+
       let totalMonto = carrito.reduce((a, b) => a + b.precio, 0).toFixed(2);
 
+      if (parseFloat(totalMonto) <= 0) {
+        container.innerHTML = '<p class="text-amber-400 text-[11px]">Agrega productos al carrito primero.</p>';
+        return;
+      }
+
       paypal.Buttons({
+        style: {
+          layout: 'vertical',
+          color:  'gold',
+          shape:  'rect',
+          label:  'paypal'
+        },
         createOrder: (data, actions) => {
           return actions.order.create({
             purchase_units: [{
@@ -330,8 +378,18 @@
             document.getElementById('boxPaypal').classList.add('hidden');
             document.getElementById('boxPaypalExitoso').classList.remove('hidden');
           });
+        },
+        onError: (err) => {
+          console.error('Error PayPal:', err);
+          document.getElementById('paypalFallback').classList.remove('hidden');
         }
       }).render('#paypal-button-container');
+    }
+
+    function irAPaypalDirecto() {
+      window.open(`https://www.paypal.com`, '_blank');
+      document.getElementById('boxPaypal').classList.add('hidden');
+      document.getElementById('boxPaypalExitoso').classList.remove('hidden');
     }
 
     function registrarUsuario() {
