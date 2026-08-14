@@ -30,10 +30,16 @@
       <button onclick="location.reload()" class="text-xs bg-slate-800 text-slate-300 px-3.5 py-1.5 rounded-xl hover:bg-slate-700">Salir</button>
     </div>
 
-    <!-- SECCIÓN 1: PEDIDOS ENTRANTES (IDÉNTICO A LA CAPTURA) -->
+    <!-- SECCIÓN 1: PEDIDOS ENTRANTES -->
     <section class="space-y-4">
       <h2 class="text-lg font-bold text-white flex items-center gap-2">📦 Lista de Pedidos Entrantes</h2>
       <div id="contenedorPedidosAdmin" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+    </section>
+
+    <!-- SECCIÓN NUEVA: CENTRO DE AYUDA (RECUPERACIÓN DE CONTRASEÑAS) -->
+    <section class="glass-card p-6 rounded-3xl space-y-4 text-left">
+      <h2 class="text-lg font-bold text-white flex items-center gap-2">🆘 Centro de Ayuda (Solicitudes de Contraseña)</h2>
+      <div id="contenedorAyudaAdmin" class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs"></div>
     </section>
 
     <!-- SECCIÓN 2: AGREGAR NUEVO PRODUCTO AL INVENTARIO -->
@@ -57,7 +63,7 @@
       <div id="contenedorPreciosAdmin" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
     </section>
 
-    <!-- SECCIÓN 4: LISTA DE CLIENTES REGISTRADOS -->
+    <!-- SECCIÓN 4: LISTA DE CLIENTES REGISTRADOS (ACORDEÓN LIMPIO) -->
     <section class="glass-card p-6 rounded-3xl space-y-4 text-left">
       <h2 class="text-lg font-bold text-white">👥 Clientes Registrados</h2>
       <div id="contenedorClientesAdmin" class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs"></div>
@@ -70,6 +76,7 @@
     let pedidos = [];
     let inventario = [];
     let clientes = [];
+    let ayuda = [];
 
     function validarAdmin() {
       if (document.getElementById('passAdmin').value === 'ARMM123') {
@@ -81,8 +88,8 @@
     socket.on('lista_pedidos_inicial', data => { pedidos = data; renderPedidosAdmin(); });
     socket.on('inventario_actualizado', data => { inventario = data; renderPreciosAdmin(); });
     socket.on('lista_clientes_inicial', data => { clientes = data; renderClientesAdmin(); });
+    socket.on('lista_ayuda_inicial', data => { ayuda = data; renderAyudaAdmin(); });
 
-    // RENDERIZADO DE PEDIDOS (Formato exacto de la pantalla)
     function renderPedidosAdmin() {
       const container = document.getElementById('contenedorPedidosAdmin');
       if (!pedidos.length) {
@@ -96,20 +103,17 @@
             <span class="font-bold text-emerald-400 text-sm">${p.id}</span>
             <span class="text-[10px] text-slate-400">${p.fechaRegistro}</span>
           </div>
-
           <div class="bg-slate-900/80 p-3 rounded-xl space-y-1 text-slate-300">
-            <p><strong class="text-white">Cliente:</strong> ${p.cliente.nombre} ${p.cliente.apellido}</p>
+            <p><strong class="text-white">Cliente:</strong> ${p.cliente.nombre} ${p.cliente.apellido || ''}</p>
             <p><strong class="text-white">Teléfono:</strong> ${p.cliente.telefono}</p>
             <p><strong class="text-white">Dirección:</strong> ${p.cliente.direccion}</p>
             <p><strong class="text-white">Método Pago:</strong> ${p.metodoPago}</p>
           </div>
-
           <div class="bg-slate-950 p-3 rounded-xl space-y-1 text-[11px]">
             <p class="font-bold text-white mb-1">Productos:</p>
             ${p.productos.map(i => `<div>• ${i.nombre} (${i.presentacion}) - $${i.precio}</div>`).join('')}
             <p class="font-bold text-emerald-400 mt-2 text-xs">Total: $${p.total} MXN</p>
           </div>
-
           <div class="space-y-2 border-t border-slate-800 pt-3">
             <div class="grid grid-cols-2 gap-2">
               <div>
@@ -121,13 +125,11 @@
                   <option value="Entregado" ${p.estado === 'Entregado' ? 'selected' : ''}>Entregado</option>
                 </select>
               </div>
-
               <div>
                 <label class="text-[10px] text-slate-400">Fecha Estimada:</label>
                 <input type="text" id="fecha-${p.id}" value="${p.fechaEstimada}" placeholder="Ej: 20/04/2026" class="w-full bg-slate-900 border border-slate-700 text-white p-2 rounded-xl text-xs">
               </div>
             </div>
-
             <button onclick="guardarCambiosPedido('${p.id}')" class="w-full bg-blue-600/30 text-blue-300 border border-blue-500/40 hover:bg-blue-600 hover:text-white font-bold py-2.5 rounded-xl text-xs transition-all">
               Actualizar Estado y Notificar
             </button>
@@ -141,6 +143,32 @@
       const fechaEstimada = document.getElementById(`fecha-${pedidoId}`).value;
       socket.emit('actualizar_estado_pedido', { pedidoId, nuevoEstado, fechaEstimada });
       alert('Pedido actualizado correctamente.');
+    }
+
+    function renderAyudaAdmin() {
+      const container = document.getElementById('contenedorAyudaAdmin');
+      if (!ayuda.length) {
+        container.innerHTML = '<p class="text-slate-400">No hay solicitudes de ayuda activas.</p>';
+        return;
+      }
+
+      container.innerHTML = ayuda.map(a => `
+        <div class="bg-slate-900 p-4 rounded-2xl border ${a.esValido ? 'border-emerald-500/40' : 'border-red-500/40'} space-y-2">
+          <div class="flex justify-between items-center">
+            <span class="font-bold text-white">${a.id}</span>
+            <span class="px-2 py-0.5 text-[10px] rounded-full font-bold ${a.esValido ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'}">
+              ${a.esValido ? '✓ Datos Coinciden' : '✕ No Coincide'}
+            </span>
+          </div>
+          <p class="text-slate-300"><strong>Nombre Enviado:</strong> ${a.nombre}</p>
+          <p class="text-slate-300"><strong>Teléfono:</strong> ${a.telefono}</p>
+          <p class="text-slate-300"><strong>Correo:</strong> ${a.correo}</p>
+          <div class="p-2 bg-slate-950 rounded-xl mt-2 border border-slate-800">
+            <p class="text-xs text-amber-400 font-bold">Contraseña en Sistema: ${a.passwordActual}</p>
+          </div>
+          <p class="text-[10px] text-slate-500">${a.fecha}</p>
+        </div>
+      `).join('');
     }
 
     function agregarProductoAdmin(e) {
@@ -195,20 +223,41 @@
       alert('Precios actualizados');
     }
 
+    // LISTA DE CLIENTES DESPLEGABLE (LIMPIA)
     function renderClientesAdmin() {
       const container = document.getElementById('contenedorClientesAdmin');
       if (!clientes.length) {
         container.innerHTML = '<p class="text-slate-400">No hay clientes registrados aún.</p>';
         return;
       }
-      container.innerHTML = clientes.map(c => `
-        <div class="bg-slate-900 p-3 rounded-2xl border border-slate-800 space-y-1">
-          <p class="font-bold text-white">${c.nombre} ${c.apellido}</p>
-          <p class="text-slate-400 text-[11px]">${c.correo}</p>
-          <p class="text-emerald-400 text-[11px]">${c.telefono}</p>
-          <p class="text-slate-500 text-[10px]">${c.direccion}</p>
+
+      container.innerHTML = clientes.map((c, idx) => `
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden transition-all">
+          <button onclick="toggleClienteDetails(${idx})" class="w-full p-3.5 text-left font-bold text-white flex justify-between items-center hover:bg-slate-800/50">
+            <span>👤 ${c.nombre} ${c.apellido || ''}</span>
+            <span id="arrow-cli-${idx}" class="text-xs text-slate-400">▼</span>
+          </button>
+          
+          <div id="details-cli-${idx}" class="hidden p-3 bg-slate-950/80 border-t border-slate-800 space-y-1.5 text-[11px] text-slate-300">
+            <p><strong class="text-white">Correo:</strong> ${c.correo || 'No especificado'}</p>
+            <p><strong class="text-white">Teléfono:</strong> ${c.telefono}</p>
+            <p><strong class="text-emerald-400">Contraseña:</strong> ${c.password}</p>
+            <p><strong class="text-white">Dirección:</strong> ${c.direccion || 'Sin dirección guardada'}</p>
+          </div>
         </div>
       `).join('');
+    }
+
+    function toggleClienteDetails(idx) {
+      const panel = document.getElementById(`details-cli-${idx}`);
+      const arrow = document.getElementById(`arrow-cli-${idx}`);
+      if (panel.classList.contains('hidden')) {
+        panel.classList.remove('hidden');
+        arrow.innerText = '▲';
+      } else {
+        panel.classList.add('hidden');
+        arrow.innerText = '▼';
+      }
     }
   </script>
 </body>
