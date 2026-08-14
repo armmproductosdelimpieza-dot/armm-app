@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html lang="es" class="scroll-smooth">
+<html lang="es">
 <head>
-  <meta name="google-site-verification" content="google5c9558ed4fb08a87" />
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ARMM - Productos y Accesorios de Limpieza</title>
+  <title>ARMM - Panel Administrador</title>
   <script src="/socket.io/socket.io.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
@@ -20,321 +19,187 @@
     }
   </style>
 </head>
-<body class="bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 text-slate-100 font-sans min-h-screen relative overflow-x-hidden">
+<body class="bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 text-slate-100 font-sans min-h-screen relative">
 
-  <!-- NAVEGACIÓN -->
-  <nav class="glass-nav fixed top-0 left-0 w-full z-50 px-6 py-4 transition-all duration-300">
+  <!-- BARRA SUPERIOR -->
+  <nav class="glass-nav fixed top-0 left-0 w-full z-50 px-6 py-4">
     <div class="max-w-7xl mx-auto flex justify-between items-center">
-      <a href="#inicio" class="flex flex-col">
+      <div class="flex items-center gap-3">
         <span class="text-2xl font-black tracking-widest text-white">ARMM</span>
-        <span class="text-[9px] text-emerald-400 font-semibold tracking-wider">PRODUCTOS Y ACCESORIOS DE LIMPIEZA</span>
-      </a>
-
-      <div class="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-300">
-        <a href="#inicio" class="hover:text-emerald-400 transition-colors">Inicio</a>
-        <a href="#productos" class="hover:text-emerald-400 transition-colors">Productos</a>
-        <a href="#nosotros" class="hover:text-emerald-400 transition-colors">Nosotros</a>
-        <a href="#contacto" class="hover:text-emerald-400 transition-colors">Contacto</a>
+        <span class="text-xs bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full border border-emerald-500/30 font-bold">PANEL ADMIN</span>
       </div>
-
-      <div class="flex items-center space-x-3">
-        <button onclick="toggleModal('modalCuenta')" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs px-4 py-2 rounded-full transition-all shadow-lg shadow-emerald-500/20">
-          Registrarse
-        </button>
-
-        <button onclick="toggleModal('modalCarrito')" class="bg-white/10 hover:bg-white/20 text-white font-bold text-xs px-4 py-2 rounded-full transition-all border border-white/10 flex items-center gap-2">
-          🛒 (<span id="cartCount">0</span>)
-        </button>
-      </div>
+      <a href="/" class="text-xs text-slate-400 hover:text-white transition-colors">← Ver Sitio Público</a>
     </div>
   </nav>
 
-  <!-- INICIO / HERO -->
-  <section id="inicio" class="min-h-screen flex items-center justify-center pt-24 px-6 relative">
-    <div class="max-w-4xl mx-auto text-center space-y-6 z-10">
-      <span class="text-xs uppercase tracking-widest text-emerald-400 bg-emerald-500/10 px-4 py-1.5 rounded-full border border-emerald-500/20">
-        Productos y Accesorios de Limpieza
-      </span>
-      <h1 class="text-5xl md:text-7xl font-extrabold text-white tracking-tight leading-tight">
-        Calidad, Limpieza & Modernidad
-      </h1>
-      <p class="text-slate-400 text-base md:text-lg max-w-2xl mx-auto font-light">
-        Entregas inmediatas en Tonalá, Guadalajara, Tlaquepaque y Zapopan.
-      </p>
-
-      <div class="inline-flex items-center gap-3 bg-blue-900/40 border border-blue-500/30 px-5 py-2.5 rounded-2xl text-xs text-blue-200 shadow-xl">
-        <span class="text-lg">💳</span>
-        <span><strong>¡Aceptamos pagos al recibir o por Transferencia SPEI!</strong></span>
-      </div>
-
-      <div class="pt-4 flex flex-wrap gap-4 justify-center">
-        <a href="#productos" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-8 py-3.5 rounded-full transition-all shadow-xl shadow-emerald-500/20">
-          Ver Catálogo
-        </a>
-      </div>
+  <main class="max-w-7xl mx-auto pt-28 px-6 pb-20 space-y-12">
+    
+    <!-- TITULO -->
+    <div>
+      <h1 class="text-3xl font-extrabold text-white">Panel de Control General</h1>
+      <p class="text-slate-400 text-sm mt-1">Gestión de clientes, contraseñas, historial de ventas y catálogo en tiempo real.</p>
     </div>
-  </section>
 
-  <!-- CATÁLOGO DE PRODUCTOS -->
-  <section id="productos" class="max-w-7xl mx-auto px-6 py-20">
-    <div class="text-center mb-12">
-      <h2 class="text-3xl font-bold text-white">Catálogo de Productos</h2>
-      <p class="text-slate-400 text-sm mt-2">Selecciona la presentación que necesitas</p>
-    </div>
-    <div id="gridProductos" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
-  </section>
-
-  <!-- NOSOTROS -->
-  <section id="nosotros" class="max-w-6xl mx-auto px-6 py-20">
-    <div class="glass-card p-8 md:p-12 rounded-3xl space-y-4">
-      <span class="text-emerald-400 text-xs font-bold uppercase tracking-wider">Sobre ARMM</span>
-      <h2 class="text-3xl font-bold text-white">Soluciones en Higiene Profesional</h2>
-      <p class="text-slate-300 text-sm leading-relaxed">
-        Ofrecemos productos de limpieza de alta concentración y accesorios para todo tipo de negocios y del hogar.
-      </p>
-    </div>
-  </section>
-
-  <!-- CONTACTO -->
-  <section id="contacto" class="max-w-6xl mx-auto px-6 py-20">
-    <div class="glass-card p-8 md:p-12 rounded-3xl text-center space-y-6">
-      <h2 class="text-3xl font-bold text-white">¿Tienes dudas o necesitas atención personalizada?</h2>
-      <a href="https://wa.me/5213351097726" target="_blank" class="inline-block bg-emerald-500 text-slate-950 font-bold px-8 py-3.5 rounded-full text-xs hover:bg-emerald-600 transition-all">
-        Contactar por WhatsApp (33 5109 7726)
-      </a>
-    </div>
-  </section>
-
-  <!-- MODAL: REGISTRO COMPLETO DE CLIENTE -->
-  <div id="modalCuenta" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden flex justify-center items-center p-4 z-50">
-    <div class="glass-card p-8 rounded-3xl max-w-md w-full space-y-4 bg-slate-900 border border-white/10 max-h-[90vh] overflow-y-auto">
-      <h3 class="text-xl font-bold text-white">Registro de Cliente</h3>
-      <p class="text-xs text-slate-400">Ingresa tus datos completos para registrar tus compras y facilitar las entregas.</p>
-      
-      <div class="grid grid-cols-2 gap-3">
-        <div>
-          <label class="text-[10px] text-slate-400 mb-1 block">Nombre(s)</label>
-          <input type="text" id="userNombre" placeholder="Tu nombre" class="bg-slate-800 border border-slate-700 text-white w-full p-3 text-xs rounded-xl focus:outline-none focus:border-emerald-500">
-        </div>
-        <div>
-          <label class="text-[10px] text-slate-400 mb-1 block">Apellido(s)</label>
-          <input type="text" id="userApellido" placeholder="Tus apellidos" class="bg-slate-800 border border-slate-700 text-white w-full p-3 text-xs rounded-xl focus:outline-none focus:border-emerald-500">
-        </div>
+    <!-- SECCIÓN: CLIENTES REGISTRADOS CON CONTRASEÑAS -->
+    <section class="glass-card p-6 md:p-8 rounded-3xl space-y-4">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl font-bold text-white flex items-center gap-2">
+          <span>👥 Clientes y Perfiles Registrados</span>
+          <span id="cantClientes" class="text-xs bg-blue-500/20 text-blue-400 px-2.5 py-0.5 rounded-full">0</span>
+        </h2>
       </div>
 
-      <div>
-        <label class="text-[10px] text-slate-400 mb-1 block">WhatsApp / Teléfono</label>
-        <input type="tel" id="userTelefono" placeholder="Ej. 3312345678" class="bg-slate-800 border border-slate-700 text-white w-full p-3 text-xs rounded-xl focus:outline-none focus:border-emerald-500">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs border-collapse">
+          <thead>
+            <tr class="border-b border-slate-800 text-slate-400 uppercase tracking-wider">
+              <th class="p-3">Fecha</th>
+              <th class="p-3">Nombre Completo</th>
+              <th class="p-3">Teléfono</th>
+              <th class="p-3">Correo</th>
+              <th class="p-3">Contraseña</th>
+              <th class="p-3">Dirección</th>
+            </tr>
+          </thead>
+          <tbody id="tablaClientes" class="divide-y divide-slate-800/60 text-slate-300">
+            <tr>
+              <td colspan="6" class="p-4 text-center text-slate-500">No hay clientes registrados aún.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECCIÓN: HISTÓRICO DE COMPRAS -->
+    <section class="glass-card p-6 md:p-8 rounded-3xl space-y-4">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl font-bold text-white flex items-center gap-2">
+          <span>📦 Pedidos y Compras Realizadas</span>
+          <span id="cantPedidos" class="text-xs bg-emerald-500/20 text-emerald-400 px-2.5 py-0.5 rounded-full">0</span>
+        </h2>
       </div>
 
-      <div>
-        <label class="text-[10px] text-slate-400 mb-1 block">Correo Electrónico</label>
-        <input type="email" id="userCorreo" placeholder="correo@ejemplo.com" class="bg-slate-800 border border-slate-700 text-white w-full p-3 text-xs rounded-xl focus:outline-none focus:border-emerald-500">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs border-collapse">
+          <thead>
+            <tr class="border-b border-slate-800 text-slate-400 uppercase tracking-wider">
+              <th class="p-3">Fecha</th>
+              <th class="p-3">Cliente</th>
+              <th class="p-3">Teléfono</th>
+              <th class="p-3">Método de Pago</th>
+              <th class="p-3">Productos</th>
+              <th class="p-3 text-right">Total</th>
+            </tr>
+          </thead>
+          <tbody id="tablaPedidos" class="divide-y divide-slate-800/60 text-slate-300">
+            <tr>
+              <td colspan="6" class="p-4 text-center text-slate-500">No hay registros de compras aún.</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
+    </section>
 
-      <div>
-        <label class="text-[10px] text-slate-400 mb-1 block">Dirección Completa de Entrega</label>
-        <textarea id="userDireccion" placeholder="Calle, Número, Colonia, Municipio y Referencias" rows="3" class="bg-slate-800 border border-slate-700 text-white w-full p-3 text-xs rounded-xl focus:outline-none focus:border-emerald-500 resize-none"></textarea>
-      </div>
+    <!-- SECCIÓN: EDICIÓN DE CATÁLOGO Y PRECIOS -->
+    <section class="glass-card p-6 md:p-8 rounded-3xl space-y-6">
+      <h2 class="text-xl font-bold text-white">🛒 Edición de Catálogo y Precios</h2>
+      <div id="gridAdminProductos" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </section>
 
-      <button onclick="registrarUsuario()" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 text-xs w-full py-3.5 rounded-xl font-bold transition-all shadow-lg shadow-emerald-500/20">
-        Guardar Datos y Registrarse
-      </button>
-      <button onclick="toggleModal('modalCuenta')" class="text-xs text-slate-500 w-full hover:text-white pt-2">Cancelar</button>
-    </div>
-  </div>
-
-  <!-- MODAL: CARRITO Y OPCIONES DE PAGO (SIN PAYPAL) -->
-  <div id="modalCarrito" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden flex justify-center items-center p-4 z-50">
-    <div class="glass-card p-6 md:p-8 rounded-3xl max-w-lg w-full bg-slate-900 border border-white/10 max-h-[90vh] overflow-y-auto">
-      <h3 class="text-xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Tu Carrito de Compras</h3>
-      
-      <div id="itemsCarrito" class="divide-y divide-slate-800 mb-4 text-xs"></div>
-      
-      <div class="bg-slate-800/50 p-3 rounded-xl text-xs flex justify-between font-bold text-sm text-white mb-6 border border-slate-700/50">
-        <span>Total a Pagar:</span>
-        <span id="total" class="text-emerald-400">$0.00 MXN</span>
-      </div>
-
-      <!-- BOTONES DE PAGO (SOLO PAGO AL RECIBIR Y SPEI) -->
-      <div id="seccionBotonesIniciales" class="space-y-3">
-        <button onclick="pedirYPagarAlRecibir()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold py-3.5 rounded-xl text-xs transition-all shadow-lg shadow-emerald-500/20">
-          🛍️ Realizar Pedido y Pagar al Recibir (Efectivo / Tarjeta)
-        </button>
-        <button onclick="mostrarOpcionesDePagoDigital()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3.5 rounded-xl text-xs transition-all border border-blue-400/30">
-          🏦 Pagar por Transferencia SPEI
-        </button>
-      </div>
-
-      <!-- DETALLES DE TRANSFERENCIA BANCARIA -->
-      <div id="seccionOpcionesDigitales" class="hidden space-y-4 pt-2 border-t border-slate-800">
-        <div id="boxSpei" class="bg-slate-800/90 p-4 rounded-2xl border border-slate-700 text-xs space-y-3">
-          <p class="font-bold text-emerald-400 uppercase tracking-wide">Datos para Transferencia Bancaria</p>
-          <div class="space-y-1.5 text-slate-300">
-            <p><strong>🏦 Banco:</strong> Mercado Pago W</p>
-            <p><strong>👤 Titular:</strong> Fernando Presa Avila</p>
-            <p class="flex items-center justify-between bg-slate-900 p-2 rounded-lg border border-slate-700">
-              <span><strong>CLABE:</strong> <span id="clabeText">722969013056803201</span></span>
-              <button onclick="copiarClabe()" class="bg-emerald-500/20 text-emerald-400 font-bold px-2 py-1 rounded text-[10px] hover:bg-emerald-500/30">Copiar</button>
-            </p>
-          </div>
-          <button onclick="enviarComprobanteWhatsApp('SPEI')" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold py-3 rounded-xl transition-all shadow-md">
-            📲 Enviar Comprobante por WhatsApp
-          </button>
-        </div>
-
-        <button onclick="volverAInicioCarrito()" class="text-xs text-slate-400 hover:text-white w-full text-center pt-2">← Volver a opciones de pago</button>
-      </div>
-
-      <button onclick="toggleModal('modalCarrito')" class="mt-4 text-xs text-slate-500 w-full hover:text-white transition-colors">Seguir Comprando</button>
-    </div>
-  </div>
+  </main>
 
   <script>
     const socket = io();
+    let clientes = [];
+    let pedidos = [];
     let productos = [];
-    let carrito = [];
-    let usuarioActual = null;
 
     socket.on('inventario_actualizado', (data) => {
       productos = data;
-      renderCatalogo();
+      renderAdminProductos();
     });
 
-    function renderCatalogo() {
-      const grid = document.getElementById('gridProductos');
-      grid.innerHTML = productos.map(p => {
-        const opciones = Object.entries(p.precios)
-          .map(([pres, prec]) => `<option value="${pres}:${prec}">${pres} - $${prec} MXN</option>`).join('');
-        return `
-          <div class="glass-card p-6 rounded-2xl flex flex-col justify-between hover:border-emerald-500/40 transition-all duration-300">
-            <div>
-              <span class="text-[10px] bg-emerald-500/10 text-emerald-400 font-semibold px-3 py-1 rounded-full border border-emerald-500/20 uppercase tracking-wider">${p.categoria}</span>
-              <h3 class="font-bold text-base text-white mt-3">${p.nombre}</h3>
-            </div>
-            <div class="mt-6">
-              <select id="sel-${p.id}" class="bg-slate-800 border border-slate-700 text-white w-full p-2.5 text-xs rounded-xl mb-3 focus:outline-none focus:border-emerald-500">${opciones}</select>
-              <button onclick="agregarAlCarrito(${p.id})" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 text-xs w-full py-2.5 rounded-xl font-bold transition-all shadow-lg shadow-emerald-500/10">
-                + Agregar al Pedido
-              </button>
-            </div>
+    socket.on('cliente_registrado_notificacion', (cliente) => {
+      clientes.unshift(cliente);
+      renderClientes();
+    });
+
+    socket.on('pedido_registrado_notificacion', (pedido) => {
+      pedidos.unshift(pedido);
+      renderPedidos();
+    });
+
+    function renderClientes() {
+      document.getElementById('cantClientes').innerText = clientes.length;
+      const tbody = document.getElementById('tablaClientes');
+      if (!clientes.length) return;
+
+      tbody.innerHTML = clientes.map(c => `
+        <tr class="hover:bg-slate-800/40 transition-colors">
+          <td class="p-3 text-slate-400">${c.fechaRegistro || 'Reciente'}</td>
+          <td class="p-3 font-bold text-white">${c.nombre} ${c.apellido}</td>
+          <td class="p-3 text-emerald-400">${c.telefono}</td>
+          <td class="p-3 text-slate-300">${c.correo}</td>
+          <td class="p-3 font-mono text-amber-400 bg-amber-400/10 px-2 py-1 rounded w-fit">${c.password || 'N/A'}</td>
+          <td class="p-3 text-slate-400 max-w-xs truncate">${c.direccion}</td>
+        </tr>
+      `).join('');
+    }
+
+    function renderPedidos() {
+      document.getElementById('cantPedidos').innerText = pedidos.length;
+      const tbody = document.getElementById('tablaPedidos');
+      if (!pedidos.length) return;
+
+      tbody.innerHTML = pedidos.map(p => `
+        <tr class="hover:bg-slate-800/40 transition-colors">
+          <td class="p-3 text-slate-400">${p.fecha}</td>
+          <td class="p-3 font-bold text-white">${p.cliente}</td>
+          <td class="p-3 text-slate-300">${p.telefono}</td>
+          <td class="p-3"><span class="bg-blue-500/10 text-blue-400 border border-blue-500/20 px-2 py-0.5 rounded-full">${p.metodoPago}</span></td>
+          <td class="p-3 text-slate-300">${p.items ? p.items.map(i => `${i.nombre} (${i.presentacion})`).join(', ') : 'N/A'}</td>
+          <td class="p-3 text-right font-bold text-emerald-400">${p.monto}</td>
+        </tr>
+      `).join('');
+    }
+
+    function renderAdminProductos() {
+      const grid = document.getElementById('gridAdminProductos');
+      grid.innerHTML = productos.map(p => `
+        <div class="bg-slate-900/80 p-5 rounded-2xl border border-slate-800 space-y-3">
+          <span class="text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded">${p.categoria}</span>
+          <h3 class="font-bold text-white text-sm">${p.nombre}</h3>
+          
+          <div class="space-y-2 pt-2 border-t border-slate-800/80">
+            ${Object.entries(p.precios).map(([pres, prec]) => `
+              <div class="flex items-center justify-between text-xs gap-2">
+                <span class="text-slate-400">${pres}:</span>
+                <div class="flex items-center gap-1">
+                  <span class="text-slate-500">$</span>
+                  <input type="number" value="${prec}" id="p-${p.id}-${pres}" class="w-20 bg-slate-800 border border-slate-700 text-white px-2 py-1 rounded text-right focus:border-emerald-500 focus:outline-none">
+                </div>
+              </div>
+            `).join('')}
           </div>
-        `;
-      }).join('');
-    }
 
-    function agregarAlCarrito(id) {
-      const prod = productos.find(p => p.id === id);
-      const [pres, prec] = document.getElementById(`sel-${id}`).value.split(':');
-      carrito.push({ nombre: prod.nombre, presentacion: pres, precio: parseFloat(prec) });
-      actualizarCarrito();
-    }
-
-    function actualizarCarrito() {
-      document.getElementById('cartCount').innerText = carrito.length;
-      let tot = carrito.reduce((a, b) => a + b.precio, 0);
-      document.getElementById('total').innerText = `$${tot.toFixed(2)} MXN`;
-
-      document.getElementById('itemsCarrito').innerHTML = carrito.map((item, i) => `
-        <div class="py-3 flex justify-between items-center">
-          <div><p class="font-bold text-white">${item.nombre}</p><p class="text-slate-400">${item.presentacion} - $${item.precio} MXN</p></div>
-          <button onclick="eliminarCarrito(${i})" class="text-red-400 font-bold hover:text-red-300 px-2">✕</button>
+          <button onclick="guardarPrecio(${p.id})" class="w-full bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500 hover:text-slate-950 font-bold py-2 rounded-xl text-xs transition-all border border-emerald-500/30">
+            Actualizar Precios
+          </button>
         </div>
       `).join('');
     }
 
-    function eliminarCarrito(i) {
-      carrito.splice(i, 1);
-      actualizarCarrito();
-    }
-
-    function registrarPedidoEnServidor(metodoPago) {
-      const fechaActual = new Date().toLocaleString('es-MX', { dateStyle: 'short', timeStyle: 'short' });
-      socket.emit('nuevo_pedido_registrado', {
-        cliente: usuarioActual ? `${usuarioActual.nombre} ${usuarioActual.apellido}` : 'Cliente Anónimo',
-        telefono: usuarioActual ? usuarioActual.telefono : 'N/A',
-        metodoPago: metodoPago,
-        monto: document.getElementById('total').innerText,
-        fecha: fechaActual,
-        items: carrito
+    function guardarPrecio(id) {
+      const prod = productos.find(p => p.id === id);
+      const nuevosPrecios = {};
+      Object.keys(prod.precios).forEach(pres => {
+        const val = parseFloat(document.getElementById(`p-${id}-${pres}`).value);
+        if (!isNaN(val)) nuevosPrecios[pres] = val;
       });
+
+      socket.emit('actualizar_precios', { id, precios: nuevosPrecios });
+      alert('¡Precios actualizados con éxito!');
     }
-
-    function pedirYPagarAlRecibir() {
-      if (!carrito.length) return alert('El carrito está vacío');
-      
-      registrarPedidoEnServidor('Pago al Recibir');
-
-      let msg = `*NUEVO PEDIDO ARMM (Pago al Recibir)*\n\n`;
-      if (usuarioActual) {
-        msg += `👤 *Cliente:* ${usuarioActual.nombre} ${usuarioActual.apellido}\n`;
-        msg += `📞 *Teléfono:* ${usuarioActual.telefono}\n`;
-        msg += `📧 *Correo:* ${usuarioActual.correo}\n`;
-        msg += `📍 *Dirección:* ${usuarioActual.direccion}\n\n`;
-      }
-      msg += `*Detalle de Productos:*\n`;
-      carrito.forEach(c => msg += `- ${c.nombre} (${c.presentacion}): $${c.precio} MXN\n`);
-      msg += `\n💵 *Pago:* Al entregar (Efectivo / Tarjeta)\n💰 *Total:* ${document.getElementById('total').innerText}`;
-      
-      window.open(`https://wa.me/5213351097726?text=${encodeURIComponent(msg)}`, '_blank');
-    }
-
-    function mostrarOpcionesDePagoDigital() {
-      if (!carrito.length) return alert('El carrito está vacío');
-      document.getElementById('seccionBotonesIniciales').classList.add('hidden');
-      document.getElementById('seccionOpcionesDigitales').classList.remove('hidden');
-    }
-
-    function volverAInicioCarrito() {
-      document.getElementById('seccionBotonesIniciales').classList.remove('hidden');
-      document.getElementById('seccionOpcionesDigitales').classList.add('hidden');
-    }
-
-    function copiarClabe() {
-      const clabe = document.getElementById('clabeText').innerText;
-      navigator.clipboard.writeText(clabe);
-      alert('¡CLABE copiada al portapapeles!');
-    }
-
-    function enviarComprobanteWhatsApp(metodoPago) {
-      registrarPedidoEnServidor(metodoPago);
-
-      let msg = `*COMPROBANTE DE PAGO - ARMM*\n\n`;
-      if (usuarioActual) {
-        msg += `👤 *Cliente:* ${usuarioActual.nombre} ${usuarioActual.apellido}\n`;
-        msg += `📞 *Teléfono:* ${usuarioActual.telefono}\n`;
-        msg += `📧 *Correo:* ${usuarioActual.correo}\n`;
-        msg += `📍 *Dirección:* ${usuarioActual.direccion}\n\n`;
-      }
-      msg += `💳 *Método de Pago:* ${metodoPago}\n`;
-      msg += `💰 *Monto:* ${document.getElementById('total').innerText}\n\n`;
-      msg += `*Detalle del Pedido:*\n`;
-      carrito.forEach(c => msg += `- ${c.nombre} (${c.presentacion}): $${c.precio} MXN\n`);
-      msg += `\n*Adjunto mi comprobante de pago:*`;
-      
-      window.open(`https://wa.me/5213351097726?text=${encodeURIComponent(msg)}`, '_blank');
-    }
-
-    function registrarUsuario() {
-      const nombre = document.getElementById('userNombre').value.trim();
-      const apellido = document.getElementById('userApellido').value.trim();
-      const telefono = document.getElementById('userTelefono').value.trim();
-      const correo = document.getElementById('userCorreo').value.trim();
-      const direccion = document.getElementById('userDireccion').value.trim();
-
-      if (nombre && apellido && telefono && correo && direccion) {
-        const fechaRegistro = new Date().toLocaleString('es-MX', { dateStyle: 'short', timeStyle: 'short' });
-        usuarioActual = { nombre, apellido, telefono, correo, direccion, fechaRegistro };
-
-        socket.emit('nuevo_cliente_registrado', usuarioActual);
-        alert('¡Registro guardado con éxito! Ya puedes realizar tu pedido.');
-        toggleModal('modalCuenta');
-      } else {
-        alert('Por favor completa todos los campos del registro (Nombre, Apellido, Teléfono, Correo y Dirección).');
-      }
-    }
-
-    function toggleModal(id) { document.getElementById(id).classList.toggle('hidden'); }
   </script>
 </body>
 </html>
