@@ -51,7 +51,7 @@
           <span class="text-xs bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full border border-emerald-500/30 font-bold">PANEL ADMIN</span>
         </div>
         <div class="flex items-center gap-4">
-          <a href="/" class="text-xs text-slate-400 hover:text-white transition-colors">← Ver Sitio Público</a>
+          <a href="/" target="_blank" class="text-xs text-slate-400 hover:text-white transition-colors">← Ver Sitio Público</a>
           <button onclick="cerrarSesion()" class="text-xs bg-red-500/20 text-red-400 px-3 py-1 rounded-full border border-red-500/30 hover:bg-red-500 hover:text-white transition-all">Cerrar Sesión</button>
         </div>
       </div>
@@ -61,10 +61,50 @@
       <!-- TITULO -->
       <div>
         <h1 class="text-3xl font-extrabold text-white">Panel de Control General</h1>
-        <p class="text-slate-400 text-sm mt-1">Gestión de clientes, contraseñas, historial de ventas y catálogo en tiempo real.</p>
+        <p class="text-slate-400 text-sm mt-1">Gestión de clientes, catálogo, precios e historial en tiempo real.</p>
       </div>
 
-      <!-- SECCIÓN: CLIENTES REGISTRADOS CON CONTRASEÑAS -->
+      <!-- SECCIÓN: AGREGAR NUEVO PRODUCTO -->
+      <section class="glass-card p-6 md:p-8 rounded-3xl space-y-6">
+        <h2 class="text-xl font-bold text-white flex items-center gap-2">
+          <span>➕ Agregar Nuevo Producto al Catálogo</span>
+        </h2>
+        
+        <form onsubmit="agregarProducto(event)" class="space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="text-xs text-slate-400 block mb-1">Nombre del Producto</label>
+              <input type="text" id="nuevoNombre" required placeholder="Ej. Jabón Líquido Manos" class="w-full bg-slate-900 border border-slate-700 text-white px-4 py-2.5 rounded-xl text-xs focus:border-emerald-500 focus:outline-none">
+            </div>
+            <div>
+              <label class="text-xs text-slate-400 block mb-1">Categoría</label>
+              <input type="text" id="nuevaCategoria" required placeholder="Ej. Cuidado Personal, Desinfección" class="w-full bg-slate-900 border border-slate-700 text-white px-4 py-2.5 rounded-xl text-xs focus:border-emerald-500 focus:outline-none">
+            </div>
+          </div>
+
+          <p class="text-xs text-slate-400 pt-2 font-bold">Precios por Presentación (Dejar en 0 si no aplica):</p>
+          <div class="grid grid-cols-3 gap-4">
+            <div>
+              <label class="text-[11px] text-slate-400 block mb-1">Precio 1 Litro ($)</label>
+              <input type="number" step="0.01" id="precio1L" placeholder="0" class="w-full bg-slate-900 border border-slate-700 text-white px-3 py-2 rounded-xl text-xs focus:border-emerald-500 focus:outline-none">
+            </div>
+            <div>
+              <label class="text-[11px] text-slate-400 block mb-1">Precio 5 Litros ($)</label>
+              <input type="number" step="0.01" id="precio5L" placeholder="0" class="w-full bg-slate-900 border border-slate-700 text-white px-3 py-2 rounded-xl text-xs focus:border-emerald-500 focus:outline-none">
+            </div>
+            <div>
+              <label class="text-[11px] text-slate-400 block mb-1">Precio 20 Litros ($)</label>
+              <input type="number" step="0.01" id="precio20L" placeholder="0" class="w-full bg-slate-900 border border-slate-700 text-white px-3 py-2 rounded-xl text-xs focus:border-emerald-500 focus:outline-none">
+            </div>
+          </div>
+
+          <button type="submit" class="w-full md:w-auto bg-emerald-500 text-slate-950 font-bold px-6 py-3 rounded-xl text-xs hover:bg-emerald-400 transition-all shadow-lg shadow-emerald-500/20">
+            Publicar Producto Inmediatamente
+          </button>
+        </form>
+      </section>
+
+      <!-- SECCIÓN: CLIENTES REGISTRADOS -->
       <section class="glass-card p-6 md:p-8 rounded-3xl space-y-4">
         <div class="flex items-center justify-between">
           <h2 class="text-xl font-bold text-white flex items-center gap-2">
@@ -126,17 +166,15 @@
 
       <!-- SECCIÓN: EDICIÓN DE CATÁLOGO Y PRECIOS -->
       <section class="glass-card p-6 md:p-8 rounded-3xl space-y-6">
-        <h2 class="text-xl font-bold text-white">🛒 Edición de Catálogo y Precios</h2>
+        <h2 class="text-xl font-bold text-white">🛒 Catálogo de Productos y Edición de Precios</h2>
         <div id="gridAdminProductos" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
       </section>
     </main>
   </div>
 
   <script>
-    // CONTRASEÑA DIRECTA DE ACCESO
     const ADMIN_PASSWORD = "ARMM123";
 
-    // Comprobar si la sesión ya fue iniciada previamente
     if (sessionStorage.getItem('adminAutenticado') === 'true') {
       mostrarPanel();
     }
@@ -145,7 +183,6 @@
       e.preventDefault();
       const passIngresada = document.getElementById('adminPassword').value;
 
-      // Compara ignorando espacios en blanco accidentales
       if (passIngresada.trim() === ADMIN_PASSWORD) {
         sessionStorage.setItem('adminAutenticado', 'true');
         document.getElementById('errorMsg').classList.add('hidden');
@@ -175,14 +212,26 @@
       if (socket) return;
       socket = io();
 
+      socket.on('lista_clientes_inicial', (data) => {
+        clientes = data;
+        renderClientes();
+      });
+
+      socket.on('lista_pedidos_inicial', (data) => {
+        pedidos = data;
+        renderPedidos();
+      });
+
       socket.on('inventario_actualizado', (data) => {
         productos = data;
         renderAdminProductos();
       });
 
       socket.on('cliente_registrado_notificacion', (cliente) => {
-        clientes.unshift(cliente);
-        renderClientes();
+        if (!clientes.some(c => c.correo === cliente.correo)) {
+          clientes.unshift(cliente);
+          renderClientes();
+        }
       });
 
       socket.on('pedido_registrado_notificacion', (pedido) => {
@@ -191,19 +240,57 @@
       });
     }
 
+    function agregarProducto(e) {
+      e.preventDefault();
+
+      const nombre = document.getElementById('nuevoNombre').value;
+      const categoria = document.getElementById('nuevaCategoria').value;
+      
+      const p1 = parseFloat(document.getElementById('precio1L').value) || 0;
+      const p5 = parseFloat(document.getElementById('precio5L').value) || 0;
+      const p20 = parseFloat(document.getElementById('precio20L').value) || 0;
+
+      const precios = {};
+      if (p1 > 0) precios["1L"] = p1;
+      if (p5 > 0) precios["5L"] = p5;
+      if (p20 > 0) precios["20L"] = p20;
+
+      const nuevoProducto = {
+        id: Date.now(),
+        nombre,
+        categoria,
+        precios
+      };
+
+      // Emitir evento para agregar producto en servidor y actualizar web pública
+      socket.emit('agregar_nuevo_producto', nuevoProducto);
+
+      // Limpiar formulario
+      document.getElementById('nuevoNombre').value = '';
+      document.getElementById('nuevaCategoria').value = '';
+      document.getElementById('precio1L').value = '';
+      document.getElementById('precio5L').value = '';
+      document.getElementById('precio20L').value = '';
+
+      alert('¡Producto agregado y publicado en vivo!');
+    }
+
     function renderClientes() {
       document.getElementById('cantClientes').innerText = clientes.length;
       const tbody = document.getElementById('tablaClientes');
-      if (!clientes.length) return;
+      if (!clientes.length) {
+        tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-500">No hay clientes registrados aún.</td></tr>`;
+        return;
+      }
 
       tbody.innerHTML = clientes.map(c => `
         <tr class="hover:bg-slate-800/40 transition-colors">
           <td class="p-3 text-slate-400">${c.fechaRegistro || 'Reciente'}</td>
-          <td class="p-3 font-bold text-white">${c.nombre} ${c.apellido}</td>
-          <td class="p-3 text-emerald-400">${c.telefono}</td>
-          <td class="p-3 text-slate-300">${c.correo}</td>
-          <td class="p-3 font-mono text-amber-400 bg-amber-400/10 px-2 py-1 rounded w-fit">${c.password || 'N/A'}</td>
-          <td class="p-3 text-slate-400 max-w-xs truncate">${c.direccion}</td>
+          <td class="p-3 font-bold text-white">${c.nombre || ''} ${c.apellido || ''}</td>
+          <td class="p-3 text-emerald-400">${c.telefono || 'N/A'}</td>
+          <td class="p-3 text-slate-300">${c.correo || 'N/A'}</td>
+          <td class="p-3 font-mono text-amber-400 bg-amber-400/10 px-2 py-1 rounded w-fit">${c.password || '••••••'}</td>
+          <td class="p-3 text-slate-400 max-w-xs truncate">${c.direccion || 'Sin dirección'}</td>
         </tr>
       `).join('');
     }
@@ -211,7 +298,10 @@
     function renderPedidos() {
       document.getElementById('cantPedidos').innerText = pedidos.length;
       const tbody = document.getElementById('tablaPedidos');
-      if (!pedidos.length) return;
+      if (!pedidos.length) {
+        tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-500">No hay registros de compras aún.</td></tr>`;
+        return;
+      }
 
       tbody.innerHTML = pedidos.map(p => `
         <tr class="hover:bg-slate-800/40 transition-colors">
@@ -227,6 +317,8 @@
 
     function renderAdminProductos() {
       const grid = document.getElementById('gridAdminProductos');
+      if (!productos.length) return;
+
       grid.innerHTML = productos.map(p => `
         <div class="bg-slate-900/80 p-5 rounded-2xl border border-slate-800 space-y-3">
           <span class="text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded">${p.categoria}</span>
