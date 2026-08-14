@@ -19,13 +19,13 @@
     <button onclick="validarAdmin()" class="w-full bg-emerald-500 text-slate-950 font-bold py-2.5 rounded-xl text-xs">Ingresar</button>
   </div>
 
-  <!-- PANEL DE GESTIÓN COMPLETO -->
+  <!-- PANEL DE GESTIÓN PRINCIPAL -->
   <main id="panelAdmin" class="max-w-7xl mx-auto space-y-10 hidden">
     
     <div class="flex justify-between items-center border-b border-slate-800 pb-4">
       <div>
-        <h1 class="text-2xl font-black text-white tracking-wide">Administración de Pedidos</h1>
-        <p class="text-xs text-emerald-400 font-bold">Seguimiento en Tiempo Real</p>
+        <h1 class="text-2xl font-black text-white tracking-wide">Administración ARMM</h1>
+        <p class="text-xs text-emerald-400 font-bold">Gestión Integral de Pedidos y Accesos</p>
       </div>
       <button onclick="location.reload()" class="text-xs bg-slate-800 text-slate-300 px-3.5 py-1.5 rounded-xl hover:bg-slate-700">Salir</button>
     </div>
@@ -36,7 +36,7 @@
       <div id="contenedorPedidosAdmin" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
     </section>
 
-    <!-- SECCIÓN CENTRO DE AYUDA (RECUPERACIÓN DE CONTRASEÑAS) CON ACCIONES DE WHATSAPP -->
+    <!-- SECCIÓN CENTRO DE AYUDA (SOLICITUDES DE CONTRASEÑA DE LA FOTO) -->
     <section class="glass-card p-6 rounded-3xl space-y-4 text-left">
       <h2 class="text-lg font-bold text-white flex items-center gap-2">🆘 Centro de Ayuda (Solicitudes de Contraseña)</h2>
       <div id="contenedorAyudaAdmin" class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs"></div>
@@ -57,13 +57,13 @@
       </form>
     </section>
 
-    <!-- SECCIÓN 3: ACTUALIZAR PRECIOS DEL CATÁLOGO -->
+    <!-- SECCIÓN 3: PRECIOS DEL CATÁLOGO -->
     <section class="glass-card p-6 rounded-3xl space-y-4 text-left">
       <h2 class="text-lg font-bold text-white">🏷️ Modificar Precios de Productos Existentes</h2>
       <div id="contenedorPreciosAdmin" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
     </section>
 
-    <!-- SECCIÓN 4: LISTA DE CLIENTES REGISTRADOS -->
+    <!-- SECCIÓN 4: CLIENTES REGISTRADOS -->
     <section class="glass-card p-6 rounded-3xl space-y-4 text-left">
       <h2 class="text-lg font-bold text-white">👥 Clientes Registrados</h2>
       <div id="contenedorClientesAdmin" class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs"></div>
@@ -71,12 +71,12 @@
 
   </main>
 
-  <!-- MENÚ DESPLEGABLE / MODAL PARA DAR ACCESO (INGRESO DE CUENTA Y CONTRASEÑA) -->
+  <!-- MENÚ DESPLEGABLE / MODAL QUE PIDES PARA ASIGNAR CUENTA Y CONTRASEÑA -->
   <div id="modalDarAcceso" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
-    <div class="glass-card p-6 rounded-3xl max-w-sm w-full space-y-4 relative text-left">
+    <div class="glass-card bg-slate-900 border border-slate-700 p-6 rounded-3xl max-w-sm w-full space-y-4 relative text-left">
       <button onclick="cerrarModalAcceso()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold">✕</button>
-      <h3 class="text-sm font-bold text-white">🔑 Asignar Datos de Acceso</h3>
-      <p class="text-[11px] text-slate-400">Ingresa la cuenta y contraseña que se enviarán por WhatsApp al cliente.</p>
+      <h3 class="text-sm font-bold text-white">🔑 Asignar Datos de Acceso al Cliente</h3>
+      <p class="text-[11px] text-slate-400">Ingresa la cuenta y contraseña que se adjuntarán en el mensaje predeterminado de WhatsApp.</p>
 
       <input type="hidden" id="accTelefono">
       <input type="hidden" id="accNombre">
@@ -85,11 +85,11 @@
       <div class="space-y-3 text-xs">
         <div>
           <label class="text-[10px] text-slate-400">Cuenta / Usuario:</label>
-          <input type="text" id="accCuenta" placeholder="Ej. cliente@correo.com o teléfono" class="w-full bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl text-xs mt-1">
+          <input type="text" id="accCuenta" placeholder="Ej. cliente@correo.com o teléfono" class="w-full bg-slate-950 border border-slate-700 text-white p-2.5 rounded-xl text-xs mt-1">
         </div>
         <div>
           <label class="text-[10px] text-slate-400">Contraseña:</label>
-          <input type="text" id="accPassword" placeholder="Ej. ARMM2026*" class="w-full bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl text-xs mt-1">
+          <input type="text" id="accPassword" placeholder="Ej. ARMM2026*" class="w-full bg-slate-950 border border-slate-700 text-white p-2.5 rounded-xl text-xs mt-1">
         </div>
 
         <button onclick="enviarAccesoWhatsApp()" class="w-full bg-emerald-500 text-slate-950 font-bold py-2.5 rounded-xl hover:bg-emerald-400 transition-all text-xs">
@@ -132,52 +132,22 @@
             <span class="text-[10px] text-slate-400">${p.fechaRegistro}</span>
           </div>
           <div class="bg-slate-900/80 p-3 rounded-xl space-y-1 text-slate-300">
-            <p><strong class="text-white">Cliente:</strong> ${p.cliente.nombre} ${p.cliente.apellido || ''}</p>
+            <p><strong class="text-white">Cliente:</strong> ${p.cliente.nombre}</p>
             <p><strong class="text-white">Teléfono:</strong> ${p.cliente.telefono}</p>
             <p><strong class="text-white">Dirección:</strong> ${p.cliente.direccion}</p>
-            <p><strong class="text-white">Método Pago:</strong> ${p.metodoPago}</p>
           </div>
           <div class="bg-slate-950 p-3 rounded-xl space-y-1 text-[11px]">
-            <p class="font-bold text-white mb-1">Productos:</p>
-            ${p.productos.map(i => `<div>• ${i.nombre} (${i.presentacion}) - $${i.precio}</div>`).join('')}
             <p class="font-bold text-emerald-400 mt-2 text-xs">Total: $${p.total} MXN</p>
-          </div>
-          <div class="space-y-2 border-t border-slate-800 pt-3">
-            <div class="grid grid-cols-2 gap-2">
-              <div>
-                <label class="text-[10px] text-slate-400">Estado:</label>
-                <select id="estado-${p.id}" class="w-full bg-slate-900 border border-slate-700 text-white p-2 rounded-xl text-xs">
-                  <option value="Leído" ${p.estado === 'Leído' ? 'selected' : ''}>Leído</option>
-                  <option value="Preparando" ${p.estado === 'Preparando' ? 'selected' : ''}>Preparando</option>
-                  <option value="En camino" ${p.estado === 'En camino' ? 'selected' : ''}>En camino</option>
-                  <option value="Entregado" ${p.estado === 'Entregado' ? 'selected' : ''}>Entregado</option>
-                </select>
-              </div>
-              <div>
-                <label class="text-[10px] text-slate-400">Fecha Estimada:</label>
-                <input type="text" id="fecha-${p.id}" value="${p.fechaEstimada}" placeholder="Ej: 20/04/2026" class="w-full bg-slate-900 border border-slate-700 text-white p-2 rounded-xl text-xs">
-              </div>
-            </div>
-            <button onclick="guardarCambiosPedido('${p.id}')" class="w-full bg-blue-600/30 text-blue-300 border border-blue-500/40 hover:bg-blue-600 hover:text-white font-bold py-2.5 rounded-xl text-xs transition-all">
-              Actualizar Estado y Notificar
-            </button>
           </div>
         </div>
       `).join('');
     }
 
-    function guardarCambiosPedido(pedidoId) {
-      const nuevoEstado = document.getElementById(`estado-${pedidoId}`).value;
-      const fechaEstimada = document.getElementById(`fecha-${pedidoId}`).value;
-      socket.emit('actualizar_estado_pedido', { pedidoId, nuevoEstado, fechaEstimada });
-      alert('Pedido actualizado correctamente.');
-    }
-
-    // RENDERIZADO DEL CENTRO DE AYUDA CON BOTONES DE DAR / DENEGAR ACCESO
+    // RENDER DEL CENTRO DE AYUDA CON BOTONES DE DAR Y DENEGAR ACCESO
     function renderAyudaAdmin() {
       const container = document.getElementById('contenedorAyudaAdmin');
       if (!ayuda.length) {
-        container.innerHTML = '<p class="text-slate-400">No hay solicitudes de ayuda activas.</p>';
+        container.innerHTML = '<p class="text-slate-400">No hay solicitudes activas.</p>';
         return;
       }
 
@@ -186,7 +156,7 @@
           <div class="flex justify-between items-center">
             <span class="font-bold text-white">${a.id}</span>
             <span class="px-2 py-0.5 text-[10px] rounded-full font-bold ${a.esValido ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'}">
-              ${a.esValido ? '✓ Datos Coinciden' : '✕ No Coincide'}
+              ${a.esValido ? '✓ Coincide' : '✕ No Coincide'}
             </span>
           </div>
           <p class="text-slate-300"><strong>Nombre Enviado:</strong> ${a.nombre}</p>
@@ -196,7 +166,7 @@
             <p class="text-xs text-amber-400 font-bold">Contraseña en Sistema: ${a.passwordActual}</p>
           </div>
 
-          <!-- BOTONES DE ACCIÓN EN EL CENTRO DE AYUDA -->
+          <!-- BOTONES SOLICITADOS -->
           <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-800">
             <button onclick="abrirModalDarAcceso('${a.telefono}', '${a.nombre}', '${a.id}', '${a.correo !== 'No especificado' ? a.correo : a.telefono}', '${a.passwordActual}')" class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500 hover:text-slate-950 font-bold py-2 rounded-xl text-xs transition-all">
               ✓ Dar Acceso
@@ -211,7 +181,7 @@
       `).join('');
     }
 
-    // FUNCIONES DEL MENÚ DESPLEGABLE Y WHATSAPP
+    // FUNCIONES DE CONTROL DE ACCESO
     function abrirModalDarAcceso(telefono, nombre, id, correo, passActual) {
       document.getElementById('accTelefono').value = telefono;
       document.getElementById('accNombre').value = nombre;
@@ -233,14 +203,14 @@
       const pass = document.getElementById('accPassword').value;
 
       if (!cuenta || !pass) {
-        alert('Por favor completa los campos de Cuenta y Contraseña.');
+        alert('Ingresa la cuenta y la contraseña.');
         return;
       }
 
       let numLimpio = tel.replace(/\D/g, '');
       if (numLimpio.length === 10) numLimpio = '52' + numLimpio;
 
-      const mensaje = `Hola ${nombre}, te informamos que tu solicitud (${id}) en ARMM ha sido APROBADA. Ya puedes acceder a tu cuenta.\n\nCuenta: ${cuenta}\nContraseña: ${pass}`;
+      const mensaje = `Hola ${nombre}, te informamos que tu solicitud (${id}) en ARMM ha sido APROBADA. Ya puedes acceder.\n\nCuenta: ${cuenta}\nContraseña: ${pass}`;
       const url = `https://api.whatsapp.com/send?phone=${numLimpio}&text=${encodeURIComponent(mensaje)}`;
 
       window.open(url, '_blank');
@@ -251,7 +221,7 @@
       let numLimpio = telefono.replace(/\D/g, '');
       if (numLimpio.length === 10) numLimpio = '52' + numLimpio;
 
-      const mensaje = `Hola ${nombre}, te informamos que tu solicitud de acceso (${id}) en ARMM ha sido DENEGADA por discrepancia de datos. Si requieres asistencia por favor contáctanos directamente.`;
+      const mensaje = `Hola ${nombre}, te informamos que tu solicitud de acceso (${id}) en ARMM ha sido DENEGADA. Si consideras que es un error, contáctanos.`;
       const url = `https://api.whatsapp.com/send?phone=${numLimpio}&text=${encodeURIComponent(mensaje)}`;
 
       window.open(url, '_blank');
@@ -270,7 +240,7 @@
       };
       socket.emit('agregar_nuevo_producto', nuevo);
       e.target.reset();
-      alert('Producto agregado al inventario');
+      alert('Producto guardado');
     }
 
     function renderPreciosAdmin() {
@@ -279,22 +249,11 @@
         <div class="bg-slate-900/80 p-4 rounded-2xl border border-slate-800 space-y-2 text-xs">
           <p class="font-bold text-white text-sm">${p.nombre}</p>
           <div class="grid grid-cols-3 gap-2">
-            <div>
-              <label class="text-[10px] text-slate-400">1L ($):</label>
-              <input type="number" id="p1L-${p.id}" value="${p.precios['1L'] || 0}" class="w-full bg-slate-950 border border-slate-700 p-1.5 rounded-lg text-white">
-            </div>
-            <div>
-              <label class="text-[10px] text-slate-400">5L ($):</label>
-              <input type="number" id="p5L-${p.id}" value="${p.precios['5L'] || 0}" class="w-full bg-slate-950 border border-slate-700 p-1.5 rounded-lg text-white">
-            </div>
-            <div>
-              <label class="text-[10px] text-slate-400">20L ($):</label>
-              <input type="number" id="p20L-${p.id}" value="${p.precios['20L'] || 0}" class="w-full bg-slate-950 border border-slate-700 p-1.5 rounded-lg text-white">
-            </div>
+            <div><label class="text-[10px] text-slate-400">1L ($):</label><input type="number" id="p1L-${p.id}" value="${p.precios['1L'] || 0}" class="w-full bg-slate-950 border border-slate-700 p-1.5 rounded-lg text-white"></div>
+            <div><label class="text-[10px] text-slate-400">5L ($):</label><input type="number" id="p5L-${p.id}" value="${p.precios['5L'] || 0}" class="w-full bg-slate-950 border border-slate-700 p-1.5 rounded-lg text-white"></div>
+            <div><label class="text-[10px] text-slate-400">20L ($):</label><input type="number" id="p20L-${p.id}" value="${p.precios['20L'] || 0}" class="w-full bg-slate-950 border border-slate-700 p-1.5 rounded-lg text-white"></div>
           </div>
-          <button onclick="guardarPrecioProd(${p.id})" class="w-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 py-1.5 rounded-xl font-bold hover:bg-emerald-500 hover:text-slate-950 transition-all">
-            Actualizar Precios
-          </button>
+          <button onclick="guardarPrecioProd(${p.id})" class="w-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 py-1.5 rounded-xl font-bold hover:bg-emerald-500 hover:text-slate-950 transition-all">Actualizar Precios</button>
         </div>
       `).join('');
     }
@@ -312,37 +271,18 @@
     function renderClientesAdmin() {
       const container = document.getElementById('contenedorClientesAdmin');
       if (!clientes.length) {
-        container.innerHTML = '<p class="text-slate-400">No hay clientes registrados aún.</p>';
+        container.innerHTML = '<p class="text-slate-400">Sin clientes registrados.</p>';
         return;
       }
 
       container.innerHTML = clientes.map((c, idx) => `
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden transition-all">
-          <button onclick="toggleClienteDetails(${idx})" class="w-full p-3.5 text-left font-bold text-white flex justify-between items-center hover:bg-slate-800/50">
-            <span>👤 ${c.nombre} ${c.apellido || ''}</span>
-            <span id="arrow-cli-${idx}" class="text-xs text-slate-400">▼</span>
-          </button>
-          
-          <div id="details-cli-${idx}" class="hidden p-3 bg-slate-950/80 border-t border-slate-800 space-y-1.5 text-[11px] text-slate-300">
-            <p><strong class="text-white">Correo:</strong> ${c.correo || 'No especificado'}</p>
-            <p><strong class="text-white">Teléfono:</strong> ${c.telefono}</p>
-            <p><strong class="text-emerald-400">Contraseña:</strong> ${c.password}</p>
-            <p><strong class="text-white">Dirección:</strong> ${c.direccion || 'Sin dirección guardada'}</p>
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+          <div class="p-3.5 font-bold text-white flex justify-between items-center">
+            <span>👤 ${c.nombre}</span>
+            <span class="text-[10px] text-emerald-400">${c.telefono}</span>
           </div>
         </div>
       `).join('');
-    }
-
-    function toggleClienteDetails(idx) {
-      const panel = document.getElementById(`details-cli-${idx}`);
-      const arrow = document.getElementById(`arrow-cli-${idx}`);
-      if (panel.classList.contains('hidden')) {
-        panel.classList.remove('hidden');
-        arrow.innerText = '▲';
-      } else {
-        panel.classList.add('hidden');
-        arrow.innerText = '▼';
-      }
     }
   </script>
 </body>
