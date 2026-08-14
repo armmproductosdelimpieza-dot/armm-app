@@ -1,108 +1,318 @@
-const express = require('express');
-const http = require('http');
-const { Server } = require('socket.io');
-const path = require('path');
-
-const app = express();
-const server = http.createServer(app);
-const io = new Server(server);
-
-const PORT = process.env.PORT || 3000;
-
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(express.json());
-
-let inventario = [
-  {
-    id: 1,
-    nombre: "Cloro Concentrado",
-    categoria: "Desinfección",
-    precios: { "1L": 18, "5L": 75, "20L": 260 }
-  },
-  {
-    id: 2,
-    nombre: "Detergente Líquido Multiusos",
-    categoria: "Limpieza General",
-    precios: { "1L": 25, "5L": 110, "20L": 380 }
-  },
-  {
-    id: 3,
-    nombre: "Suavizante de Telas",
-    categoria: "Cuidado de Ropa",
-    precios: { "1L": 22, "5L": 95, "20L": 340 }
-  },
-  {
-    id: 4,
-    nombre: "Desengrasante Industrial",
-    categoria: "Especializados",
-    precios: { "1L": 35, "5L": 150, "20L": 520 }
-  }
-];
-
-let clientes = [];
-let pedidos = [];
-
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-
-app.get('/admin', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'admin.html'));
-});
-
-io.on('connection', (socket) => {
-  console.log(`Cliente conectado: ${socket.id}`);
-
-  socket.emit('inventario_actualizado', inventario);
-  socket.emit('lista_clientes_inicial', clientes);
-  socket.emit('lista_pedidos_inicial', pedidos);
-
-  // Agregar nuevo producto
-  socket.on('agregar_nuevo_producto', (nuevoProducto) => {
-    inventario.push(nuevoProducto);
-    io.emit('inventario_actualizado', inventario);
-  });
-
-  // Actualizar precios
-  socket.on('actualizar_precios', (data) => {
-    const producto = inventario.find(p => p.id === data.id);
-    if (producto) {
-      producto.precios = data.precios;
-      io.emit('inventario_actualizado', inventario);
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ARMM - Productos y Accesorios de Limpieza</title>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .glass-card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
-  });
-
-  // Nuevo registro de cliente
-  socket.on('nuevo_registro_cliente', (cliente) => {
-    const existe = clientes.some(c => c.correo === cliente.correo);
-    if (!existe) {
-      clientes.unshift(cliente);
+    .glass-nav {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
-    io.emit('cliente_registrado_notificacion', cliente);
-  });
+  </style>
+</head>
+<body class="bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 text-slate-100 font-sans min-h-screen relative">
 
-  // Validación de Iniciar Sesión de Cliente
-  socket.on('validar_login_cliente', ({ correo, pass }) => {
-    const clienteEncontrado = clientes.find(c => c.correo === correo && c.password === pass);
-    if (clienteEncontrado) {
-      socket.emit('respuesta_login_cliente', { exito: true, cliente: clienteEncontrado });
-    } else {
-      socket.emit('respuesta_login_cliente', { exito: false });
+  <!-- BARRA DE NAVEGACIÓN -->
+  <nav class="glass-nav fixed top-0 left-0 w-full z-50 px-6 py-4">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+      <div>
+        <span class="text-2xl font-black tracking-widest text-white">ARMM</span>
+        <p class="text-[10px] text-emerald-400 font-bold uppercase tracking-wider">Productos y Accesorios de Limpieza</p>
+      </div>
+
+      <div class="flex items-center gap-4">
+        <!-- BOTÓN DE PERFIL / INGRESAR -->
+        <div id="userProfileBtn">
+          <button onclick="abrirModalAuth()" class="text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-3 py-1.5 rounded-full hover:bg-emerald-500 hover:text-slate-950 font-bold transition-all">
+            Ingresar / Registrarse
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- SECCIÓN PRINCIPAL -->
+  <main class="max-w-7xl mx-auto pt-28 px-6 pb-20 space-y-12">
+    <!-- HERO HEADER -->
+    <div class="text-center space-y-4 max-w-3xl mx-auto pt-6">
+      <h1 class="text-4xl md:text-5xl font-black text-white tracking-tight">ARMM</h1>
+      <p class="text-emerald-400 text-sm font-bold tracking-widest uppercase">PRODUCTOS Y ACCESORIOS DE LIMPIEZA</p>
+      <p class="text-slate-400 text-sm md:text-base">Catálogo de productos de alta calidad para el hogar, negocio e industria.</p>
+    </div>
+
+    <!-- CATÁLOGO DE PRODUCTOS -->
+    <section class="space-y-6">
+      <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+        <span>🛒 Catálogo de Productos</span>
+      </h2>
+      <div id="gridProductos" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Los productos se cargan dinámicamente -->
+      </div>
+    </section>
+
+    <!-- ATENCIÓN PERSONALIZADA / WHATSAPP -->
+    <section class="glass-card p-8 rounded-3xl text-center space-y-4 max-w-2xl mx-auto">
+      <h3 class="text-xl font-bold text-white">¿Tienes dudas o necesitas atención personalizada?</h3>
+      <p class="text-slate-400 text-xs">Contáctanos directamente por WhatsApp para cotizaciones o entregas especiales.</p>
+      <a href="https://wa.me/523351097726" target="_blank" class="inline-flex items-center gap-2 bg-emerald-500 text-slate-950 font-bold px-6 py-3 rounded-xl text-sm hover:bg-emerald-400 transition-all shadow-lg shadow-emerald-500/20">
+        <span>Contáctanos por WhatsApp al (33 5109 7726)</span>
+      </a>
+    </section>
+  </main>
+
+  <!-- MODAL DE AUTENTICACIÓN / MI CUENTA -->
+  <div id="modalAuth" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
+    <div class="glass-card p-6 md:p-8 rounded-3xl max-w-md w-full space-y-6 relative">
+      <button onclick="cerrarModalAuth()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg font-bold">✕</button>
+
+      <!-- PESTAÑAS (LOGIN / REGISTRO) - Solo visibles si no hay sesión activa -->
+      <div id="tabsAuth" class="flex border-b border-slate-800 text-center">
+        <button id="tabLoginBtn" onclick="cambiarTab('login')" class="w-1/2 py-2 text-xs font-bold border-b-2 border-emerald-500 text-emerald-400">Iniciar Sesión</button>
+        <button id="tabRegBtn" onclick="cambiarTab('registro')" class="w-1/2 py-2 text-xs font-bold border-b-2 border-transparent text-slate-400 hover:text-white">Registrarse</button>
+      </div>
+
+      <!-- FORMULARIO 1: INICIAR SESIÓN -->
+      <div id="vistaLogin" class="space-y-4">
+        <form onsubmit="iniciarSesionCliente(event)" class="space-y-3 text-left">
+          <div>
+            <label class="text-[11px] text-slate-400">Correo Electrónico</label>
+            <input type="email" id="loginCorreo" required class="w-full bg-slate-900 border border-slate-700 text-white px-3 py-2 rounded-xl text-xs focus:border-emerald-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="text-[11px] text-slate-400">Contraseña</label>
+            <input type="password" id="loginPassword" required class="w-full bg-slate-900 border border-slate-700 text-white px-3 py-2 rounded-xl text-xs focus:border-emerald-500 focus:outline-none">
+          </div>
+          <p id="errorLogin" class="text-[11px] text-red-400 hidden">Correo o contraseña incorrectos.</p>
+          <button type="submit" class="w-full bg-emerald-500 text-slate-950 font-bold py-2.5 rounded-xl text-xs hover:bg-emerald-400 transition-all shadow-lg shadow-emerald-500/20">
+            Ingresar
+          </button>
+        </form>
+      </div>
+
+      <!-- FORMULARIO 2: REGISTRO -->
+      <div id="vistaRegistro" class="hidden space-y-4">
+        <form onsubmit="registrarCliente(event)" class="space-y-3 text-left">
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="text-[11px] text-slate-400">Nombre</label>
+              <input type="text" id="regNombre" required class="w-full bg-slate-900 border border-slate-700 text-white px-3 py-2 rounded-xl text-xs focus:border-emerald-500 focus:outline-none">
+            </div>
+            <div>
+              <label class="text-[11px] text-slate-400">Apellido</label>
+              <input type="text" id="regApellido" required class="w-full bg-slate-900 border border-slate-700 text-white px-3 py-2 rounded-xl text-xs focus:border-emerald-500 focus:outline-none">
+            </div>
+          </div>
+          <div>
+            <label class="text-[11px] text-slate-400">Correo Electrónico</label>
+            <input type="email" id="regCorreo" required class="w-full bg-slate-900 border border-slate-700 text-white px-3 py-2 rounded-xl text-xs focus:border-emerald-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="text-[11px] text-slate-400">Teléfono</label>
+            <input type="tel" id="regTelefono" required class="w-full bg-slate-900 border border-slate-700 text-white px-3 py-2 rounded-xl text-xs focus:border-emerald-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="text-[11px] text-slate-400">Contraseña</label>
+            <input type="password" id="regPassword" required class="w-full bg-slate-900 border border-slate-700 text-white px-3 py-2 rounded-xl text-xs focus:border-emerald-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="text-[11px] text-slate-400">Dirección de Entrega</label>
+            <input type="text" id="regDireccion" required class="w-full bg-slate-900 border border-slate-700 text-white px-3 py-2 rounded-xl text-xs focus:border-emerald-500 focus:outline-none">
+          </div>
+
+          <button type="submit" class="w-full bg-emerald-500 text-slate-950 font-bold py-2.5 rounded-xl text-xs hover:bg-emerald-400 transition-all shadow-lg shadow-emerald-500/20">
+            Crear Cuenta y Guardar
+          </button>
+        </form>
+      </div>
+
+      <!-- VISTA 3: PERFIL ACTIVO (SI YA TIENE SESIÓN INICIADA) -->
+      <div id="vistaPerfilActivo" class="hidden space-y-6">
+        <div class="border-b border-slate-800 pb-4 flex justify-between items-center">
+          <div>
+            <h2 id="perfilNombre" class="text-xl font-bold text-white"></h2>
+            <p id="perfilCorreo" class="text-xs text-slate-400"></p>
+          </div>
+          <button onclick="cerrarSesionCliente()" class="text-[10px] bg-red-500/20 text-red-400 px-2.5 py-1 rounded-full border border-red-500/30">Cerrar Sesión</button>
+        </div>
+
+        <div class="bg-slate-900/60 p-4 rounded-2xl border border-slate-800 space-y-2 text-xs text-left">
+          <p class="text-emerald-400 font-bold text-[11px]">DATOS REGISTRADOS</p>
+          <p><span class="text-slate-400">📞 Teléfono:</span> <span id="perfilTelefono" class="text-white"></span></p>
+          <p><span class="text-slate-400">📍 Dirección:</span> <span id="perfilDireccion" class="text-white"></span></p>
+        </div>
+
+        <button onclick="cerrarModalAuth()" class="w-full bg-slate-800 text-slate-300 font-bold py-2.5 rounded-xl text-xs hover:bg-slate-700 transition-all">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const socket = io();
+
+    let productos = [];
+    let clienteActual = JSON.parse(localStorage.getItem('armm_cliente')) || null;
+
+    socket.on('inventario_actualizado', (data) => {
+      productos = data;
+      renderProductos();
+    });
+
+    actualizarBotonPerfil();
+
+    function renderProductos() {
+      const grid = document.getElementById('gridProductos');
+      if (!productos.length) return;
+
+      grid.innerHTML = productos.map(p => `
+        <div class="glass-card p-6 rounded-3xl space-y-4 flex flex-col justify-between">
+          <div class="space-y-2">
+            <span class="text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full font-bold">${p.categoria}</span>
+            <h3 class="font-extrabold text-white text-lg">${p.nombre}</h3>
+          </div>
+
+          <div class="space-y-2">
+            <p class="text-xs text-slate-400">Precios y Presentaciones:</p>
+            <div class="grid grid-cols-3 gap-2">
+              ${Object.entries(p.precios).map(([pres, prec]) => `
+                <div class="bg-slate-900/80 p-2 rounded-xl text-center border border-slate-800">
+                  <span class="block text-[10px] text-slate-400">${pres}</span>
+                  <span class="block text-xs font-bold text-emerald-400">$${prec}</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <button onclick="comprarWhatsApp('${p.nombre}')" class="w-full bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500 hover:text-slate-950 font-bold py-2.5 rounded-xl text-xs transition-all border border-emerald-500/30 flex items-center justify-center gap-2">
+            <span>Pedir por WhatsApp</span>
+          </button>
+        </div>
+      `).join('');
     }
-  });
 
-  // Registro de pedido
-  socket.on('nuevo_pedido', (pedido) => {
-    pedidos.unshift(pedido);
-    io.emit('pedido_registrado_notificacion', pedido);
-  });
+    function cambiarTab(tab) {
+      document.getElementById('errorLogin').classList.add('hidden');
+      if (tab === 'login') {
+        document.getElementById('vistaLogin').classList.remove('hidden');
+        document.getElementById('vistaRegistro').classList.add('hidden');
+        document.getElementById('tabLoginBtn').className = "w-1/2 py-2 text-xs font-bold border-b-2 border-emerald-500 text-emerald-400";
+        document.getElementById('tabRegBtn').className = "w-1/2 py-2 text-xs font-bold border-b-2 border-transparent text-slate-400 hover:text-white";
+      } else {
+        document.getElementById('vistaLogin').classList.add('hidden');
+        document.getElementById('vistaRegistro').classList.remove('hidden');
+        document.getElementById('tabRegBtn').className = "w-1/2 py-2 text-xs font-bold border-b-2 border-emerald-500 text-emerald-400";
+        document.getElementById('tabLoginBtn').className = "w-1/2 py-2 text-xs font-bold border-b-2 border-transparent text-slate-400 hover:text-white";
+      }
+    }
 
-  socket.on('disconnect', () => {
-    console.log(`Cliente desconectado: ${socket.id}`);
-  });
-});
+    function abrirModalAuth() {
+      document.getElementById('modalAuth').classList.remove('hidden');
+      if (clienteActual) {
+        document.getElementById('tabsAuth').classList.add('hidden');
+        document.getElementById('vistaLogin').classList.add('hidden');
+        document.getElementById('vistaRegistro').classList.add('hidden');
+        document.getElementById('vistaPerfilActivo').classList.remove('hidden');
+        
+        document.getElementById('perfilNombre').innerText = `${clienteActual.nombre} ${clienteActual.apellido}`;
+        document.getElementById('perfilCorreo').innerText = clienteActual.correo;
+        document.getElementById('perfilTelefono').innerText = clienteActual.telefono;
+        document.getElementById('perfilDireccion').innerText = clienteActual.direccion;
+      } else {
+        document.getElementById('tabsAuth').classList.remove('hidden');
+        document.getElementById('vistaPerfilActivo').classList.add('hidden');
+        cambiarTab('login');
+      }
+    }
 
-server.listen(PORT, () => {
-  console.log(`Servidor ARMM ejecutándose en http://localhost:${PORT}`);
-});
+    function cerrarModalAuth() {
+      document.getElementById('modalAuth').classList.add('hidden');
+    }
 
+    function registrarCliente(e) {
+      e.preventDefault();
+
+      const nuevoCliente = {
+        nombre: document.getElementById('regNombre').value,
+        apellido: document.getElementById('regApellido').value,
+        correo: document.getElementById('regCorreo').value,
+        telefono: document.getElementById('regTelefono').value,
+        password: document.getElementById('regPassword').value,
+        direccion: document.getElementById('regDireccion').value,
+        fechaRegistro: new Date().toLocaleDateString('es-MX', {
+          day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
+        })
+      };
+
+      clienteActual = nuevoCliente;
+      localStorage.setItem('armm_cliente', JSON.stringify(nuevoCliente));
+
+      socket.emit('nuevo_registro_cliente', nuevoCliente);
+
+      actualizarBotonPerfil();
+      abrirModalAuth();
+    }
+
+    function iniciarSesionCliente(e) {
+      e.preventDefault();
+      const correo = document.getElementById('loginCorreo').value;
+      const pass = document.getElementById('loginPassword').value;
+
+      // Solicitar autenticación al servidor o validar
+      socket.emit('validar_login_cliente', { correo, pass });
+    }
+
+    socket.on('respuesta_login_cliente', (res) => {
+      if (res.exito) {
+        clienteActual = res.cliente;
+        localStorage.setItem('armm_cliente', JSON.stringify(clienteActual));
+        actualizarBotonPerfil();
+        abrirModalAuth();
+      } else {
+        document.getElementById('errorLogin').classList.remove('hidden');
+      }
+    });
+
+    function cerrarSesionCliente() {
+      localStorage.removeItem('armm_cliente');
+      clienteActual = null;
+      actualizarBotonPerfil();
+      abrirModalAuth();
+    }
+
+    function actualizarBotonPerfil() {
+      const container = document.getElementById('userProfileBtn');
+      if (clienteActual) {
+        container.innerHTML = `
+          <button onclick="abrirModalAuth()" class="text-xs bg-blue-500/20 text-blue-400 border border-blue-500/30 px-3 py-1.5 rounded-full font-bold">
+            👤 ${clienteActual.nombre}
+          </button>
+        `;
+      } else {
+        container.innerHTML = `
+          <button onclick="abrirModalAuth()" class="text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-3 py-1.5 rounded-full hover:bg-emerald-500 hover:text-slate-950 font-bold transition-all">
+            Ingresar / Registrarse
+          </button>
+        `;
+      }
+    }
+
+    function comprarWhatsApp(productoNombre) {
+      let mensaje = `Hola, me interesa pedir ${productoNombre} en ARMM.`;
+      if (clienteActual) {
+        mensaje += ` Mi nombre es ${clienteActual.nombre} ${clienteActual.apellido} y mi dirección de entrega es ${clienteActual.direccion}.`;
+      }
+      window.open(`https://wa.me/523351097726?text=${encodeURIComponent(mensaje)}`, '_blank');
+    }
+  </script>
+</body>
+</html>
