@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ARMM - Panel Administrador</title>
+  <title>ARMM - Acceso Administrador</title>
   <script src="/socket.io/socket.io.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
@@ -21,113 +21,171 @@
 </head>
 <body class="bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 text-slate-100 font-sans min-h-screen relative">
 
-  <!-- BARRA SUPERIOR -->
-  <nav class="glass-nav fixed top-0 left-0 w-full z-50 px-6 py-4">
-    <div class="max-w-7xl mx-auto flex justify-between items-center">
-      <div class="flex items-center gap-3">
-        <span class="text-2xl font-black tracking-widest text-white">ARMM</span>
-        <span class="text-xs bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full border border-emerald-500/30 font-bold">PANEL ADMIN</span>
+  <!-- FORMULARIO DE LOGIN (SE MUESTRA PRIMERO) -->
+  <div id="loginSection" class="min-h-screen flex items-center justify-center p-4">
+    <div class="glass-card p-8 rounded-3xl max-w-md w-full space-y-6 text-center">
+      <div class="space-y-2">
+        <h1 class="text-3xl font-black tracking-widest text-white">ARMM</h1>
+        <p class="text-xs bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full border border-emerald-500/30 inline-block font-bold">ACCESO ADMINISTRADOR</p>
       </div>
-      <a href="/" class="text-xs text-slate-400 hover:text-white transition-colors">← Ver Sitio Público</a>
+      <form onsubmit="validarAcceso(event)" class="space-y-4 text-left">
+        <div>
+          <label class="text-xs text-slate-400 block mb-1">Contraseña de Administrador</label>
+          <input type="password" id="adminPassword" required placeholder="ARMM123" class="w-full bg-slate-900/80 border border-slate-700 text-white px-4 py-2.5 rounded-xl text-sm focus:border-emerald-500 focus:outline-none">
+        </div>
+        <p id="errorMsg" class="text-xs text-red-400 hidden">Contraseña incorrecta. Inténtalo de nuevo.</p>
+        <button type="submit" class="w-full bg-emerald-500 text-slate-950 font-bold py-3 rounded-xl text-sm hover:bg-emerald-400 transition-all shadow-lg shadow-emerald-500/20">
+          Ingresar al Panel
+        </button>
+      </form>
     </div>
-  </nav>
+  </div>
 
-  <main class="max-w-7xl mx-auto pt-28 px-6 pb-20 space-y-12">
-    
-    <!-- TITULO -->
-    <div>
-      <h1 class="text-3xl font-extrabold text-white">Panel de Control General</h1>
-      <p class="text-slate-400 text-sm mt-1">Gestión de clientes, contraseñas, historial de ventas y catálogo en tiempo real.</p>
-    </div>
+  <!-- CONTENIDO DEL PANEL (OCULTO POR DEFECTO) -->
+  <div id="adminPanel" class="hidden">
+    <!-- BARRA SUPERIOR -->
+    <nav class="glass-nav fixed top-0 left-0 w-full z-50 px-6 py-4">
+      <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <div class="flex items-center gap-3">
+          <span class="text-2xl font-black tracking-widest text-white">ARMM</span>
+          <span class="text-xs bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full border border-emerald-500/30 font-bold">PANEL ADMIN</span>
+        </div>
+        <div class="flex items-center gap-4">
+          <a href="/" class="text-xs text-slate-400 hover:text-white transition-colors">← Ver Sitio Público</a>
+          <button onclick="cerrarSesion()" class="text-xs bg-red-500/20 text-red-400 px-3 py-1 rounded-full border border-red-500/30 hover:bg-red-500 hover:text-white transition-all">Cerrar Sesión</button>
+        </div>
+      </div>
+    </nav>
 
-    <!-- SECCIÓN: CLIENTES REGISTRADOS CON CONTRASEÑAS -->
-    <section class="glass-card p-6 md:p-8 rounded-3xl space-y-4">
-      <div class="flex items-center justify-between">
-        <h2 class="text-xl font-bold text-white flex items-center gap-2">
-          <span>👥 Clientes y Perfiles Registrados</span>
-          <span id="cantClientes" class="text-xs bg-blue-500/20 text-blue-400 px-2.5 py-0.5 rounded-full">0</span>
-        </h2>
+    <main class="max-w-7xl mx-auto pt-28 px-6 pb-20 space-y-12">
+      <!-- TITULO -->
+      <div>
+        <h1 class="text-3xl font-extrabold text-white">Panel de Control General</h1>
+        <p class="text-slate-400 text-sm mt-1">Gestión de clientes, contraseñas, historial de ventas y catálogo en tiempo real.</p>
       </div>
 
-      <div class="overflow-x-auto">
-        <table class="w-full text-left text-xs border-collapse">
-          <thead>
-            <tr class="border-b border-slate-800 text-slate-400 uppercase tracking-wider">
-              <th class="p-3">Fecha</th>
-              <th class="p-3">Nombre Completo</th>
-              <th class="p-3">Teléfono</th>
-              <th class="p-3">Correo</th>
-              <th class="p-3">Contraseña</th>
-              <th class="p-3">Dirección</th>
-            </tr>
-          </thead>
-          <tbody id="tablaClientes" class="divide-y divide-slate-800/60 text-slate-300">
-            <tr>
-              <td colspan="6" class="p-4 text-center text-slate-500">No hay clientes registrados aún.</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
+      <!-- SECCIÓN: CLIENTES REGISTRADOS CON CONTRASEÑAS -->
+      <section class="glass-card p-6 md:p-8 rounded-3xl space-y-4">
+        <div class="flex items-center justify-between">
+          <h2 class="text-xl font-bold text-white flex items-center gap-2">
+            <span>👥 Clientes y Perfiles Registrados</span>
+            <span id="cantClientes" class="text-xs bg-blue-500/20 text-blue-400 px-2.5 py-0.5 rounded-full">0</span>
+          </h2>
+        </div>
 
-    <!-- SECCIÓN: HISTÓRICO DE COMPRAS -->
-    <section class="glass-card p-6 md:p-8 rounded-3xl space-y-4">
-      <div class="flex items-center justify-between">
-        <h2 class="text-xl font-bold text-white flex items-center gap-2">
-          <span>📦 Pedidos y Compras Realizadas</span>
-          <span id="cantPedidos" class="text-xs bg-emerald-500/20 text-emerald-400 px-2.5 py-0.5 rounded-full">0</span>
-        </h2>
-      </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr class="border-b border-slate-800 text-slate-400 uppercase tracking-wider">
+                <th class="p-3">Fecha</th>
+                <th class="p-3">Nombre Completo</th>
+                <th class="p-3">Teléfono</th>
+                <th class="p-3">Correo</th>
+                <th class="p-3">Contraseña</th>
+                <th class="p-3">Dirección</th>
+              </tr>
+            </thead>
+            <tbody id="tablaClientes" class="divide-y divide-slate-800/60 text-slate-300">
+              <tr>
+                <td colspan="6" class="p-4 text-center text-slate-500">No hay clientes registrados aún.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
 
-      <div class="overflow-x-auto">
-        <table class="w-full text-left text-xs border-collapse">
-          <thead>
-            <tr class="border-b border-slate-800 text-slate-400 uppercase tracking-wider">
-              <th class="p-3">Fecha</th>
-              <th class="p-3">Cliente</th>
-              <th class="p-3">Teléfono</th>
-              <th class="p-3">Método de Pago</th>
-              <th class="p-3">Productos</th>
-              <th class="p-3 text-right">Total</th>
-            </tr>
-          </thead>
-          <tbody id="tablaPedidos" class="divide-y divide-slate-800/60 text-slate-300">
-            <tr>
-              <td colspan="6" class="p-4 text-center text-slate-500">No hay registros de compras aún.</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
+      <!-- SECCIÓN: HISTÓRICO DE COMPRAS -->
+      <section class="glass-card p-6 md:p-8 rounded-3xl space-y-4">
+        <div class="flex items-center justify-between">
+          <h2 class="text-xl font-bold text-white flex items-center gap-2">
+            <span>📦 Pedidos y Compras Realizadas</span>
+            <span id="cantPedidos" class="text-xs bg-emerald-500/20 text-emerald-400 px-2.5 py-0.5 rounded-full">0</span>
+          </h2>
+        </div>
 
-    <!-- SECCIÓN: EDICIÓN DE CATÁLOGO Y PRECIOS -->
-    <section class="glass-card p-6 md:p-8 rounded-3xl space-y-6">
-      <h2 class="text-xl font-bold text-white">🛒 Edición de Catálogo y Precios</h2>
-      <div id="gridAdminProductos" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-    </section>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr class="border-b border-slate-800 text-slate-400 uppercase tracking-wider">
+                <th class="p-3">Fecha</th>
+                <th class="p-3">Cliente</th>
+                <th class="p-3">Teléfono</th>
+                <th class="p-3">Método de Pago</th>
+                <th class="p-3">Productos</th>
+                <th class="p-3 text-right">Total</th>
+              </tr>
+            </thead>
+            <tbody id="tablaPedidos" class="divide-y divide-slate-800/60 text-slate-300">
+              <tr>
+                <td colspan="6" class="p-4 text-center text-slate-500">No hay registros de compras aún.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
 
-  </main>
+      <!-- SECCIÓN: EDICIÓN DE CATÁLOGO Y PRECIOS -->
+      <section class="glass-card p-6 md:p-8 rounded-3xl space-y-6">
+        <h2 class="text-xl font-bold text-white">🛒 Edición de Catálogo y Precios</h2>
+        <div id="gridAdminProductos" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+      </section>
+    </main>
+  </div>
 
   <script>
-    const socket = io();
+    // CAMBIA ESTA CONTRASEÑA POR LA QUE TÚ QUIERAS USAR PARA ENTRAR
+    const ADMIN_PASSWORD = "armmadmin2026";
+
+    // Comprobar si ya inició sesión previamente
+    if (sessionStorage.getItem('adminAutenticado') === 'true') {
+      mostrarPanel();
+    }
+
+    function validarAcceso(e) {
+      e.preventDefault();
+      const pass = document.getElementById('adminPassword').value;
+      if (pass === ADMIN_PASSWORD) {
+        sessionStorage.setItem('adminAutenticado', 'true');
+        mostrarPanel();
+      } else {
+        document.getElementById('errorMsg').classList.remove('hidden');
+      }
+    }
+
+    function mostrarPanel() {
+      document.getElementById('loginSection').classList.add('hidden');
+      document.getElementById('adminPanel').classList.remove('hidden');
+      iniciarSocket();
+    }
+
+    function cerrarSesion() {
+      sessionStorage.removeItem('adminAutenticado');
+      location.reload();
+    }
+
+    let socket;
     let clientes = [];
     let pedidos = [];
     let productos = [];
 
-    socket.on('inventario_actualizado', (data) => {
-      productos = data;
-      renderAdminProductos();
-    });
+    function iniciarSocket() {
+      socket = io();
 
-    socket.on('cliente_registrado_notificacion', (cliente) => {
-      clientes.unshift(cliente);
-      renderClientes();
-    });
+      socket.on('inventario_actualizado', (data) => {
+        productos = data;
+        renderAdminProductos();
+      });
 
-    socket.on('pedido_registrado_notificacion', (pedido) => {
-      pedidos.unshift(pedido);
-      renderPedidos();
-    });
+      socket.on('cliente_registrado_notificacion', (cliente) => {
+        clientes.unshift(cliente);
+        renderClientes();
+      });
+
+      socket.on('pedido_registrado_notificacion', (pedido) => {
+        pedidos.unshift(pedido);
+        renderPedidos();
+      });
+    }
 
     function renderClientes() {
       document.getElementById('cantClientes').innerText = clientes.length;
