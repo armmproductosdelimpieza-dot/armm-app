@@ -27,7 +27,7 @@
     <div class="max-w-7xl mx-auto flex justify-between items-center">
       <a href="#inicio" class="flex flex-col">
         <span class="text-2xl font-black tracking-widest text-white">ARMM</span>
-        <span class="text-[9px] text-emerald-400 font-semibold tracking-wider">LIMPIEZA PROFESIONAL</span>
+        <span class="text-[9px] text-emerald-400 font-semibold tracking-wider">PRODUCTOS Y ACCESORIOS DE LIMPIEZA</span>
       </a>
 
       <div class="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-300">
@@ -49,7 +49,7 @@
     </div>
   </nav>
 
-  <!-- HEROCENTER -->
+  <!-- INICIO / HERO -->
   <section id="inicio" class="min-h-screen flex items-center justify-center pt-24 px-6 relative">
     <div class="max-w-4xl mx-auto text-center space-y-6 z-10">
       <span class="text-xs uppercase tracking-widest text-emerald-400 bg-emerald-500/10 px-4 py-1.5 rounded-full border border-emerald-500/20">
@@ -64,7 +64,7 @@
 
       <div class="inline-flex items-center gap-3 bg-blue-900/40 border border-blue-500/30 px-5 py-2.5 rounded-2xl text-xs text-blue-200 shadow-xl">
         <span class="text-lg">💳</span>
-        <span><strong>¡Aceptamos pagos al recibir!</strong> Efectivo o tarjeta de débito/crédito con terminal física.</span>
+        <span><strong>¡Aceptamos pagos al recibir o por Transferencia SPEI!</strong></span>
       </div>
 
       <div class="pt-4 flex flex-wrap gap-4 justify-center">
@@ -75,7 +75,7 @@
     </div>
   </section>
 
-  <!-- PRODUCTOS -->
+  <!-- CATÁLOGO DE PRODUCTOS -->
   <section id="productos" class="max-w-7xl mx-auto px-6 py-20">
     <div class="text-center mb-12">
       <h2 class="text-3xl font-bold text-white">Catálogo de Productos</h2>
@@ -100,30 +100,55 @@
     <div class="glass-card p-8 md:p-12 rounded-3xl text-center space-y-6">
       <h2 class="text-3xl font-bold text-white">¿Tienes dudas o necesitas atención personalizada?</h2>
       <a href="https://wa.me/5213351097726" target="_blank" class="inline-block bg-emerald-500 text-slate-950 font-bold px-8 py-3.5 rounded-full text-xs hover:bg-emerald-600 transition-all">
-        Contactar por WhatsApp
+        Contactar por WhatsApp (33 5109 7726)
       </a>
     </div>
   </section>
 
-  <!-- MODAL: REGISTRO -->
+  <!-- MODAL: REGISTRO COMPLETO DE CLIENTE -->
   <div id="modalCuenta" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden flex justify-center items-center p-4 z-50">
-    <div class="glass-card p-8 rounded-3xl max-w-sm w-full space-y-4 bg-slate-900">
+    <div class="glass-card p-8 rounded-3xl max-w-md w-full space-y-4 bg-slate-900 border border-white/10 max-h-[90vh] overflow-y-auto">
       <h3 class="text-xl font-bold text-white">Registro de Cliente</h3>
-      <input type="text" id="userNombre" placeholder="Nombre completo" class="bg-slate-800 border border-slate-700 text-white w-full p-3 text-xs rounded-xl focus:outline-none focus:border-emerald-500">
-      <input type="tel" id="userTelefono" placeholder="WhatsApp / Teléfono" class="bg-slate-800 border border-slate-700 text-white w-full p-3 text-xs rounded-xl focus:outline-none focus:border-emerald-500">
-      <button onclick="registrarUsuario()" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 text-xs w-full py-3 rounded-xl font-bold transition-all">
-        Completar Registro
+      <p class="text-xs text-slate-400">Ingresa tus datos completos para registrar tus compras y facilitar las entregas.</p>
+      
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="text-[10px] text-slate-400 mb-1 block">Nombre(s)</label>
+          <input type="text" id="userNombre" placeholder="Tu nombre" class="bg-slate-800 border border-slate-700 text-white w-full p-3 text-xs rounded-xl focus:outline-none focus:border-emerald-500">
+        </div>
+        <div>
+          <label class="text-[10px] text-slate-400 mb-1 block">Apellido(s)</label>
+          <input type="text" id="userApellido" placeholder="Tus apellidos" class="bg-slate-800 border border-slate-700 text-white w-full p-3 text-xs rounded-xl focus:outline-none focus:border-emerald-500">
+        </div>
+      </div>
+
+      <div>
+        <label class="text-[10px] text-slate-400 mb-1 block">WhatsApp / Teléfono</label>
+        <input type="tel" id="userTelefono" placeholder="Ej. 3312345678" class="bg-slate-800 border border-slate-700 text-white w-full p-3 text-xs rounded-xl focus:outline-none focus:border-emerald-500">
+      </div>
+
+      <div>
+        <label class="text-[10px] text-slate-400 mb-1 block">Correo Electrónico</label>
+        <input type="email" id="userCorreo" placeholder="correo@ejemplo.com" class="bg-slate-800 border border-slate-700 text-white w-full p-3 text-xs rounded-xl focus:outline-none focus:border-emerald-500">
+      </div>
+
+      <div>
+        <label class="text-[10px] text-slate-400 mb-1 block">Dirección Completa de Entrega</label>
+        <textarea id="userDireccion" placeholder="Calle, Número, Colonia, Municipio y Referencias" rows="3" class="bg-slate-800 border border-slate-700 text-white w-full p-3 text-xs rounded-xl focus:outline-none focus:border-emerald-500 resize-none"></textarea>
+      </div>
+
+      <button onclick="registrarUsuario()" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 text-xs w-full py-3.5 rounded-xl font-bold transition-all shadow-lg shadow-emerald-500/20">
+        Guardar Datos y Registrarse
       </button>
-      <button onclick="toggleModal('modalCuenta')" class="text-xs text-slate-500 w-full hover:text-white">Cancelar</button>
+      <button onclick="toggleModal('modalCuenta')" class="text-xs text-slate-500 w-full hover:text-white pt-2">Cancelar</button>
     </div>
   </div>
 
-  <!-- MODAL: CARRITO Y CHECKOUT -->
+  <!-- MODAL: CARRITO Y OPCIONES DE PAGO (SIN PAYPAL) -->
   <div id="modalCarrito" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden flex justify-center items-center p-4 z-50">
     <div class="glass-card p-6 md:p-8 rounded-3xl max-w-lg w-full bg-slate-900 border border-white/10 max-h-[90vh] overflow-y-auto">
       <h3 class="text-xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Tu Carrito de Compras</h3>
       
-      <!-- Lista de Items -->
       <div id="itemsCarrito" class="divide-y divide-slate-800 mb-4 text-xs"></div>
       
       <div class="bg-slate-800/50 p-3 rounded-xl text-xs flex justify-between font-bold text-sm text-white mb-6 border border-slate-700/50">
@@ -131,31 +156,19 @@
         <span id="total" class="text-emerald-400">$0.00 MXN</span>
       </div>
 
-      <!-- OPCIONES INICIALES DE COMPRA -->
+      <!-- BOTONES DE PAGO (SOLO PAGO AL RECIBIR Y SPEI) -->
       <div id="seccionBotonesIniciales" class="space-y-3">
         <button onclick="pedirYPagarAlRecibir()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold py-3.5 rounded-xl text-xs transition-all shadow-lg shadow-emerald-500/20">
-          🛍️ Realizar Pedido y Pagar al Recibir
+          🛍️ Realizar Pedido y Pagar al Recibir (Efectivo / Tarjeta)
         </button>
         <button onclick="mostrarOpcionesDePagoDigital()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3.5 rounded-xl text-xs transition-all border border-blue-400/30">
-          💳 Ir a Pagar en Línea
+          🏦 Pagar por Transferencia SPEI
         </button>
       </div>
 
-      <!-- SECCIÓN DESPLEGABLE DE PAGOS EN LÍNEA (OCULTA POR DEFECTO) -->
+      <!-- DETALLES DE TRANSFERENCIA BANCARIA -->
       <div id="seccionOpcionesDigitales" class="hidden space-y-4 pt-2 border-t border-slate-800">
-        <p class="text-xs font-bold text-slate-300 uppercase tracking-wider">Selecciona tu método de pago:</p>
-        
-        <div class="grid grid-cols-2 gap-3">
-          <button onclick="seleccionarOpcionDigital('spei')" id="btnOptSpei" class="p-3 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl text-xs font-bold text-white flex flex-col items-center gap-1 transition-all">
-            <span>🏦 Transferencia SPEI</span>
-          </button>
-          <button onclick="seleccionarOpcionDigital('paypal')" id="btnOptPaypal" class="p-3 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl text-xs font-bold text-white flex flex-col items-center gap-1 transition-all">
-            <span>🅿️ PayPal</span>
-          </button>
-        </div>
-
-        <!-- APARTADO SPEI -->
-        <div id="boxSpei" class="hidden bg-slate-800/90 p-4 rounded-2xl border border-slate-700 text-xs space-y-3">
+        <div id="boxSpei" class="bg-slate-800/90 p-4 rounded-2xl border border-slate-700 text-xs space-y-3">
           <p class="font-bold text-emerald-400 uppercase tracking-wide">Datos para Transferencia Bancaria</p>
           <div class="space-y-1.5 text-slate-300">
             <p><strong>🏦 Banco:</strong> Mercado Pago W</p>
@@ -170,31 +183,7 @@
           </button>
         </div>
 
-        <!-- APARTADO PAYPAL -->
-        <div id="boxPaypal" class="hidden bg-slate-800/90 p-4 rounded-2xl border border-slate-700 text-xs space-y-3">
-          <p class="font-bold text-blue-400 uppercase tracking-wide">Paga de forma segura con PayPal</p>
-          
-          <div id="paypal-button-container" class="mt-2 min-h-[50px] flex items-center justify-center">
-            <p class="text-slate-400 text-[11px] animate-pulse">Cargando pasarela de PayPal...</p>
-          </div>
-
-          <div id="paypalFallback" class="hidden border-t border-slate-700 pt-3 text-center">
-            <button onclick="irAPaypalDirecto()" class="w-full bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold py-3 rounded-xl transition-all shadow-md flex items-center justify-center gap-2">
-              <span>🅿️ Abrir PayPal para Pagar</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- VISTA DE PAGO PAYPAL CONFIRMADO -->
-        <div id="boxPaypalExitoso" class="hidden bg-emerald-500/10 border border-emerald-500/30 p-4 rounded-2xl text-center space-y-3">
-          <p class="text-emerald-400 font-bold text-sm">¡Pago verificado con éxito en PayPal!</p>
-          <p class="text-xs text-slate-300">Da clic abajo para enviar tu orden y comprobante directamente por WhatsApp.</p>
-          <button onclick="enviarComprobanteWhatsApp('PayPal (Pago Confirmado)')" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold py-3 rounded-xl transition-all shadow-lg">
-            📲 Enviar Comprobante de Pago por WhatsApp
-          </button>
-        </div>
-
-        <button onclick="volverAInicioCarrito()" class="text-xs text-slate-400 hover:text-white w-full text-center pt-2">← Volver a opciones principales</button>
+        <button onclick="volverAInicioCarrito()" class="text-xs text-slate-400 hover:text-white w-full text-center pt-2">← Volver a opciones de pago</button>
       </div>
 
       <button onclick="toggleModal('modalCarrito')" class="mt-4 text-xs text-slate-500 w-full hover:text-white transition-colors">Seguir Comprando</button>
@@ -205,7 +194,7 @@
     const socket = io();
     let productos = [];
     let carrito = [];
-    let paypalSdkCargado = false;
+    let usuarioActual = null;
 
     socket.on('inventario_actualizado', (data) => {
       productos = data;
@@ -259,11 +248,34 @@
       actualizarCarrito();
     }
 
+    function registrarPedidoEnServidor(metodoPago) {
+      const fechaActual = new Date().toLocaleString('es-MX', { dateStyle: 'short', timeStyle: 'short' });
+      socket.emit('nuevo_pedido_registrado', {
+        cliente: usuarioActual ? `${usuarioActual.nombre} ${usuarioActual.apellido}` : 'Cliente Anónimo',
+        telefono: usuarioActual ? usuarioActual.telefono : 'N/A',
+        metodoPago: metodoPago,
+        monto: document.getElementById('total').innerText,
+        fecha: fechaActual,
+        items: carrito
+      });
+    }
+
     function pedirYPagarAlRecibir() {
       if (!carrito.length) return alert('El carrito está vacío');
+      
+      registrarPedidoEnServidor('Pago al Recibir');
+
       let msg = `*NUEVO PEDIDO ARMM (Pago al Recibir)*\n\n`;
+      if (usuarioActual) {
+        msg += `👤 *Cliente:* ${usuarioActual.nombre} ${usuarioActual.apellido}\n`;
+        msg += `📞 *Teléfono:* ${usuarioActual.telefono}\n`;
+        msg += `📧 *Correo:* ${usuarioActual.correo}\n`;
+        msg += `📍 *Dirección:* ${usuarioActual.direccion}\n\n`;
+      }
+      msg += `*Detalle de Productos:*\n`;
       carrito.forEach(c => msg += `- ${c.nombre} (${c.presentacion}): $${c.precio} MXN\n`);
       msg += `\n💵 *Pago:* Al entregar (Efectivo / Tarjeta)\n💰 *Total:* ${document.getElementById('total').innerText}`;
+      
       window.open(`https://wa.me/5213351097726?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
@@ -278,19 +290,6 @@
       document.getElementById('seccionOpcionesDigitales').classList.add('hidden');
     }
 
-    function seleccionarOpcionDigital(metodo) {
-      document.getElementById('boxSpei').classList.add('hidden');
-      document.getElementById('boxPaypal').classList.add('hidden');
-      document.getElementById('boxPaypalExitoso').classList.add('hidden');
-
-      if (metodo === 'spei') {
-        document.getElementById('boxSpei').classList.remove('hidden');
-      } else if (metodo === 'paypal') {
-        document.getElementById('boxPaypal').classList.remove('hidden');
-        cargarPaypalSDK();
-      }
-    }
-
     function copiarClabe() {
       const clabe = document.getElementById('clabeText').innerText;
       navigator.clipboard.writeText(clabe);
@@ -298,109 +297,40 @@
     }
 
     function enviarComprobanteWhatsApp(metodoPago) {
+      registrarPedidoEnServidor(metodoPago);
+
       let msg = `*COMPROBANTE DE PAGO - ARMM*\n\n`;
+      if (usuarioActual) {
+        msg += `👤 *Cliente:* ${usuarioActual.nombre} ${usuarioActual.apellido}\n`;
+        msg += `📞 *Teléfono:* ${usuarioActual.telefono}\n`;
+        msg += `📧 *Correo:* ${usuarioActual.correo}\n`;
+        msg += `📍 *Dirección:* ${usuarioActual.direccion}\n\n`;
+      }
       msg += `💳 *Método de Pago:* ${metodoPago}\n`;
       msg += `💰 *Monto:* ${document.getElementById('total').innerText}\n\n`;
       msg += `*Detalle del Pedido:*\n`;
       carrito.forEach(c => msg += `- ${c.nombre} (${c.presentacion}): $${c.precio} MXN\n`);
-      msg += `\n*Adjunto mi comprobante a continuación:*`;
+      msg += `\n*Adjunto mi comprobante de pago:*`;
       
       window.open(`https://wa.me/5213351097726?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
-    async function cargarPaypalSDK() {
-      const container = document.getElementById('paypal-button-container');
-      const fallback = document.getElementById('paypalFallback');
-      
-      container.innerHTML = '<p class="text-slate-400 text-[11px] animate-pulse">Cargando pasarela de PayPal...</p>';
-      if (fallback) fallback.classList.add('hidden');
-
-      if (window.paypal) {
-        renderBotonPaypal();
-        return;
-      }
-      
-      try {
-        const res = await fetch('/api/paypal-client-id');
-        const data = await res.json();
-
-        const oldScript = document.getElementById('paypal-sdk-script');
-        if (oldScript) oldScript.remove();
-
-        const script = document.createElement('script');
-        script.id = 'paypal-sdk-script';
-        script.src = `https://www.paypal.com/sdk/js?client-id=${data.clientId}&currency=MXN`;
-        
-        script.onload = () => {
-          paypalSdkCargado = true;
-          renderBotonPaypal();
-        };
-
-        script.onerror = () => {
-          container.innerHTML = '<p class="text-amber-400 text-[11px] mb-2">Presiona el botón de abajo para ir a PayPal:</p>';
-          if (fallback) fallback.classList.remove('hidden');
-        };
-
-        document.body.appendChild(script);
-      } catch (err) {
-        container.innerHTML = '<p class="text-amber-400 text-[11px] mb-2">Presiona el botón de abajo para ir a PayPal:</p>';
-        if (fallback) fallback.classList.remove('hidden');
-      }
-    }
-
-    function renderBotonPaypal() {
-      const container = document.getElementById('paypal-button-container');
-      container.innerHTML = ''; 
-
-      let totalMonto = carrito.reduce((a, b) => a + b.precio, 0).toFixed(2);
-
-      if (parseFloat(totalMonto) <= 0) {
-        container.innerHTML = '<p class="text-amber-400 text-[11px]">Agrega productos al carrito primero.</p>';
-        return;
-      }
-
-      paypal.Buttons({
-        style: {
-          layout: 'vertical',
-          color:  'gold',
-          shape:  'rect',
-          label:  'paypal'
-        },
-        createOrder: (data, actions) => {
-          return actions.order.create({
-            purchase_units: [{
-              amount: { value: totalMonto }
-            }]
-          });
-        },
-        onApprove: (data, actions) => {
-          return actions.order.capture().then(details => {
-            document.getElementById('boxPaypal').classList.add('hidden');
-            document.getElementById('boxPaypalExitoso').classList.remove('hidden');
-          });
-        },
-        onError: (err) => {
-          console.error('Error PayPal:', err);
-          document.getElementById('paypalFallback').classList.remove('hidden');
-        }
-      }).render('#paypal-button-container');
-    }
-
-    function irAPaypalDirecto() {
-      window.open(`https://www.paypal.com`, '_blank');
-      document.getElementById('boxPaypal').classList.add('hidden');
-      document.getElementById('boxPaypalExitoso').classList.remove('hidden');
-    }
-
     function registrarUsuario() {
-      const nom = document.getElementById('userNombre').value;
-      const tel = document.getElementById('userTelefono').value;
-      if (nom && tel) {
-        socket.emit('nuevo_cliente_registrado', { nombre: nom, telefono: tel, fecha: new Date().toLocaleTimeString() });
-        alert('¡Registro exitoso!');
+      const nombre = document.getElementById('userNombre').value.trim();
+      const apellido = document.getElementById('userApellido').value.trim();
+      const telefono = document.getElementById('userTelefono').value.trim();
+      const correo = document.getElementById('userCorreo').value.trim();
+      const direccion = document.getElementById('userDireccion').value.trim();
+
+      if (nombre && apellido && telefono && correo && direccion) {
+        const fechaRegistro = new Date().toLocaleString('es-MX', { dateStyle: 'short', timeStyle: 'short' });
+        usuarioActual = { nombre, apellido, telefono, correo, direccion, fechaRegistro };
+
+        socket.emit('nuevo_cliente_registrado', usuarioActual);
+        alert('¡Registro guardado con éxito! Ya puedes realizar tu pedido.');
         toggleModal('modalCuenta');
       } else {
-        alert('Por favor completa los campos.');
+        alert('Por favor completa todos los campos del registro (Nombre, Apellido, Teléfono, Correo y Dirección).');
       }
     }
 
