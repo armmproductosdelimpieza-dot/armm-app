@@ -13,7 +13,7 @@
 </head>
 <body class="bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 text-slate-100 font-sans min-h-screen relative">
 
-  <!-- BARRA DE NAVEGACIÓN -->
+  <!-- NAVEGACIÓN PRINCIPAL -->
   <nav class="glass-nav fixed top-0 left-0 w-full z-50 px-6 py-4">
     <div class="max-w-7xl mx-auto flex justify-between items-center">
       <div>
@@ -22,11 +22,18 @@
       </div>
 
       <div class="flex items-center gap-3">
+        <!-- BOTÓN WHATSAPP DE SOPORTE -->
+        <a href="https://wa.me/523351097726" target="_blank" class="hidden sm:flex bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-3 py-1.5 rounded-full text-xs font-bold items-center gap-1.5 hover:bg-emerald-500/20">
+          💬 (33 5109 7726)
+        </a>
+
+        <!-- BOTÓN CARRITO -->
         <button onclick="abrirCarrito()" class="relative bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-3.5 py-1.5 rounded-full hover:bg-emerald-500 hover:text-slate-950 font-bold text-xs transition-all flex items-center gap-2">
           <span>🛒 Carrito</span>
           <span id="cantCarrito" class="bg-emerald-500 text-slate-950 px-2 py-0.5 rounded-full text-[10px]">0</span>
         </button>
 
+        <!-- BOTÓN MI CUENTA -->
         <div id="userProfileBtn">
           <button onclick="abrirModalAuth()" class="text-xs bg-blue-500/20 text-blue-400 border border-blue-500/30 px-3.5 py-1.5 rounded-full font-bold hover:bg-blue-500 hover:text-white transition-all">
             Ingresar / Mi Cuenta
@@ -36,20 +43,39 @@
     </div>
   </nav>
 
-  <!-- CONTENIDO -->
-  <main class="max-w-7xl mx-auto pt-28 px-6 pb-20 space-y-12">
-    <div class="text-center space-y-3 max-w-3xl mx-auto pt-4">
-      <h1 class="text-4xl md:text-5xl font-black text-white">ARMM</h1>
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="max-w-7xl mx-auto pt-28 px-6 pb-20 space-y-16">
+    
+    <!-- ENCABEZADO Y HERO -->
+    <div class="text-center space-y-4 max-w-3xl mx-auto pt-4">
+      <h1 class="text-4xl md:text-6xl font-black text-white tracking-tight">ARMM</h1>
       <p class="text-emerald-400 text-sm font-bold uppercase tracking-widest">PRODUCTOS Y ACCESORIOS DE LIMPIEZA</p>
+      <p class="text-slate-400 text-sm">Realiza tus pedidos directamente desde nuestro portal web y da seguimiento a tu entrega en tiempo real.</p>
     </div>
 
+    <!-- CATÁLOGO DE PRODUCTOS -->
     <section class="space-y-6">
-      <h2 class="text-xl font-bold text-white">🛒 Catálogo de Productos</h2>
+      <h2 class="text-xl font-bold text-white flex items-center gap-2">🛒 Catálogo de Productos</h2>
       <div id="gridProductos" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </section>
+
+    <!-- SECCIÓN DE RESEÑAS Y OPINIONES -->
+    <section class="space-y-6 border-t border-slate-800 pt-12">
+      <div class="flex justify-between items-center">
+        <div>
+          <h2 class="text-xl font-bold text-white">⭐ Reseñas y Opiniones de Clientes</h2>
+          <p class="text-xs text-slate-400">Conoce la experiencia de nuestros compradores</p>
+        </div>
+        <button onclick="abrirModalResena()" class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-4 py-2 rounded-xl text-xs font-bold hover:bg-emerald-500 hover:text-slate-950 transition-all">
+          + Escribir Opinión
+        </button>
+      </div>
+
+      <div id="gridResenas" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
     </section>
   </main>
 
-  <!-- MODAL CARRITO -->
+  <!-- MODAL CARRITO DE COMPRAS -->
   <div id="modalCarrito" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
     <div class="glass-card p-6 rounded-3xl max-w-lg w-full space-y-6 relative max-h-[90vh] overflow-y-auto">
       <button onclick="cerrarCarrito()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold">✕</button>
@@ -62,6 +88,7 @@
         <span id="totalCarrito" class="text-emerald-400 text-lg">$0 MXN</span>
       </div>
 
+      <!-- SELECCIÓN MÉTODO DE PAGO -->
       <div class="space-y-2 text-left">
         <label class="text-xs text-slate-400">Método de Pago:</label>
         <select id="metodoPago" onchange="evaluarMetodoPago()" class="w-full bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl text-xs">
@@ -69,12 +96,12 @@
           <option value="Transferencia SPEI">Transferencia SPEI</option>
         </select>
 
-        <!-- ÚNICA OPCIÓN A WHATSAPP: COMPROBANTE SPEI -->
+        <!-- ENVIAR COMPROBANTE SPEI POR WHATSAPP -->
         <div id="infoSpei" class="hidden bg-slate-900/80 p-3 rounded-xl border border-slate-800 text-[11px] space-y-2">
-          <p class="text-emerald-400 font-bold">Datos de Transferencia:</p>
-          <p>CLABE: 012180000000000000 | BBVA</p>
-          <a href="https://wa.me/523351097726?text=Hola,%20adjunto%20mi%20comprobante%20de%20pago%20SPEI." target="_blank" class="inline-block text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-3 py-1.5 rounded-lg hover:bg-emerald-500 hover:text-slate-950 font-bold transition-all">
-            Enviar comprobante del SPEI
+          <p class="text-emerald-400 font-bold">Datos SPEI ARMM:</p>
+          <p>CLABE: 012180000000000000 | Banco: BBVA</p>
+          <a href="https://wa.me/523351097726?text=Hola%20ARMM,%20adjunto%20mi%20comprobante%20de%20pago%20SPEI" target="_blank" class="inline-block text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-3 py-1.5 rounded-lg hover:bg-emerald-500 hover:text-slate-950 font-bold transition-all">
+            Enviar comprobante del SPEI por WhatsApp
           </a>
         </div>
       </div>
@@ -85,11 +112,11 @@
     </div>
   </div>
 
-  <!-- MODAL CHECKOUT CON OJO EN CONTRASEÑA -->
+  <!-- MODAL CHECKOUT CON ICONO DE OJO EN CONTRASEÑA -->
   <div id="modalCheckout" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
     <div class="glass-card p-6 rounded-3xl max-w-md w-full space-y-5 relative">
       <button onclick="cerrarCheckout()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold">✕</button>
-      <h3 class="text-lg font-bold text-white">Datos de Envío y Registro</h3>
+      <h3 class="text-lg font-bold text-white">Datos de Envío y Crear Cuenta</h3>
 
       <form onsubmit="confirmarPedidoNuevoUsuario(event)" class="space-y-3 text-left">
         <div class="grid grid-cols-2 gap-2">
@@ -99,7 +126,7 @@
         <input type="email" id="chkCorreo" placeholder="Correo electrónico" required class="w-full bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl text-xs">
         <input type="tel" id="chkTelefono" placeholder="Teléfono" required class="w-full bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl text-xs">
         
-        <!-- CAMPO CONTRASEÑA CON ÍCONO DE OJO -->
+        <!-- CONTRASEÑA CON ÍCONO DE OJO 👁️ -->
         <div class="relative">
           <input type="password" id="chkPassword" placeholder="Generar contraseña" required class="w-full bg-slate-900 border border-slate-700 text-white p-2.5 pr-10 rounded-xl text-xs">
           <button type="button" onclick="toggleEye('chkPassword', 'eyeChk')" class="absolute right-3 top-2.5 text-slate-400 hover:text-white text-xs">
@@ -116,7 +143,7 @@
     </div>
   </div>
 
-  <!-- MODAL MI CUENTA Y RASTREO DE PEDIDOS -->
+  <!-- MODAL AUTH Y RASTREO DE PEDIDOS -->
   <div id="modalAuth" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
     <div class="glass-card p-6 rounded-3xl max-w-lg w-full space-y-6 relative max-h-[90vh] overflow-y-auto">
       <button onclick="cerrarModalAuth()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold">✕</button>
@@ -146,9 +173,27 @@
           <button onclick="cerrarSesionCliente()" class="text-[10px] bg-red-500/20 text-red-400 px-2 py-1 rounded-full">Cerrar Sesión</button>
         </div>
 
-        <h4 class="font-bold text-white text-xs">Mis Pedidos y Seguimiento:</h4>
+        <h4 class="font-bold text-white text-xs">Mis Pedidos y Estado de Entrega:</h4>
         <div id="contenedorMisPedidos" class="space-y-3"></div>
       </div>
+    </div>
+  </div>
+
+  <!-- MODAL NUEVA RESEÑA -->
+  <div id="modalResena" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
+    <div class="glass-card p-6 rounded-3xl max-w-md w-full space-y-4 relative">
+      <button onclick="cerrarModalResena()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-bold">✕</button>
+      <h3 class="text-lg font-bold text-white">Escribir una Opinión</h3>
+      <form onsubmit="guardarResena(event)" class="space-y-3 text-left">
+        <input type="text" id="resNombre" placeholder="Tu Nombre" required class="w-full bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl text-xs">
+        <select id="resEstrellas" class="w-full bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl text-xs">
+          <option value="5">⭐⭐⭐⭐⭐ (5 Estrellas)</option>
+          <option value="4">⭐⭐⭐⭐ (4 Estrellas)</option>
+          <option value="3">⭐⭐⭐ (3 Estrellas)</option>
+        </select>
+        <textarea id="resComentario" placeholder="Escribe tu opinión aquí..." required class="w-full bg-slate-900 border border-slate-700 text-white p-2.5 rounded-xl text-xs h-24"></textarea>
+        <button type="submit" class="w-full bg-emerald-500 text-slate-950 font-bold py-2.5 rounded-xl text-xs">Publicar Reseña</button>
+      </form>
     </div>
   </div>
 
@@ -161,6 +206,7 @@
 
     socket.on('inventario_actualizado', data => { productos = data; renderProductos(); });
     socket.on('lista_pedidos_inicial', data => { misPedidos = data; if (clienteActual) renderMisPedidos(); });
+    socket.on('lista_resenas_inicial', renderResenas);
 
     socket.on('pedido_actualizado_estado', pedidoUpd => {
       const idx = misPedidos.findIndex(p => p.id === pedidoUpd.id);
@@ -198,6 +244,7 @@
             <h3 class="font-extrabold text-white text-lg mt-2">${p.nombre}</h3>
           </div>
           <div class="space-y-2">
+            <label class="text-[11px] text-slate-400">Seleccionar Presentación:</label>
             <select id="pres-${p.id}" class="w-full bg-slate-900 border border-slate-700 text-white p-2 rounded-xl text-xs">
               ${Object.entries(p.precios).map(([pres, prec]) => `<option value="${pres}">${pres} - $${prec} MXN</option>`).join('')}
             </select>
@@ -228,7 +275,7 @@
               <p class="font-bold text-white">${item.nombre}</p>
               <p class="text-[10px] text-slate-400">${item.presentacion} - $${item.precio} MXN</p>
             </div>
-            <button onclick="carrito.splice(${idx},1); actualizarCarritoUI();" class="text-red-400 text-xs">Quitar</button>
+            <button onclick="carrito.splice(${idx},1); actualizarCarritoUI();" class="text-red-400 text-xs hover:underline">Quitar</button>
           </div>
         `;
       }).join('');
@@ -247,7 +294,7 @@
     function cerrarCheckout() { document.getElementById('modalCheckout').classList.add('hidden'); }
 
     function procesarBotonRealizarPedido() {
-      if (!carrito.length) return alert('Tu carrito está vacío');
+      if (!carrito.length) return alert('El carrito está vacío');
       const total = carrito.reduce((s, i) => s + i.precio, 0);
       const metodoPago = document.getElementById('metodoPago').value;
 
@@ -300,7 +347,7 @@
       const filtrados = misPedidos.filter(p => p.cliente.correo === clienteActual.correo);
 
       if (!filtrados.length) {
-        container.innerHTML = '<p class="text-slate-400 text-xs">No tienes pedidos activos.</p>';
+        container.innerHTML = '<p class="text-slate-400 text-xs">No tienes pedidos registrados.</p>';
         return;
       }
 
@@ -314,7 +361,7 @@
               p.estado === 'Preparando' ? 'bg-amber-500/20 text-amber-400' : 'bg-slate-700 text-slate-300'
             }">${p.estado}</span>
           </div>
-          <p class="text-slate-300"><span class="text-slate-500">Fecha Estimada de Entrega:</span> ${p.fechaEstimada}</p>
+          <p class="text-slate-300"><span class="text-slate-500">Fecha Estimada:</span> ${p.fechaEstimada}</p>
           <p class="text-slate-400 text-[11px]">Método: ${p.metodoPago} | Total: $${p.total} MXN</p>
         </div>
       `).join('');
@@ -332,13 +379,40 @@
         clienteActual = res.cliente;
         localStorage.setItem('armm_cliente', JSON.stringify(clienteActual));
         abrirModalAuth();
-      } else alert('Datos incorrectos');
+      } else alert('Credenciales incorrectas');
     });
 
     function cerrarSesionCliente() {
       localStorage.removeItem('armm_cliente');
       clienteActual = null;
       abrirModalAuth();
+    }
+
+    function renderResenas(resenas) {
+      const grid = document.getElementById('gridResenas');
+      grid.innerHTML = resenas.map(r => `
+        <div class="glass-card p-4 rounded-2xl space-y-2 text-left text-xs">
+          <div class="flex justify-between items-center">
+            <span class="font-bold text-white">${r.nombre}</span>
+            <span class="text-amber-400">${'⭐'.repeat(r.estrellas)}</span>
+          </div>
+          <p class="text-slate-300">${r.comentario}</p>
+          <span class="text-[10px] text-slate-500 block">${r.fecha}</span>
+        </div>
+      `).join('');
+    }
+
+    function abrirModalResena() { document.getElementById('modalResena').classList.remove('hidden'); }
+    function cerrarModalResena() { document.getElementById('modalResena').classList.add('hidden'); }
+
+    function guardarResena(e) {
+      e.preventDefault();
+      socket.emit('nueva_resena', {
+        nombre: document.getElementById('resNombre').value,
+        estrellas: document.getElementById('resEstrellas').value,
+        comentario: document.getElementById('resComentario').value
+      });
+      cerrarModalResena();
     }
   </script>
 </body>
