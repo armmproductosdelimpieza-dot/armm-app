@@ -1,82 +1,180 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="scroll-smooth">
 <head>
   <meta name="google-site-verification" content="google5c9558ed4fb08a87" />
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ARMM - Productos de Limpieza</title>
+  <title>ARMM - Productos y Accesorios de Limpieza</title>
   <script src="/socket.io/socket.io.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Efecto Glassmorphism y profundidad */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .glass-nav {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+  </style>
 </head>
-<body class="bg-gray-100 font-sans">
+<body class="bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 text-slate-100 font-sans min-h-screen relative overflow-x-hidden">
 
-  <header class="bg-blue-900 text-white p-4 sticky top-0 z-50 shadow-md">
-    <div class="max-w-5xl mx-auto flex justify-between items-center">
-      <div>
-        <h1 class="text-2xl font-bold">ARMM</h1>
-        <p class="text-xs text-green-400">PRODUCTOS Y ACCESORIOS DE LIMPIEZA</p>
+  <!-- Navegación Principal estilo "Doup" -->
+  <nav class="glass-nav fixed top-0 left-0 w-full z-50 px-6 py-4 transition-all duration-300">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+      <!-- Logo -->
+      <a href="#inicio" class="flex flex-col">
+        <span class="text-2xl font-black tracking-widest text-white">ARMM</span>
+        <span class="text-[9px] text-emerald-400 font-semibold tracking-wider">LIMPIEZA PROFESIONAL</span>
+      </a>
+
+      <!-- Menú de "Páginas" (Secciones fluidas) -->
+      <div class="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-300">
+        <a href="#inicio" class="hover:text-emerald-400 transition-colors">Inicio</a>
+        <a href="#productos" class="hover:text-emerald-400 transition-colors">Productos</a>
+        <a href="#nosotros" class="hover:text-emerald-400 transition-colors">Nosotros</a>
+        <a href="#contacto" class="hover:text-emerald-400 transition-colors">Contacto</a>
       </div>
-      <div class="flex gap-2">
-        <button onclick="toggleModal('modalCuenta')" class="bg-green-600 hover:bg-green-700 text-white text-xs px-3 py-2 rounded font-bold">
-          🎁 Crear Cuenta (30% DESC)
+
+      <!-- Acciones de Usuario & Redes -->
+      <div class="flex items-center space-x-3">
+        <a href="https://instagram.com" target="_blank" class="p-2 rounded-full hover:bg-white/10 text-pink-400 transition-all" title="Instagram">
+          <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        </a>
+
+        <button onclick="toggleModal('modalCuenta')" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs px-4 py-2 rounded-full transition-all shadow-lg shadow-emerald-500/20">
+          Registrarse
         </button>
-        <button onclick="toggleModal('modalCarrito')" class="bg-white text-blue-900 px-3 py-2 rounded text-xs font-bold">
-          🛒 Carrito (<span id="cartCount">0</span>)
+
+        <button onclick="toggleModal('modalCarrito')" class="bg-white/10 hover:bg-white/20 text-white font-bold text-xs px-4 py-2 rounded-full transition-all border border-white/10 flex items-center gap-2">
+          🛒 (<span id="cartCount">0</span>)
         </button>
       </div>
     </div>
-  </header>
+  </nav>
 
-  <div class="bg-green-100 border-l-4 border-green-500 text-green-900 p-3 max-w-5xl mx-auto my-4 text-xs">
-    📍 <strong>Zonas de entrega:</strong> Tonalá, Guadalajara Centro, Tlaquepaque, Zapopan. | <strong>Envío GRATIS</strong> desde $200 MXN.
-  </div>
+  <!-- SECCIÓN 1: INICIO (HERO BANNER) -->
+  <section id="inicio" class="min-h-screen flex items-center justify-center pt-24 px-6 relative">
+    <div class="max-w-4xl mx-auto text-center space-y-6 z-10">
+      <span class="text-xs uppercase tracking-widest text-emerald-400 bg-emerald-500/10 px-4 py-1.5 rounded-full border border-emerald-500/20">
+        Nueva Era en Limpieza y Jarcería
+      </span>
+      <h1 class="text-5xl md:text-7xl font-extrabold text-white tracking-tight leading-tight">
+        Calidad, Limpieza & Modernidad
+      </h1>
+      <p class="text-slate-400 text-base md:text-lg max-w-2xl mx-auto font-light">
+        Descubre nuestros productos y accesorios de limpieza de alta calidad. Envíos eficientes y directos en Guadalajara, Tonalá, Tlaquepaque y Zapopan.
+      </p>
+      <div class="pt-4 flex flex-wrap gap-4 justify-center">
+        <a href="#productos" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-8 py-3.5 rounded-full transition-all transform hover:-translate-y-0.5 shadow-xl shadow-emerald-500/20">
+          Ver Catálogo
+        </a>
+        <a href="#contacto" class="bg-white/5 hover:bg-white/10 text-white font-semibold px-8 py-3.5 rounded-full border border-white/10 transition-all">
+          Contactar
+        </a>
+      </div>
+    </div>
+  </section>
 
-  <main class="max-w-5xl mx-auto p-4">
-    <section>
-      <h2 class="text-xl font-bold text-blue-900 mb-4">Catálogo de Productos</h2>
-      <div id="gridProductos" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
-    </section>
-  </main>
-
-  <!-- Modal Cuenta -->
-  <div id="modalCuenta" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center p-4 z-50">
-    <div class="bg-white p-6 rounded max-w-sm w-full">
-      <h3 class="font-bold text-blue-900 mb-2">Crear Cuenta</h3>
-      <p class="text-xs text-gray-600 mb-4">Ingresa tu nombre para obtener 30% de descuento automático.</p>
-      <input type="text" id="userNombre" placeholder="Tu Nombre" class="border w-full p-2 mb-3 text-xs rounded">
-      <button onclick="registrarUsuario()" class="bg-green-600 text-white text-xs w-full p-2 rounded font-bold">Obtener Descuento</button>
-      <button onclick="toggleModal('modalCuenta')" class="mt-2 text-xs text-gray-500 w-full">Cerrar</button>
+  <!-- Banner Informativo de Zonas -->
+  <div class="max-w-6xl mx-auto px-6 mb-12">
+    <div class="glass-card p-4 rounded-2xl flex flex-wrap justify-between items-center text-xs text-slate-300 gap-4">
+      <span>📍 <strong>Zonas de Entrega:</strong> Tonalá, Guadalajara Centro, Tlaquepaque, Zapopan.</span>
+      <span class="text-emerald-400 font-semibold">✨ Envío GRATIS en pedidos desde $200 MXN</span>
     </div>
   </div>
 
-  <!-- Modal Carrito -->
-  <div id="modalCarrito" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center p-4 z-50">
-    <div class="bg-white p-6 rounded max-w-md w-full">
-      <h3 class="font-bold text-blue-900 mb-4">Resumen del Pedido</h3>
-      <div id="itemsCarrito" class="divide-y mb-4 text-xs"></div>
-      <div class="bg-gray-100 p-3 rounded text-xs space-y-1 mb-4">
-        <div class="flex justify-between"><span>Subtotal:</span><span id="subtotal">$0.00</span></div>
-        <div class="flex justify-between text-green-600"><span>Descuento (30%):</span><span id="descuento">-$0.00</span></div>
-        <div class="flex justify-between font-bold"><span>Total:</span><span id="total">$0.00</span></div>
+  <!-- SECCIÓN 2: PRODUCTOS -->
+  <section id="productos" class="max-w-7xl mx-auto px-6 py-20">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-bold text-white">Catálogo de Productos</h2>
+      <p class="text-slate-400 text-sm mt-2">Selecciona la presentación que necesitas y agrégala a tu pedido</p>
+    </div>
+    
+    <div id="gridProductos" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+  </section>
+
+  <!-- SECCIÓN 3: NOSOTROS -->
+  <section id="nosotros" class="max-w-6xl mx-auto px-6 py-20">
+    <div class="glass-card p-8 md:p-12 rounded-3xl space-y-6">
+      <span class="text-emerald-400 text-xs font-bold uppercase tracking-wider">Sobre Nosotros</span>
+      <h2 class="text-3xl font-bold text-white">ARMM: Tu Aliado en Limpieza</h2>
+      <p class="text-slate-300 text-sm leading-relaxed">
+        Nos dedicamos a ofrecer soluciones integrales de higiene y accesorios de limpieza para hogares, comercios e industrias. Garantizamos productos eficientes, un excelente servicio al cliente y entregas puntuales.
+      </p>
+    </div>
+  </section>
+
+  <!-- SECCIÓN 4: CONTACTO -->
+  <section id="contacto" class="max-w-6xl mx-auto px-6 py-20">
+    <div class="glass-card p-8 md:p-12 rounded-3xl text-center space-y-6">
+      <h2 class="text-3xl font-bold text-white">¿Tienes dudas o pedidos especiales?</h2>
+      <p class="text-slate-400 text-sm">Contáctanos por WhatsApp o síguenos en nuestras redes sociales.</p>
+      <div class="flex justify-center gap-4">
+        <a href="https://wa.me/5213351097726" target="_blank" class="bg-emerald-500 text-slate-950 font-bold px-6 py-3 rounded-full text-xs hover:bg-emerald-600 transition-all">
+          WhatsApp Directo
+        </a>
+        <a href="https://instagram.com" target="_blank" class="bg-white/10 text-white font-bold px-6 py-3 rounded-full text-xs border border-white/10 hover:bg-white/20 transition-all">
+          Instagram
+        </a>
       </div>
-      <select id="metodoPago" class="border w-full p-2 rounded text-xs mb-4">
-        <option value="Efectivo">Efectivo</option>
-        <option value="Transferencia">Transferencia</option>
-        <option value="Tarjeta">Tarjeta</option>
+    </div>
+  </section>
+
+  <!-- MODAL: CREAR CUENTA (REGISTRO A ADMIN) -->
+  <div id="modalCuenta" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden flex justify-center items-center p-4 z-50">
+    <div class="glass-card p-8 rounded-3xl max-w-sm w-full space-y-4 border border-white/10 bg-slate-900">
+      <h3 class="text-xl font-bold text-white">Registro de Cliente</h3>
+      <p class="text-xs text-slate-400">Ingresa tus datos para registrarte como cliente preferencial.</p>
+      
+      <input type="text" id="userNombre" placeholder="Nombre completo" class="bg-slate-800 border border-slate-700 text-white w-full p-3 text-xs rounded-xl focus:outline-none focus:border-emerald-500">
+      <input type="tel" id="userTelefono" placeholder="WhatsApp / Teléfono" class="bg-slate-800 border border-slate-700 text-white w-full p-3 text-xs rounded-xl focus:outline-none focus:border-emerald-500">
+      
+      <button onclick="registrarUsuario()" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 text-xs w-full py-3 rounded-xl font-bold transition-all shadow-lg shadow-emerald-500/20">
+        Completar Registro
+      </button>
+      <button onclick="toggleModal('modalCuenta')" class="text-xs text-slate-500 w-full hover:text-white transition-colors">Cancelar</button>
+    </div>
+  </div>
+
+  <!-- MODAL: CARRITO DE COMPRAS -->
+  <div id="modalCarrito" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden flex justify-center items-center p-4 z-50">
+    <div class="glass-card p-8 rounded-3xl max-w-md w-full bg-slate-900 border border-white/10">
+      <h3 class="text-xl font-bold text-white mb-4">Resumen de tu Pedido</h3>
+      <div id="itemsCarrito" class="divide-y divide-slate-800 mb-4 text-xs max-h-60 overflow-y-auto"></div>
+      
+      <div class="bg-slate-800/50 p-4 rounded-xl text-xs space-y-2 mb-4 border border-slate-700/50">
+        <div class="flex justify-between font-bold text-sm text-white"><span>Total:</span><span id="total">$0.00 MXN</span></div>
+      </div>
+
+      <select id="metodoPago" class="bg-slate-800 border border-slate-700 text-white w-full p-3 rounded-xl text-xs mb-4 focus:outline-none focus:border-emerald-500">
+        <option value="Efectivo">Pago en Efectivo</option>
+        <option value="Transferencia">Transferencia Bancaria</option>
+        <option value="Tarjeta">Tarjeta de Débito/Crédito</option>
         <option value="Mercado Pago">Mercado Pago</option>
       </select>
-      <button onclick="enviarPedidoWhatsApp()" class="bg-green-600 text-white font-bold w-full p-2 rounded text-xs">
-        📲 Confirmar por WhatsApp
+
+      <button onclick="enviarPedidoWhatsApp()" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold w-full py-3 rounded-xl text-xs transition-all shadow-lg shadow-emerald-500/20">
+        📲 Enviar Pedido por WhatsApp
       </button>
-      <button onclick="toggleModal('modalCarrito')" class="mt-2 text-xs text-gray-500 w-full">Seguir Comprando</button>
+      <button onclick="toggleModal('modalCarrito')" class="mt-3 text-xs text-slate-500 w-full hover:text-white transition-colors">Seguir Comprando</button>
     </div>
   </div>
 
+  <!-- BOTÓN FLOTANTE DE WHATSAPP -->
+  <a href="https://wa.me/5213351097726?text=Hola,%20me%20gustaría%20obtener%20información%20sobre%20sus%20productos" target="_blank" class="fixed bottom-6 right-6 bg-emerald-500 hover:bg-emerald-400 text-slate-950 p-4 rounded-full shadow-2xl transition-all transform hover:scale-110 z-50 flex items-center justify-center shadow-emerald-500/30" title="Contactar por WhatsApp">
+    <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.572-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+  </a>
+
+  <!-- SCRIPTS -->
   <script>
     const socket = io();
     let productos = [];
     let carrito = [];
-    let tieneDescuento = false;
 
     socket.on('inventario_actualizado', (data) => {
       productos = data;
@@ -89,15 +187,15 @@
         const opciones = Object.entries(p.precios)
           .map(([pres, prec]) => `<option value="${pres}:${prec}">${pres} - $${prec} MXN</option>`).join('');
         return `
-          <div class="bg-white p-4 rounded border shadow-sm flex flex-col justify-between">
+          <div class="glass-card p-6 rounded-2xl flex flex-col justify-between hover:border-emerald-500/40 transition-all duration-300">
             <div>
-              <span class="text-[10px] bg-blue-100 text-blue-900 font-bold px-2 py-1 rounded">${p.categoria}</span>
-              <h3 class="font-bold text-sm mt-2">${p.nombre}</h3>
+              <span class="text-[10px] bg-emerald-500/10 text-emerald-400 font-semibold px-3 py-1 rounded-full border border-emerald-500/20 uppercase tracking-wider">${p.categoria}</span>
+              <h3 class="font-bold text-base text-white mt-3">${p.nombre}</h3>
             </div>
-            <div class="mt-4">
-              <select id="sel-${p.id}" class="border w-full p-1 text-xs rounded mb-2">${opciones}</select>
-              <button onclick="agregarAlCarrito(${p.id})" class="bg-blue-900 text-white text-xs w-full py-2 rounded font-bold">
-                + Agregar
+            <div class="mt-6">
+              <select id="sel-${p.id}" class="bg-slate-800 border border-slate-700 text-white w-full p-2.5 text-xs rounded-xl mb-3 focus:outline-none focus:border-emerald-500">${opciones}</select>
+              <button onclick="agregarAlCarrito(${p.id})" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 text-xs w-full py-2.5 rounded-xl font-bold transition-all shadow-lg shadow-emerald-500/10">
+                + Agregar al Pedido
               </button>
             </div>
           </div>
@@ -114,18 +212,14 @@
 
     function actualizarCarrito() {
       document.getElementById('cartCount').innerText = carrito.length;
-      let sub = carrito.reduce((a, b) => a + b.precio, 0);
-      let desc = tieneDescuento ? sub * 0.30 : 0;
-      let tot = sub - desc;
+      let tot = carrito.reduce((a, b) => a + b.precio, 0);
 
-      document.getElementById('subtotal').innerText = `$${sub.toFixed(2)}`;
-      document.getElementById('descuento').innerText = `-$${desc.toFixed(2)}`;
-      document.getElementById('total').innerText = `$${tot.toFixed(2)}`;
+      document.getElementById('total').innerText = `$${tot.toFixed(2)} MXN`;
 
       document.getElementById('itemsCarrito').innerHTML = carrito.map((item, i) => `
-        <div class="py-2 flex justify-between">
-          <div><p class="font-bold">${item.nombre}</p><p class="text-gray-500">${item.presentacion} - $${item.precio}</p></div>
-          <button onclick="eliminarCarrito(${i})" class="text-red-500 font-bold">X</button>
+        <div class="py-3 flex justify-between items-center">
+          <div><p class="font-bold text-white">${item.nombre}</p><p class="text-slate-400">${item.presentacion} - $${item.precio} MXN</p></div>
+          <button onclick="eliminarCarrito(${i})" class="text-red-400 font-bold hover:text-red-300 px-2">✕</button>
         </div>
       `).join('');
     }
@@ -136,22 +230,25 @@
     }
 
     function registrarUsuario() {
-      if (document.getElementById('userNombre').value) {
-        tieneDescuento = true;
-        alert('¡30% de descuento aplicado!');
+      const nom = document.getElementById('userNombre').value;
+      const tel = document.getElementById('userTelefono').value;
+      if (nom && tel) {
+        // Enviar evento de nuevo usuario al servidor vía WebSockets
+        socket.emit('nuevo_cliente_registrado', { nombre: nom, telefono: tel, fecha: new Date().toLocaleTimeString() });
+        alert('¡Registro exitoso! Nos pondremos en contacto contigo.');
         toggleModal('modalCuenta');
-        actualizarCarrito();
+      } else {
+        alert('Por favor completa ambos campos.');
       }
     }
 
     function enviarPedidoWhatsApp() {
-      if (!carrito.length) return alert('Carrito vacío');
+      if (!carrito.length) return alert('El carrito está vacío');
       const pago = document.getElementById('metodoPago').value;
-      let msg = `*NUEVO PEDIDO ARMM*\n`;
-      carrito.forEach(c => msg += `- ${c.nombre} (${c.presentacion}): $${c.precio}\n`);
-      msg += `\n*Pago:* ${pago}\n*Total:* ${document.getElementById('total').innerText}`;
+      let msg = `*NUEVO PEDIDO ARMM*\n\n`;
+      carrito.forEach(c => msg += `- ${c.nombre} (${c.presentacion}): $${c.precio} MXN\n`);
+      msg += `\n*Método de Pago:* ${pago}\n*Total:* ${document.getElementById('total').innerText}`;
       
-      // Número con código internacional México: 5213351097726
       window.open(`https://wa.me/5213351097726?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
