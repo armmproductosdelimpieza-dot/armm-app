@@ -1,8 +1,6 @@
-
 <!DOCTYPE html>
-<html lang="es" class="scroll-smooth">
+<html lang="es">
 <head>
-  <meta name="google-site-verification" content="google5c9558ed4fb08a87" />
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ARMM - Productos y Accesorios de Limpieza</title>
@@ -21,512 +19,248 @@
     }
   </style>
 </head>
-<body class="bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 text-slate-100 font-sans min-h-screen relative overflow-x-hidden">
+<body class="bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 text-slate-100 font-sans min-h-screen relative">
 
-  <!-- NAVEGACIÓN -->
-  <nav class="glass-nav fixed top-0 left-0 w-full z-50 px-6 py-4 transition-all duration-300">
+  <!-- BARRA DE NAVEGACIÓN -->
+  <nav class="glass-nav fixed top-0 left-0 w-full z-50 px-6 py-4">
     <div class="max-w-7xl mx-auto flex justify-between items-center">
-      <a href="#inicio" class="flex flex-col">
+      <div>
         <span class="text-2xl font-black tracking-widest text-white">ARMM</span>
-        <span class="text-[9px] text-emerald-400 font-semibold tracking-wider">PRODUCTOS Y ACCESORIOS DE LIMPIEZA</span>
-      </a>
-
-      <div class="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-300">
-        <a href="#inicio" class="hover:text-emerald-400 transition-colors">Inicio</a>
-        <a href="#productos" class="hover:text-emerald-400 transition-colors">Productos</a>
-        <a href="#nosotros" class="hover:text-emerald-400 transition-colors">Nosotros</a>
-        <a href="#contacto" class="hover:text-emerald-400 transition-colors">Contacto</a>
+        <p class="text-[10px] text-emerald-400 font-bold uppercase tracking-wider">Productos y Accesorios de Limpieza</p>
       </div>
 
-      <div class="flex items-center space-x-2">
-        <!-- BOTONES SI NO HA INICIADO SESIÓN -->
-        <div id="botonesAuth" class="flex items-center gap-2">
-          <button onclick="toggleModal('modalLogin')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold text-xs px-3.5 py-2 rounded-full transition-all">
-            Iniciar Sesión
-          </button>
-          <button onclick="toggleModal('modalRegistro')" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-xs px-3.5 py-2 rounded-full transition-all shadow-lg shadow-emerald-500/20">
-            Registrarse
+      <div class="flex items-center gap-4">
+        <!-- BOTÓN DE PERFIL / REGISTRO -->
+        <div id="userProfileBtn">
+          <button onclick="abrirModalRegistro()" class="text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-3 py-1.5 rounded-full hover:bg-emerald-500 hover:text-slate-950 font-bold transition-all">
+            Registrarse / Mi Cuenta
           </button>
         </div>
 
-        <!-- BOTÓN SI YA INICIÓ SESIÓN -->
-        <div id="botonPerfil" class="hidden">
-          <button onclick="toggleModal('modalPerfil')" class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-bold text-xs px-4 py-2 rounded-full hover:bg-emerald-500/30 transition-all flex items-center gap-2">
-            👤 <span id="nombreHeader">Mi Perfil</span>
-          </button>
-        </div>
-
-        <!-- CARRITO -->
-        <button onclick="toggleModal('modalCarrito')" class="bg-white/10 hover:bg-white/20 text-white font-bold text-xs px-4 py-2 rounded-full transition-all border border-white/10 flex items-center gap-2">
-          🛒 (<span id="cartCount">0</span>)
-        </button>
+        <!-- ACCESO ADMIN -->
+        <a href="/admin" class="text-xs bg-slate-800 text-slate-300 border border-slate-700 px-3 py-1.5 rounded-full hover:bg-slate-700 hover:text-white transition-all">
+          Admin
+        </a>
       </div>
     </div>
   </nav>
 
-  <!-- INICIO / HERO -->
-  <section id="inicio" class="min-h-screen flex items-center justify-center pt-24 px-6 relative">
-    <div class="max-w-4xl mx-auto text-center space-y-6 z-10">
-      <span class="text-xs uppercase tracking-widest text-emerald-400 bg-emerald-500/10 px-4 py-1.5 rounded-full border border-emerald-500/20">
-        Productos y Accesorios de Limpieza
-      </span>
-      <h1 class="text-5xl md:text-7xl font-extrabold text-white tracking-tight leading-tight">
-        Calidad, Limpieza & Modernidad
-      </h1>
-      <p class="text-slate-400 text-base md:text-lg max-w-2xl mx-auto font-light">
-        Entregas inmediatas en Tonalá, Guadalajara, Tlaquepaque y Zapopan.
-      </p>
+  <!-- SECCIÓN PRINCIPAL -->
+  <main class="max-w-7xl mx-auto pt-28 px-6 pb-20 space-y-12">
+    <!-- HERO HEADER -->
+    <div class="text-center space-y-4 max-w-3xl mx-auto pt-6">
+      <h1 class="text-4xl md:text-5xl font-black text-white tracking-tight">ARMM</h1>
+      <p class="text-emerald-400 text-sm font-bold tracking-widest uppercase">PRODUCTOS Y ACCESORIOS DE LIMPIEZA</p>
+      <p class="text-slate-400 text-sm md:text-base">Catálogo de productos de alta calidad para el hogar, negocio e industria.</p>
+    </div>
 
-      <div class="inline-flex items-center gap-3 bg-blue-900/40 border border-blue-500/30 px-5 py-2.5 rounded-2xl text-xs text-blue-200 shadow-xl">
-        <span class="text-lg">💳</span>
-        <span><strong>¡Aceptamos pagos al recibir o por Transferencia SPEI!</strong></span>
+    <!-- CATÁLOGO DE PRODUCTOS -->
+    <section class="space-y-6">
+      <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+        <span>🛒 Catálogo de Productos</span>
+      </h2>
+      <div id="gridProductos" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Los productos se cargan dinámicamente -->
       </div>
+    </section>
 
-      <div class="pt-4 flex flex-wrap gap-4 justify-center">
-        <a href="#productos" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold px-8 py-3.5 rounded-full transition-all shadow-xl shadow-emerald-500/20">
-          Ver Catálogo
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- CATÁLOGO -->
-  <section id="productos" class="max-w-7xl mx-auto px-6 py-20">
-    <div class="text-center mb-12">
-      <h2 class="text-3xl font-bold text-white">Catálogo de Productos</h2>
-      <p class="text-slate-400 text-sm mt-2">Selecciona la presentación que necesitas</p>
-    </div>
-    <div id="gridProductos" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
-  </section>
-
-  <!-- NOSOTROS -->
-  <section id="nosotros" class="max-w-6xl mx-auto px-6 py-20">
-    <div class="glass-card p-8 md:p-12 rounded-3xl space-y-4">
-      <span class="text-emerald-400 text-xs font-bold uppercase tracking-wider">Sobre ARMM</span>
-      <h2 class="text-3xl font-bold text-white">Soluciones en Higiene Profesional</h2>
-      <p class="text-slate-300 text-sm leading-relaxed">
-        Ofrecemos productos de limpieza de alta concentración y accesorios para todo tipo de negocios y del hogar.
-      </p>
-    </div>
-  </section>
-
-  <!-- CONTACTO -->
-  <section id="contacto" class="max-w-6xl mx-auto px-6 py-20">
-    <div class="glass-card p-8 md:p-12 rounded-3xl text-center space-y-6">
-      <h2 class="text-3xl font-bold text-white">¿Tienes dudas o necesitas atención personalizada?</h2>
-      <a href="https://wa.me/5213351097726" target="_blank" class="inline-block bg-emerald-500 text-slate-950 font-bold px-8 py-3.5 rounded-full text-xs hover:bg-emerald-600 transition-all">
-        Contactar por WhatsApp (33 5109 7726)
+    <!-- ATENCIÓN PERSONALIZADA / WHATSAPP -->
+    <section class="glass-card p-8 rounded-3xl text-center space-y-4 max-w-2xl mx-auto">
+      <h3 class="text-xl font-bold text-white">¿Tienes dudas o necesitas atención personalizada?</h3>
+      <p class="text-slate-400 text-xs">Contáctanos directamente por WhatsApp para cotizaciones o entregas especiales.</p>
+      <a href="https://wa.me/523351097726" target="_blank" class="inline-flex items-center gap-2 bg-emerald-500 text-slate-950 font-bold px-6 py-3 rounded-xl text-sm hover:bg-emerald-400 transition-all shadow-lg shadow-emerald-500/20">
+        <span>Contáctanos por WhatsApp al (33 5109 7726)</span>
       </a>
-    </div>
-  </section>
+    </section>
+  </main>
 
-  <!-- MODAL: INICIAR SESIÓN -->
-  <div id="modalLogin" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden flex justify-center items-center p-4 z-50">
-    <div class="glass-card p-8 rounded-3xl max-w-sm w-full space-y-4 bg-slate-900 border border-white/10">
-      <h3 class="text-xl font-bold text-white">Iniciar Sesión</h3>
-      <p class="text-xs text-slate-400">Ingresa tu correo o número de teléfono registrado.</p>
+  <!-- MODAL DE REGISTRO / MI CUENTA -->
+  <div id="modalRegistro" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
+    <div class="glass-card p-6 md:p-8 rounded-3xl max-w-md w-full space-y-6 relative">
+      <button onclick="cerrarModalRegistro()" class="absolute top-4 right-4 text-slate-400 hover:text-white text-lg font-bold">✕</button>
 
-      <div>
-        <label class="text-[10px] text-slate-400 mb-1 block">Correo o Teléfono</label>
-        <input type="text" id="loginUser" placeholder="Correo o teléfono" class="bg-slate-800 border border-slate-700 text-white w-full p-3 text-xs rounded-xl focus:outline-none focus:border-emerald-500">
-      </div>
-
-      <div>
-        <label class="text-[10px] text-slate-400 mb-1 block">Contraseña</label>
-        <input type="password" id="loginPassword" placeholder="••••••••" class="bg-slate-800 border border-slate-700 text-white w-full p-3 text-xs rounded-xl focus:outline-none focus:border-emerald-500">
-      </div>
-
-      <div class="text-right">
-        <button onclick="abrirOlvidarPassword()" class="text-[11px] text-emerald-400 hover:underline">¿Olvidaste tu contraseña?</button>
-      </div>
-
-      <button onclick="iniciarSesion()" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 text-xs w-full py-3 rounded-xl font-bold transition-all shadow-lg shadow-emerald-500/20">
-        Entrar
-      </button>
-
-      <p class="text-[11px] text-center text-slate-400 pt-2">
-        ¿No tienes cuenta? <button onclick="toggleModal('modalLogin'); toggleModal('modalRegistro');" class="text-emerald-400 font-bold hover:underline">Regístrate</button>
-      </p>
-      <button onclick="toggleModal('modalLogin')" class="text-xs text-slate-500 w-full text-center hover:text-white pt-1">Cancelar</button>
-    </div>
-  </div>
-
-  <!-- MODAL: REGISTRO DE CLIENTE -->
-  <div id="modalRegistro" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden flex justify-center items-center p-4 z-50">
-    <div class="glass-card p-8 rounded-3xl max-w-md w-full space-y-4 bg-slate-900 border border-white/10 max-h-[90vh] overflow-y-auto">
-      <h3 class="text-xl font-bold text-white">Registro de Cliente</h3>
-      <p class="text-xs text-slate-400">Crea tu cuenta para guardar tu historial de compras y agilizar tus pedidos.</p>
-      
-      <div class="grid grid-cols-2 gap-3">
-        <div>
-          <label class="text-[10px] text-slate-400 mb-1 block">Nombre(s)</label>
-          <input type="text" id="regNombre" placeholder="Tu nombre" class="bg-slate-800 border border-slate-700 text-white w-full p-3 text-xs rounded-xl focus:outline-none focus:border-emerald-500">
-        </div>
-        <div>
-          <label class="text-[10px] text-slate-400 mb-1 block">Apellido(s)</label>
-          <input type="text" id="regApellido" placeholder="Tus apellidos" class="bg-slate-800 border border-slate-700 text-white w-full p-3 text-xs rounded-xl focus:outline-none focus:border-emerald-500">
-        </div>
-      </div>
-
-      <div>
-        <label class="text-[10px] text-slate-400 mb-1 block">WhatsApp / Teléfono</label>
-        <input type="tel" id="regTelefono" placeholder="Ej. 3312345678" class="bg-slate-800 border border-slate-700 text-white w-full p-3 text-xs rounded-xl focus:outline-none focus:border-emerald-500">
-      </div>
-
-      <div>
-        <label class="text-[10px] text-slate-400 mb-1 block">Correo Electrónico</label>
-        <input type="email" id="regCorreo" placeholder="correo@ejemplo.com" class="bg-slate-800 border border-slate-700 text-white w-full p-3 text-xs rounded-xl focus:outline-none focus:border-emerald-500">
-      </div>
-
-      <div>
-        <label class="text-[10px] text-slate-400 mb-1 block">Crea una Contraseña</label>
-        <input type="password" id="regPassword" placeholder="••••••••" class="bg-slate-800 border border-slate-700 text-white w-full p-3 text-xs rounded-xl focus:outline-none focus:border-emerald-500">
-      </div>
-
-      <div>
-        <label class="text-[10px] text-slate-400 mb-1 block">Dirección Completa de Entrega</label>
-        <textarea id="regDireccion" placeholder="Calle, Número, Colonia, Municipio" rows="2" class="bg-slate-800 border border-slate-700 text-white w-full p-3 text-xs rounded-xl focus:outline-none focus:border-emerald-500 resize-none"></textarea>
-      </div>
-
-      <button onclick="registrarUsuario()" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 text-xs w-full py-3.5 rounded-xl font-bold transition-all shadow-lg shadow-emerald-500/20">
-        Crear Cuenta
-      </button>
-
-      <p class="text-[11px] text-center text-slate-400 pt-1">
-        ¿Ya tienes cuenta? <button onclick="toggleModal('modalRegistro'); toggleModal('modalLogin');" class="text-emerald-400 font-bold hover:underline">Inicia Sesión</button>
-      </p>
-      <button onclick="toggleModal('modalRegistro')" class="text-xs text-slate-500 w-full text-center hover:text-white">Cancelar</button>
-    </div>
-  </div>
-
-  <!-- MODAL: PERFIL DE USUARIO Y HISTORIAL DE COMPRAS -->
-  <div id="modalPerfil" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden flex justify-center items-center p-4 z-50">
-    <div class="glass-card p-6 md:p-8 rounded-3xl max-w-xl w-full bg-slate-900 border border-white/10 max-h-[90vh] overflow-y-auto space-y-6">
-      
-      <div class="flex justify-between items-start border-b border-slate-800 pb-4">
-        <div>
-          <h3 id="perfilNombre" class="text-xl font-bold text-white">Nombre Cliente</h3>
-          <p id="perfilCorreo" class="text-xs text-slate-400">correo@ejemplo.com</p>
-        </div>
-        <button onclick="cerrarSesion()" class="bg-red-500/10 hover:bg-red-500/20 text-red-400 text-[11px] font-bold px-3 py-1.5 rounded-full border border-red-500/20">
-          Cerrar Sesión
-        </button>
-      </div>
-
-      <!-- DATOS DE CONTACTO Y ENTREGA -->
-      <div class="bg-slate-800/40 p-4 rounded-2xl border border-slate-700/50 text-xs space-y-2">
-        <p class="font-bold text-emerald-400 uppercase">Datos Registrados</p>
-        <p><strong>📞 Teléfono:</strong> <span id="perfilTelefono">---</span></p>
-        <p><strong>📍 Dirección:</strong> <span id="perfilDireccion">---</span></p>
-      </div>
-
-      <!-- HISTORIAL DE COMPRAS -->
-      <div class="space-y-3">
-        <h4 class="font-bold text-white text-sm flex items-center justify-between">
-          <span>📦 Historial de Pedidos y Pagos</span>
-          <span id="cantHistorial" class="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full">0</span>
-        </h4>
-
-        <div id="listaHistorial" class="space-y-2 max-h-60 overflow-y-auto pr-1 text-xs divide-y divide-slate-800">
-          <p class="text-slate-500 text-center py-4">Aún no has realizado ningún pedido con esta cuenta.</p>
-        </div>
-      </div>
-
-      <button onclick="toggleModal('modalPerfil')" class="w-full bg-slate-800 hover:bg-slate-700 text-white text-xs py-3 rounded-xl font-bold">
-        Cerrar Perfil
-      </button>
-    </div>
-  </div>
-
-  <!-- MODAL: CARRITO Y CHECKOUT -->
-  <div id="modalCarrito" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden flex justify-center items-center p-4 z-50">
-    <div class="glass-card p-6 md:p-8 rounded-3xl max-w-lg w-full bg-slate-900 border border-white/10 max-h-[90vh] overflow-y-auto">
-      <h3 class="text-xl font-bold text-white mb-4 border-b border-slate-800 pb-2">Tu Carrito de Compras</h3>
-      
-      <div id="itemsCarrito" class="divide-y divide-slate-800 mb-4 text-xs"></div>
-      
-      <div class="bg-slate-800/50 p-3 rounded-xl text-xs flex justify-between font-bold text-sm text-white mb-6 border border-slate-700/50">
-        <span>Total a Pagar:</span>
-        <span id="total" class="text-emerald-400">$0.00 MXN</span>
-      </div>
-
-      <div id="seccionBotonesIniciales" class="space-y-3">
-        <button onclick="pedirYPagarAlRecibir()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold py-3.5 rounded-xl text-xs transition-all shadow-lg shadow-emerald-500/20">
-          🛍️ Realizar Pedido y Pagar al Recibir (Efectivo / Tarjeta)
-        </button>
-        <button onclick="mostrarOpcionesDePagoDigital()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3.5 rounded-xl text-xs transition-all border border-blue-400/30">
-          🏦 Pagar por Transferencia SPEI
-        </button>
-      </div>
-
-      <div id="seccionOpcionesDigitales" class="hidden space-y-4 pt-2 border-t border-slate-800">
-        <div id="boxSpei" class="bg-slate-800/90 p-4 rounded-2xl border border-slate-700 text-xs space-y-3">
-          <p class="font-bold text-emerald-400 uppercase tracking-wide">Datos para Transferencia Bancaria</p>
-          <div class="space-y-1.5 text-slate-300">
-            <p><strong>🏦 Banco:</strong> Mercado Pago W</p>
-            <p><strong>👤 Titular:</strong> Fernando Presa Avila</p>
-            <p class="flex items-center justify-between bg-slate-900 p-2 rounded-lg border border-slate-700">
-              <span><strong>CLABE:</strong> <span id="clabeText">722969013056803201</span></span>
-              <button onclick="copiarClabe()" class="bg-emerald-500/20 text-emerald-400 font-bold px-2 py-1 rounded text-[10px] hover:bg-emerald-500/30">Copiar</button>
-            </p>
+      <!-- VISTA 1: FORMULARIO DE REGISTRO -->
+      <div id="vistaFormulario" class="space-y-4">
+        <h2 class="text-xl font-bold text-white text-center">Crear Perfil de Cliente</h2>
+        <form onsubmit="registrarCliente(event)" class="space-y-3 text-left">
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="text-[11px] text-slate-400">Nombre</label>
+              <input type="text" id="regNombre" required class="w-full bg-slate-900 border border-slate-700 text-white px-3 py-2 rounded-xl text-xs focus:border-emerald-500 focus:outline-none">
+            </div>
+            <div>
+              <label class="text-[11px] text-slate-400">Apellido</label>
+              <input type="text" id="regApellido" required class="w-full bg-slate-900 border border-slate-700 text-white px-3 py-2 rounded-xl text-xs focus:border-emerald-500 focus:outline-none">
+            </div>
           </div>
-          <button onclick="enviarComprobanteWhatsApp('SPEI')" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold py-3 rounded-xl transition-all shadow-md">
-            📲 Enviar Comprobante por WhatsApp
-          </button>
-        </div>
+          <div>
+            <label class="text-[11px] text-slate-400">Correo Electrónico</label>
+            <input type="email" id="regCorreo" required class="w-full bg-slate-900 border border-slate-700 text-white px-3 py-2 rounded-xl text-xs focus:border-emerald-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="text-[11px] text-slate-400">Teléfono</label>
+            <input type="tel" id="regTelefono" required class="w-full bg-slate-900 border border-slate-700 text-white px-3 py-2 rounded-xl text-xs focus:border-emerald-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="text-[11px] text-slate-400">Contraseña</label>
+            <input type="password" id="regPassword" required class="w-full bg-slate-900 border border-slate-700 text-white px-3 py-2 rounded-xl text-xs focus:border-emerald-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="text-[11px] text-slate-400">Dirección de Entrega</label>
+            <input type="text" id="regDireccion" required class="w-full bg-slate-900 border border-slate-700 text-white px-3 py-2 rounded-xl text-xs focus:border-emerald-500 focus:outline-none">
+          </div>
 
-        <button onclick="volverAInicioCarrito()" class="text-xs text-slate-400 hover:text-white w-full text-center pt-2">← Volver a opciones de pago</button>
+          <button type="submit" class="w-full bg-emerald-500 text-slate-950 font-bold py-2.5 rounded-xl text-xs hover:bg-emerald-400 transition-all shadow-lg shadow-emerald-500/20">
+            Guardar Perfil
+          </button>
+        </form>
       </div>
 
-      <button onclick="toggleModal('modalCarrito')" class="mt-4 text-xs text-slate-500 w-full hover:text-white transition-colors">Seguir Comprando</button>
+      <!-- VISTA 2: PERFIL ACTIVO (SI YA TIENE SESIÓN) -->
+      <div id="vistaPerfilActivo" class="hidden space-y-6">
+        <div class="border-b border-slate-800 pb-4 flex justify-between items-center">
+          <div>
+            <h2 id="perfilNombre" class="text-xl font-bold text-white"></h2>
+            <p id="perfilCorreo" class="text-xs text-slate-400"></p>
+          </div>
+          <button onclick="cerrarSesionCliente()" class="text-[10px] bg-red-500/20 text-red-400 px-2.5 py-1 rounded-full border border-red-500/30">Cerrar Sesión</button>
+        </div>
+
+        <div class="bg-slate-900/60 p-4 rounded-2xl border border-slate-800 space-y-2 text-xs">
+          <p class="text-emerald-400 font-bold text-[11px]">DATOS REGISTRADOS</p>
+          <p><span class="text-slate-400">📞 Teléfono:</span> <span id="perfilTelefono" class="text-white"></span></p>
+          <p><span class="text-slate-400">📍 Dirección:</span> <span id="perfilDireccion" class="text-white"></span></p>
+        </div>
+
+        <button onclick="cerrarModalRegistro()" class="w-full bg-slate-800 text-slate-300 font-bold py-2.5 rounded-xl text-xs hover:bg-slate-700 transition-all">
+          Cerrar Perfil
+        </button>
+      </div>
     </div>
   </div>
 
   <script>
     const socket = io();
+
     let productos = [];
-    let carrito = [];
-    let usuarioActual = JSON.parse(localStorage.getItem('armm_usuario')) || null;
+    let clienteActual = JSON.parse(localStorage.getItem('armm_cliente')) || null;
 
-    // Al cargar la página, verificamos si hay sesión guardada
-    window.onload = () => {
-      actualizarInterfazAuth();
-    };
-
+    // Conexión y recepción del inventario actualizado
     socket.on('inventario_actualizado', (data) => {
       productos = data;
-      renderCatalogo();
+      renderProductos();
     });
 
-    function renderCatalogo() {
+    // Comprobar estado inicial del cliente
+    actualizarBotonPerfil();
+
+    function renderProductos() {
       const grid = document.getElementById('gridProductos');
-      grid.innerHTML = productos.map(p => {
-        const opciones = Object.entries(p.precios)
-          .map(([pres, prec]) => `<option value="${pres}:${prec}">${pres} - $${prec} MXN</option>`).join('');
-        return `
-          <div class="glass-card p-6 rounded-2xl flex flex-col justify-between hover:border-emerald-500/40 transition-all duration-300">
-            <div>
-              <span class="text-[10px] bg-emerald-500/10 text-emerald-400 font-semibold px-3 py-1 rounded-full border border-emerald-500/20 uppercase tracking-wider">${p.categoria}</span>
-              <h3 class="font-bold text-base text-white mt-3">${p.nombre}</h3>
-            </div>
-            <div class="mt-6">
-              <select id="sel-${p.id}" class="bg-slate-800 border border-slate-700 text-white w-full p-2.5 text-xs rounded-xl mb-3 focus:outline-none focus:border-emerald-500">${opciones}</select>
-              <button onclick="agregarAlCarrito(${p.id})" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 text-xs w-full py-2.5 rounded-xl font-bold transition-all shadow-lg shadow-emerald-500/10">
-                + Agregar al Pedido
-              </button>
+      if (!productos.length) return;
+
+      grid.innerHTML = productos.map(p => `
+        <div class="glass-card p-6 rounded-3xl space-y-4 flex flex-col justify-between">
+          <div class="space-y-2">
+            <span class="text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full font-bold">${p.categoria}</span>
+            <h3 class="font-extrabold text-white text-lg">${p.nombre}</h3>
+          </div>
+
+          <div class="space-y-2">
+            <p class="text-xs text-slate-400">Precios y Presentaciones:</p>
+            <div class="grid grid-cols-3 gap-2">
+              ${Object.entries(p.precios).map(([pres, prec]) => `
+                <div class="bg-slate-900/80 p-2 rounded-xl text-center border border-slate-800">
+                  <span class="block text-[10px] text-slate-400">${pres}</span>
+                  <span class="block text-xs font-bold text-emerald-400">$${prec}</span>
+                </div>
+              `).join('')}
             </div>
           </div>
-        `;
-      }).join('');
-    }
 
-    function agregarAlCarrito(id) {
-      const prod = productos.find(p => p.id === id);
-      const [pres, prec] = document.getElementById(`sel-${id}`).value.split(':');
-      carrito.push({ nombre: prod.nombre, presentacion: pres, precio: parseFloat(prec) });
-      actualizarCarrito();
-    }
-
-    function actualizarCarrito() {
-      document.getElementById('cartCount').innerText = carrito.length;
-      let tot = carrito.reduce((a, b) => a + b.precio, 0);
-      document.getElementById('total').innerText = `$${tot.toFixed(2)} MXN`;
-
-      document.getElementById('itemsCarrito').innerHTML = carrito.map((item, i) => `
-        <div class="py-3 flex justify-between items-center">
-          <div><p class="font-bold text-white">${item.nombre}</p><p class="text-slate-400">${item.presentacion} - $${item.precio} MXN</p></div>
-          <button onclick="eliminarCarrito(${i})" class="text-red-400 font-bold hover:text-red-300 px-2">✕</button>
+          <button onclick="comprarWhatsApp('${p.nombre}')" class="w-full bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500 hover:text-slate-950 font-bold py-2.5 rounded-xl text-xs transition-all border border-emerald-500/30 flex items-center justify-center gap-2">
+            <span>Pedir por WhatsApp</span>
+          </button>
         </div>
       `).join('');
     }
 
-    function eliminarCarrito(i) {
-      carrito.splice(i, 1);
-      actualizarCarrito();
-    }
-
-    // REGISTRO
-    function registrarUsuario() {
-      const nombre = document.getElementById('regNombre').value.trim();
-      const apellido = document.getElementById('regApellido').value.trim();
-      const telefono = document.getElementById('regTelefono').value.trim();
-      const correo = document.getElementById('regCorreo').value.trim();
-      const password = document.getElementById('regPassword').value.trim();
-      const direccion = document.getElementById('regDireccion').value.trim();
-
-      if (nombre && apellido && telefono && correo && password && direccion) {
-        const fechaRegistro = new Date().toLocaleString('es-MX', { dateStyle: 'short', timeStyle: 'short' });
-        usuarioActual = { nombre, apellido, telefono, correo, password, direccion, fechaRegistro, historial: [] };
-
-        localStorage.setItem('armm_usuario', JSON.stringify(usuarioActual));
-        socket.emit('nuevo_cliente_registrado', usuarioActual);
-
-        actualizarInterfazAuth();
-        toggleModal('modalRegistro');
-        alert(`¡Bienvenido, ${nombre}! Tu cuenta se ha creado con éxito.`);
+    function abrirModalRegistro() {
+      document.getElementById('modalRegistro').classList.remove('hidden');
+      if (clienteActual) {
+        document.getElementById('vistaFormulario').classList.add('hidden');
+        document.getElementById('vistaPerfilActivo').classList.remove('hidden');
+        
+        document.getElementById('perfilNombre').innerText = `${clienteActual.nombre} ${clienteActual.apellido}`;
+        document.getElementById('perfilCorreo').innerText = clienteActual.correo;
+        document.getElementById('perfilTelefono').innerText = clienteActual.telefono;
+        document.getElementById('perfilDireccion').innerText = clienteActual.direccion;
       } else {
-        alert('Por favor completa todos los campos del registro.');
+        document.getElementById('vistaFormulario').classList.remove('hidden');
+        document.getElementById('vistaPerfilActivo').classList.add('hidden');
       }
     }
 
-    // INICIAR SESIÓN
-    function iniciarSesion() {
-      const loginUser = document.getElementById('loginUser').value.trim();
-      const loginPass = document.getElementById('loginPassword').value.trim();
-
-      if (!loginUser || !loginPass) return alert('Ingresa tu usuario y contraseña.');
-
-      // Si ya hay datos en localStorage se valida
-      const local = JSON.parse(localStorage.getItem('armm_usuario'));
-      if (local && (local.correo === loginUser || local.telefono === loginUser) && local.password === loginPass) {
-        usuarioActual = local;
-        actualizarInterfazAuth();
-        toggleModal('modalLogin');
-        alert(`¡Hola de nuevo, ${usuarioActual.nombre}!`);
-      } else {
-        alert('Usuario o contraseña incorrectos. Si no recuerdas tus datos usa la opción "Olvidé mi contraseña".');
-      }
+    function cerrarModalRegistro() {
+      document.getElementById('modalRegistro').classList.add('hidden');
     }
 
-    // OLVIDÉ MI CONTRASEÑA (ENVÍA A WHATSAPP CON SUS DATOS)
-    function abrirOlvidarPassword() {
-      const loginUser = document.getElementById('loginUser').value.trim();
-      if (!loginUser) {
-        alert('Por favor escribe tu Correo o Teléfono en el campo de arriba y vuelve a hacer clic en "Olvidé mi contraseña".');
-        return;
-      }
+    function registrarCliente(e) {
+      e.preventDefault();
 
-      const msg = `*RECUPERACIÓN DE CONTRASEÑA - ARMM*\n\nHola, olvidé mi contraseña de mi cuenta.\nMis datos de acceso registrados son:\n📌 *Correo/Teléfono ingresado:* ${loginUser}\n\n¿Me ayudan a restablecer o recuperar mi contraseña por favor?`;
-      window.open(`https://wa.me/5213351097726?text=${encodeURIComponent(msg)}`, '_blank');
-    }
-
-    function cerrarSesion() {
-      localStorage.removeItem('armm_usuario');
-      usuarioActual = null;
-      actualizarInterfazAuth();
-      toggleModal('modalPerfil');
-      alert('Sesión cerrada.');
-    }
-
-    function actualizarInterfazAuth() {
-      if (usuarioActual) {
-        document.getElementById('botonesAuth').classList.add('hidden');
-        document.getElementById('botonPerfil').classList.remove('hidden');
-        document.getElementById('nombreHeader').innerText = usuarioActual.nombre;
-
-        // Llenar datos de perfil
-        document.getElementById('perfilNombre').innerText = `${usuarioActual.nombre} ${usuarioActual.apellido}`;
-        document.getElementById('perfilCorreo').innerText = usuarioActual.correo;
-        document.getElementById('perfilTelefono').innerText = usuarioActual.telefono;
-        document.getElementById('perfilDireccion').innerText = usuarioActual.direccion;
-
-        renderHistorialPerfil();
-      } else {
-        document.getElementById('botonesAuth').classList.remove('hidden');
-        document.getElementById('botonPerfil').classList.add('hidden');
-      }
-    }
-
-    function renderHistorialPerfil() {
-      const container = document.getElementById('listaHistorial');
-      const historial = usuarioActual.historial || [];
-      document.getElementById('cantHistorial').innerText = historial.length;
-
-      if (!historial.length) {
-        container.innerHTML = `<p class="text-slate-500 text-center py-4">Aún no has realizado ningún pedido con esta cuenta.</p>`;
-        return;
-      }
-
-      container.innerHTML = historial.map(h => `
-        <div class="py-2.5 space-y-1">
-          <div class="flex justify-between font-bold text-white">
-            <span>📅 ${h.fecha}</span>
-            <span class="text-emerald-400">${h.monto}</span>
-          </div>
-          <p class="text-slate-400 text-[11px]">💳 Método: ${h.metodoPago}</p>
-          <p class="text-slate-300 text-[11px]">🛒 Items: ${h.items.map(i => `${i.nombre} (${i.presentacion})`).join(', ')}</p>
-        </div>
-      `).join('');
-    }
-
-    function registrarPedidoEnServidor(metodoPago) {
-      const fechaActual = new Date().toLocaleString('es-MX', { dateStyle: 'short', timeStyle: 'short' });
-      const nuevoPedido = {
-        cliente: usuarioActual ? `${usuarioActual.nombre} ${usuarioActual.apellido}` : 'Cliente Anónimo',
-        telefono: usuarioActual ? usuarioActual.telefono : 'N/A',
-        metodoPago: metodoPago,
-        monto: document.getElementById('total').innerText,
-        fecha: fechaActual,
-        items: [...carrito]
+      const nuevoCliente = {
+        nombre: document.getElementById('regNombre').value,
+        apellido: document.getElementById('regApellido').value,
+        correo: document.getElementById('regCorreo').value,
+        telefono: document.getElementById('regTelefono').value,
+        password: document.getElementById('regPassword').value,
+        direccion: document.getElementById('regDireccion').value,
+        fechaRegistro: new Date().toLocaleDateString('es-MX', {
+          day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
+        })
       };
 
-      // Si el usuario tiene sesión activa, guardamos en su historial local
-      if (usuarioActual) {
-        if (!usuarioActual.historial) usuarioActual.historial = [];
-        usuarioActual.historial.unshift(nuevoPedido);
-        localStorage.setItem('armm_usuario', JSON.stringify(usuarioActual));
-        renderHistorialPerfil();
+      // 1. Guardar localmente
+      clienteActual = nuevoCliente;
+      localStorage.setItem('armm_cliente', JSON.stringify(nuevoCliente));
+
+      // 2. Transmitir al Servidor y al Panel de Admin por Sockets
+      socket.emit('nuevo_registro_cliente', nuevoCliente);
+
+      actualizarBotonPerfil();
+      abrirModalRegistro();
+    }
+
+    function cerrarSesionCliente() {
+      localStorage.removeItem('armm_cliente');
+      clienteActual = null;
+      actualizarBotonPerfil();
+      abrirModalRegistro();
+    }
+
+    function actualizarBotonPerfil() {
+      const container = document.getElementById('userProfileBtn');
+      if (clienteActual) {
+        container.innerHTML = `
+          <button onclick="abrirModalRegistro()" class="text-xs bg-blue-500/20 text-blue-400 border border-blue-500/30 px-3 py-1.5 rounded-full font-bold">
+            👤 ${clienteActual.nombre}
+          </button>
+        `;
+      } else {
+        container.innerHTML = `
+          <button onclick="abrirModalRegistro()" class="text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-3 py-1.5 rounded-full hover:bg-emerald-500 hover:text-slate-950 font-bold transition-all">
+            Registrarse / Mi Cuenta
+          </button>
+        `;
       }
-
-      socket.emit('nuevo_pedido_registrado', nuevoPedido);
     }
 
-    function pedirYPagarAlRecibir() {
-      if (!carrito.length) return alert('El carrito está vacío');
-      
-      registrarPedidoEnServidor('Pago al Recibir');
-
-      let msg = `*NUEVO PEDIDO ARMM (Pago al Recibir)*\n\n`;
-      if (usuarioActual) {
-        msg += `👤 *Cliente:* ${usuarioActual.nombre} ${usuarioActual.apellido}\n`;
-        msg += `📞 *Teléfono:* ${usuarioActual.telefono}\n`;
-        msg += `📧 *Correo:* ${usuarioActual.correo}\n`;
-        msg += `📍 *Dirección:* ${usuarioActual.direccion}\n\n`;
+    function comprarWhatsApp(productoNombre) {
+      let mensaje = `Hola, me interesa pedir ${productoNombre} en ARMM.`;
+      if (clienteActual) {
+        mensaje += ` Mi nombre es ${clienteActual.nombre} ${clienteActual.apellido} y mi dirección de entrega es ${clienteActual.direccion}.`;
       }
-      msg += `*Detalle de Productos:*\n`;
-      carrito.forEach(c => msg += `- ${c.nombre} (${c.presentacion}): $${c.precio} MXN\n`);
-      msg += `\n💵 *Pago:* Al entregar (Efectivo / Tarjeta)\n💰 *Total:* ${document.getElementById('total').innerText}`;
-      
-      window.open(`https://wa.me/5213351097726?text=${encodeURIComponent(msg)}`, '_blank');
+      window.open(`https://wa.me/523351097726?text=${encodeURIComponent(mensaje)}`, '_blank');
     }
-
-    function mostrarOpcionesDePagoDigital() {
-      if (!carrito.length) return alert('El carrito está vacío');
-      document.getElementById('seccionBotonesIniciales').classList.add('hidden');
-      document.getElementById('seccionOpcionesDigitales').classList.remove('hidden');
-    }
-
-    function volverAInicioCarrito() {
-      document.getElementById('seccionBotonesIniciales').classList.remove('hidden');
-      document.getElementById('seccionOpcionesDigitales').classList.add('hidden');
-    }
-
-    function copiarClabe() {
-      const clabe = document.getElementById('clabeText').innerText;
-      navigator.clipboard.writeText(clabe);
-      alert('¡CLABE copiada al portapapeles!');
-    }
-
-    function enviarComprobanteWhatsApp(metodoPago) {
-      registrarPedidoEnServidor(metodoPago);
-
-      let msg = `*COMPROBANTE DE PAGO - ARMM*\n\n`;
-      if (usuarioActual) {
-        msg += `👤 *Cliente:* ${usuarioActual.nombre} ${usuarioActual.apellido}\n`;
-        msg += `📞 *Teléfono:* ${usuarioActual.telefono}\n`;
-        msg += `📧 *Correo:* ${usuarioActual.correo}\n`;
-        msg += `📍 *Dirección:* ${usuarioActual.direccion}\n\n`;
-      }
-      msg += `💳 *Método de Pago:* ${metodoPago}\n`;
-      msg += `💰 *Monto:* ${document.getElementById('total').innerText}\n\n`;
-      msg += `*Detalle del Pedido:*\n`;
-      carrito.forEach(c => msg += `- ${c.nombre} (${c.presentacion}): $${c.precio} MXN\n`);
-      msg += `\n*Adjunto mi comprobante de pago:*`;
-      
-      window.open(`https://wa.me/5213351097726?text=${encodeURIComponent(msg)}`, '_blank');
-    }
-
-    function toggleModal(id) { document.getElementById(id).classList.toggle('hidden'); }
   </script>
 </body>
 </html>
