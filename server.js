@@ -22,6 +22,7 @@ let inventario = [
 
 let clientes = [];
 let pedidos = [];
+let solicitudesAyuda = [];
 let resenas = [
   { nombre: "María López", comentario: "Excelente calidad en el cloro concentrado, rinde muchísimo.", estrellas: 5, fecha: "10/08/2026" },
   { nombre: "Carlos R.", comentario: "El desengrasante dejó impecable el taller. Muy recomendado ARMM.", estrellas: 5, fecha: "12/08/2026" }
@@ -38,6 +39,7 @@ io.on('connection', (socket) => {
   socket.emit('lista_clientes_inicial', clientes);
   socket.emit('lista_pedidos_inicial', pedidos);
   socket.emit('lista_resenas_inicial', resenas);
+  socket.emit('lista_ayuda_inicial', solicitudesAyuda);
 
   // Agregar Nuevo Producto
   socket.on('agregar_nuevo_producto', (nuevoProducto) => {
@@ -46,7 +48,7 @@ io.on('connection', (socket) => {
     io.emit('inventario_actualizado', inventario);
   });
 
-  // Actualizar Precios de Productos
+  // Actualizar Precios
   socket.on('actualizar_precios', (data) => {
     const producto = inventario.find(p => p.id === data.id);
     if (producto) {
@@ -55,22 +57,52 @@ io.on('connection', (socket) => {
     }
   });
 
-  // Registro de Clientes
+  // Registro de Clientes Independiente / Carrito
   socket.on('nuevo_registro_cliente', (cliente) => {
-    const existe = clientes.some(c => c.correo === cliente.correo);
-    if (!existe) clientes.unshift(cliente);
-    io.emit('cliente_registrado_notificacion', cliente);
-    io.emit('lista_clientes_inicial', clientes);
+    const existe = clientes.some(c => (cliente.correo && c.correo === cliente.correo) || c.telefono === cliente.telefono);
+    if (existe) {
+      socket.emit('respuesta_registro', { exito: false, msj: 'El correo o teléfono ya está registrado.' });
+    } else {
+      clientes.unshift(cliente);
+      io.emit('lista_clientes_inicial', clientes);
+      socket.emit('respuesta_registro', { exito: true, cliente });
+    }
   });
 
-  // Validar Login de Cliente
-  socket.on('validar_login_cliente', ({ correo, pass }) => {
-    const clienteEncontrado = clientes.find(c => c.correo === correo && c.password === pass);
+  // Validar Login de Cliente (Correo o Teléfono)
+  socket.on('validar_login_cliente', ({ identificador, pass }) => {
+    const clienteEncontrado = clientes.find(c => 
+      (c.correo === identificador || c.telefono === identificador) && c.password === pass
+    );
     if (clienteEncontrado) {
       socket.emit('respuesta_login_cliente', { exito: true, cliente: clienteEncontrado });
     } else {
-      socket.emit('respuesta_login_cliente', { exito: false });
+      socket.emit('respuesta_login_cliente', { exito: false, msj: 'Credenciales incorrectas.' });
     }
+  });
+
+  // Recuperar Contraseña / Centro de Ayuda
+  socket.on('solicitar_recuperacion', (datos) => {
+    // Validar si la información coincide con un cliente existente
+    const coincidencia = clientes.find(c => 
+      c.nombre.toLowerCase().trim() === datos.nombre.toLowerCase().trim() &&
+      c.telefono === datos.telefono &&
+      ((!c.correo && !datos.correo) || (c.correo && datos.correo && c.correo.toLowerCase().trim() === datos.correo.toLowerCase().trim()))
+    );
+
+    const solicitud = {
+      id: 'AYUDA-' + Math.floor(1000 + Math.random() * 9000),
+      nombre: datos.nombre,
+      telefono: datos.telefono,
+      correo: datos.correo || 'No especificado',
+      esValido: !!coincidencia,
+      passwordActual: coincidencia ? coincidencia.password : 'No coincide con ningún usuario',
+      fecha: new Date().toLocaleString('es-MX')
+    };
+
+    solicitudesAyuda.unshift(solicitud);
+    io.emit('lista_ayuda_inicial', solicitudesAyuda);
+    socket.emit('respuesta_recuperacion', { exito: true });
   });
 
   // Crear Pedido desde la Web Pública
@@ -89,19 +121,21 @@ io.on('connection', (socket) => {
 
     pedidos.unshift(nuevoPedido);
 
-    // Guardar cliente en la lista global si no existía
-    const existeCliente = clientes.some(c => c.correo === datosPedido.cliente.correo);
-    if (!existeCliente) {
+    // Asegurar que el cliente existe con sus datos completos
+    const idx = clientes.findIndex(c => (c.correo && c.correo === datosPedido.cliente.correo) || c.telefono === datosPedido.cliente.telefono);
+    if (idx === -1) {
       clientes.unshift(datosPedido.cliente);
-      io.emit('lista_clientes_inicial', clientes);
+    } else {
+      clientes[idx] = datosPedido.cliente; // Actualizar datos
     }
-
+    
+    io.emit('lista_clientes_inicial', clientes);
     socket.emit('pedido_creado_exito', nuevoPedido);
     io.emit('pedido_registrado_notificacion', nuevoPedido);
     io.emit('lista_pedidos_inicial', pedidos);
   });
 
-  // Actualizar Estado del Pedido desde el Admin
+  // Actualizar Estado del Pedido
   socket.on('actualizar_estado_pedido', ({ pedidoId, nuevoEstado, fechaEstimada }) => {
     const pedido = pedidos.find(p => p.id === pedidoId);
     if (pedido) {
@@ -112,7 +146,7 @@ io.on('connection', (socket) => {
     }
   });
 
-  // Publicar Reseñas / Comentarios
+  // Reseñas
   socket.on('nueva_resena', (datosResena) => {
     const resena = {
       nombre: datosResena.nombre,
@@ -127,6 +161,4 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => console.log(`Cliente desconectado: ${socket.id}`));
 });
 
-server.listen(PORT, () => {
-  console.log(`Servidor ARMM corriendo en http://localhost:${PORT}`);
-});
+server.listen(PORT, () => console.log(`Servidor ARMM corriendo en http://localhost:${PORT}`));
