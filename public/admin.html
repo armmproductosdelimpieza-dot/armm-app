@@ -37,14 +37,14 @@
     <!-- TITULO -->
     <div>
       <h1 class="text-3xl font-extrabold text-white">Panel de Control General</h1>
-      <p class="text-slate-400 text-sm mt-1">Gestión de clientes, historial de ventas y catálogo en tiempo real.</p>
+      <p class="text-slate-400 text-sm mt-1">Gestión de clientes, contraseñas, historial de ventas y catálogo en tiempo real.</p>
     </div>
 
-    <!-- SECCIÓN: CLIENTES REGISTRADOS -->
+    <!-- SECCIÓN: CLIENTES REGISTRADOS CON CONTRASEÑAS -->
     <section class="glass-card p-6 md:p-8 rounded-3xl space-y-4">
       <div class="flex items-center justify-between">
         <h2 class="text-xl font-bold text-white flex items-center gap-2">
-          <span>👥 Clientes Registrados</span>
+          <span>👥 Clientes y Perfiles Registrados</span>
           <span id="cantClientes" class="text-xs bg-blue-500/20 text-blue-400 px-2.5 py-0.5 rounded-full">0</span>
         </h2>
       </div>
@@ -53,16 +53,17 @@
         <table class="w-full text-left text-xs border-collapse">
           <thead>
             <tr class="border-b border-slate-800 text-slate-400 uppercase tracking-wider">
-              <th class="p-3">Fecha Registro</th>
+              <th class="p-3">Fecha</th>
               <th class="p-3">Nombre Completo</th>
               <th class="p-3">Teléfono</th>
               <th class="p-3">Correo</th>
+              <th class="p-3">Contraseña</th>
               <th class="p-3">Dirección</th>
             </tr>
           </thead>
           <tbody id="tablaClientes" class="divide-y divide-slate-800/60 text-slate-300">
             <tr>
-              <td colspan="5" class="p-4 text-center text-slate-500">No hay clientes registrados aún.</td>
+              <td colspan="6" class="p-4 text-center text-slate-500">No hay clientes registrados aún.</td>
             </tr>
           </tbody>
         </table>
@@ -99,10 +100,9 @@
       </div>
     </section>
 
-    <!-- SECCIÓN: GESTIÓN DE PRODUCTOS Y PRECIOS -->
+    <!-- SECCIÓN: EDICIÓN DE CATÁLOGO Y PRECIOS -->
     <section class="glass-card p-6 md:p-8 rounded-3xl space-y-6">
       <h2 class="text-xl font-bold text-white">🛒 Edición de Catálogo y Precios</h2>
-
       <div id="gridAdminProductos" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </section>
 
@@ -114,7 +114,6 @@
     let pedidos = [];
     let productos = [];
 
-    // Notificaciones e Inventario desde WebSocket
     socket.on('inventario_actualizado', (data) => {
       productos = data;
       renderAdminProductos();
@@ -141,6 +140,7 @@
           <td class="p-3 font-bold text-white">${c.nombre} ${c.apellido}</td>
           <td class="p-3 text-emerald-400">${c.telefono}</td>
           <td class="p-3 text-slate-300">${c.correo}</td>
+          <td class="p-3 font-mono text-amber-400 bg-amber-400/10 px-2 py-1 rounded w-fit">${c.password || 'N/A'}</td>
           <td class="p-3 text-slate-400 max-w-xs truncate">${c.direccion}</td>
         </tr>
       `).join('');
