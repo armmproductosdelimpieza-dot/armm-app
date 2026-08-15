@@ -6,144 +6,75 @@
     <title>Web Admin - ARMM</title>
     <style>
         :root {
-            --bg-dark: #070d1d;
-            --card-bg: rgba(16, 28, 56, 0.75);
-            --card-border: rgba(26, 43, 76, 0.9);
+            --bg-dark: #080e18;
+            --card-glass: rgba(16, 26, 48, 0.7);
+            --card-border: rgba(0, 230, 153, 0.2);
             --accent-green: #00e699;
-            --text-main: #ffffff;
-            --text-sub: #8a99ad;
+            --text-muted: #8a99ad;
         }
 
         body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            margin: 0;
-            background: #070d1d;
-            color: var(--text-main);
-            display: flex;
-            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0; background: var(--bg-dark); color: #fff;
+            display: flex; min-height: 100vh;
         }
 
         .sidebar {
-            width: 260px;
-            background: rgba(10, 17, 34, 0.95);
-            border-right: 1px solid var(--card-border);
-            padding: 25px 15px;
+            width: 260px; background: rgba(10, 17, 34, 0.85);
+            backdrop-filter: blur(15px); border-right: 1px solid var(--card-border);
+            padding: 25px 15px; box-sizing: border-box;
         }
-
-        .sidebar h2 {
-            color: var(--accent-green);
-            font-size: 1.1em;
-            margin-bottom: 30px;
-            padding-left: 10px;
+        .sidebar h2 { color: var(--accent-green); font-size: 1.2em; margin-bottom: 30px; text-align: center; }
+        .sidebar ul { list-style: none; padding: 0; margin: 0; }
+        .sidebar li {
+            padding: 12px 15px; border-radius: 10px; color: var(--text-muted);
+            cursor: pointer; margin-bottom: 8px; transition: all 0.3s; font-size: 0.9em;
         }
+        .sidebar li.active, .sidebar li:hover { background: rgba(0,230,153,0.15); color: var(--accent-green); }
 
-        .sidebar-menu {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .sidebar-menu li {
-            padding: 12px 15px;
-            border-radius: 8px;
-            color: var(--text-sub);
-            cursor: pointer;
-            margin-bottom: 6px;
-            transition: all 0.2s ease;
-            font-size: 0.9em;
-            font-weight: 600;
-        }
-
-        .sidebar-menu li.active, .sidebar-menu li:hover {
-            background: rgba(0, 230, 153, 0.15);
-            color: var(--accent-green);
-        }
-
-        .main-content {
-            flex: 1;
-            padding: 35px;
-            overflow-y: auto;
-        }
-
-        .glass-panel {
-            background: var(--card-bg);
+        .content { flex: 1; padding: 35px; overflow-y: auto; }
+        .glass-box {
+            background: var(--card-glass); border: 1px solid var(--card-border);
+            border-radius: 16px; padding: 25px; margin-bottom: 30px;
             backdrop-filter: blur(10px);
-            border: 1px solid var(--card-border);
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 25px;
         }
 
-        .form-input {
-            width: 100%;
-            padding: 10px;
-            background: rgba(7, 13, 29, 0.9);
-            border: 1px solid var(--card-border);
-            border-radius: 6px;
-            color: #fff;
-            box-sizing: border-box;
-            margin-top: 4px;
-            margin-bottom: 12px;
+        input, select {
+            width: 100%; padding: 10px; background: rgba(8,14,24,0.7);
+            border: 1px solid var(--card-border); border-radius: 8px;
+            color: #fff; box-sizing: border-box; margin-top: 5px; margin-bottom: 12px; outline: none;
         }
 
         .btn-green {
-            background: var(--accent-green);
-            color: #0b1329;
-            border: none;
-            padding: 10px 18px;
-            border-radius: 6px;
-            font-weight: 700;
-            cursor: pointer;
+            background: var(--accent-green); color: #080e18; border: none;
+            padding: 10px 18px; font-weight: bold; border-radius: 8px; cursor: pointer;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
-
-        th, td {
-            padding: 12px;
-            border-bottom: 1px solid var(--card-border);
-            text-align: left;
-            font-size: 0.85em;
-        }
-
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 12px; border-bottom: 1px solid var(--card-border); text-align: left; font-size: 0.88em; }
         th { color: var(--accent-green); }
 
-        .pwd-field { position: relative; }
-        .eye-icon { position: absolute; right: 12px; top: 12px; cursor: pointer; }
-        
-        .drag-item {
-            background: rgba(7, 13, 29, 0.6);
-            border: 1px dashed var(--accent-green);
-            padding: 12px;
-            margin-bottom: 8px;
-            border-radius: 6px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+        .eye-icon { position: absolute; right: 12px; top: 12px; cursor: pointer; opacity: 0.8; }
     </style>
 </head>
 <body>
 
-    <!-- Modal Login Admin -->
-    <div id="adminLoginModal" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#070d1d; display:flex; justify-content:center; align-items:center; z-index:9999;">
-        <div class="glass-panel" style="width:300px; text-align:center;">
-            <h2 style="color:var(--accent-green);">Acceso Admin</h2>
-            <div class="pwd-field">
-                <input type="password" id="adminPass" class="form-input" placeholder="Contraseña">
+    <!-- Modal Login Admin con Contraseña ARMM123 -->
+    <div id="adminLoginModal" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#080e18; display:flex; justify-content:center; align-items:center; z-index:9999;">
+        <div style="background:rgba(16,26,48,0.95); padding:35px; border-radius:20px; width:340px; text-align:center; border:1px solid var(--accent-green);">
+            <h2 style="color:var(--accent-green); margin-top:0;">Acceso Web Admin</h2>
+            <div style="position:relative;">
+                <input type="password" id="adminPass" placeholder="Contraseña de acceso">
                 <span class="eye-icon" onclick="togglePass('adminPass')">👁️</span>
             </div>
-            <button class="btn-green" style="width:100%; margin-top:10px;" onclick="validarAdmin()">Ingresar</button>
+            <button class="btn-green" style="width:100%; margin-top:15px;" onclick="validarAdmin()">Ingresar a la Plataforma</button>
         </div>
     </div>
 
-    <!-- Sidebar -->
+    <!-- Sidebar Navegación -->
     <div class="sidebar">
-        <h2>🛡️ ARMM ADMIN</h2>
-        <ul class="sidebar-menu">
+        <h2>🛡️ ARMM Admin</h2>
+        <ul>
             <li onclick="verSeccion('sPedidos')" class="active">1. Pedidos Realizados</li>
             <li onclick="verSeccion('sProductos')">2. Gestión de Productos</li>
             <li onclick="verSeccion('sAcomodo')">3. Editar Acomodo</li>
@@ -154,147 +85,125 @@
         </ul>
     </div>
 
-    <!-- Main Content -->
-    <div class="main-content">
+    <!-- Contenido Principal -->
+    <div class="content">
         <!-- 1. Pedidos -->
-        <div id="sPedidos" class="glass-panel">
-            <h2 style="color:var(--accent-green); margin-top:0;">Pedidos Realizados</h2>
+        <div id="sPedidos" class="glass-box">
+            <h2 style="color:var(--accent-green);">1. Pedidos Realizados</h2>
             <table>
-                <thead>
-                    <tr><th>ID</th><th>Cliente</th><th>Dirección</th><th>Método</th><th>Total</th><th>Estado</th><th>Fecha Est.</th><th>Acción</th></tr>
-                </thead>
+                <thead><tr><th>ID</th><th>Cliente</th><th>Dirección</th><th>Método</th><th>Total</th><th>Estado</th><th>Fecha Est.</th><th>Acción</th></tr></thead>
                 <tbody id="tblPedidos"></tbody>
             </table>
         </div>
 
         <!-- 2. Gestión de Productos -->
-        <div id="sProductos" class="glass-panel" style="display:none;">
-            <h2 style="color:var(--accent-green); margin-top:0;">Agregar / Editar Productos</h2>
-            <form onsubmit="guardarProductoAdmin(event)">
+        <div id="sProductos" class="glass-box" style="display:none;">
+            <h2 style="color:var(--accent-green);" id="formProdTitle">Agregar / Editar Producto</h2>
+            <form onsubmit="guardarProducto(event)">
                 <input type="hidden" id="pEditId">
                 <label>Nombre del Producto</label>
-                <input type="text" id="pNombre" class="form-input" required>
+                <input type="text" id="pNombre" required>
                 
                 <label>Categoría</label>
-                <input type="text" id="pCat" class="form-input" required>
+                <input type="text" id="pCat" required>
 
                 <label>Modo de Presentación / Venta</label>
-                <select id="pModo" class="form-input" onchange="cambiarCamposModo()">
+                <select id="pModo" onchange="cambiarModoCampos()">
                     <option value="Litro">Litro (1L, 5L, 20L)</option>
                     <option value="Pieza">Pieza (Mayoreo / Menudeo)</option>
                 </select>
 
                 <!-- Campos dinámicos para Litro -->
-                <div id="camposLitro">
-                    <label>Precio 1 Litro ($)</label>
-                    <input type="number" id="p1" class="form-input" value="0">
-                    <label>Precio 5 Litros ($)</label>
-                    <input type="number" id="p5" class="form-input" value="0">
-                    <label>Precio 20 Litros ($)</label>
-                    <input type="number" id="p20" class="form-input" value="0">
+                <div id="secCamposLitro">
+                    <label>Precio 1 Litro ($)</label><input type="number" id="p1">
+                    <label>Precio 5 Litros ($)</label><input type="number" id="p5">
+                    <label>Precio 20 Litros ($)</label><input type="number" id="p20">
                 </div>
 
                 <!-- Campos dinámicos para Pieza -->
-                <div id="camposPieza" style="display:none;">
-                    <label>Precio Menudeo ($)</label>
-                    <input type="number" id="pMenudeo" class="form-input" value="0">
-                    <label>Precio Mayoreo ($)</label>
-                    <input type="number" id="pMayoreo" class="form-input" value="0">
+                <div id="secCamposPieza" style="display:none;">
+                    <label>Precio Menudeo ($)</label><input type="number" id="pMenudeo">
+                    <label>Precio Mayoreo ($)</label><input type="number" id="pMayoreo">
                 </div>
 
-                <button type="submit" class="btn-green">Guardar Producto</button>
+                <button type="submit" class="btn-green" style="width:100%; margin-top:10px;">Guardar Producto</button>
             </form>
 
             <hr style="border-color:var(--card-border); margin:25px 0;">
-            <h3>Catálogo Registrado</h3>
+            <h3>Catálogo de Productos</h3>
             <table>
-                <thead>
-                    <tr><th>Nombre</th><th>Categoría</th><th>Modo</th><th>Precios</th><th>Acciones</th></tr>
-                </thead>
+                <thead><tr><th>Nombre</th><th>Categoría</th><th>Modo</th><th>Precios</th><th>Acciones</th></tr></thead>
                 <tbody id="tblProductos"></tbody>
             </table>
         </div>
 
         <!-- 3. Editar Acomodo -->
-        <div id="sAcomodo" class="glass-panel" style="display:none;">
-            <h2 style="color:var(--accent-green); margin-top:0;">Editar Acomodo de Categorías</h2>
-            <p style="font-size:0.85em; color:var(--text-sub);">Reordena los bloques visibles en la web pública:</p>
-            <div id="dragContainer">
-                <div class="drag-item"><span>1. DESINFECCIÓN</span> <span>⬆️ ⬇️</span></div>
-                <div class="drag-item"><span>2. LIMPIEZA GENERAL</span> <span>⬆️ ⬇️</span></div>
-                <div class="drag-item"><span>3. CUIDADO DE ROPA</span> <span>⬆️ ⬇️</span></div>
-                <div class="drag-item"><span>4. JARCERÍA</span> <span>⬆️ ⬇️</span></div>
-            </div>
+        <div id="sAcomodo" class="glass-box" style="display:none;">
+            <h2 style="color:var(--accent-green);">3. Editar Acomodo de Productos</h2>
+            <p style="color:var(--text-muted);">Ajusta la prioridad o posición de los productos en la Web Pública:</p>
+            <div id="listaAcomodo"></div>
         </div>
 
         <!-- 4. Usuarios Registrados -->
-        <div id="sUsuarios" class="glass-panel" style="display:none;">
-            <h2 style="color:var(--accent-green); margin-top:0;">Usuarios Registrados</h2>
+        <div id="sUsuarios" class="glass-box" style="display:none;">
+            <h2 style="color:var(--accent-green);">4. Usuarios Registrados</h2>
             <table>
-                <thead>
-                    <tr><th>Nombre</th><th>Correo</th><th>Teléfono</th><th>Dirección</th><th>Contraseña</th></tr>
-                </thead>
+                <thead><tr><th>Nombre</th><th>Correo</th><th>Teléfono</th><th>Dirección</th><th>Contraseña</th></tr></thead>
                 <tbody id="tblUsuarios"></tbody>
             </table>
         </div>
 
         <!-- 5. Centro de Ayuda -->
-        <div id="sAyuda" class="glass-panel" style="display:none;">
-            <h2 style="color:var(--accent-green); margin-top:0;">Centro de Ayuda (Solicitudes de Acceso)</h2>
+        <div id="sAyuda" class="glass-box" style="display:none;">
+            <h2 style="color:var(--accent-green);">5. Centro de Ayuda (Recuperación)</h2>
             <table>
-                <thead>
-                    <tr><th>Nombre</th><th>Correo</th><th>Teléfono</th><th>Acciones</th></tr>
-                </thead>
-                <tbody id="tblRecs"></tbody>
+                <thead><tr><th>Nombre</th><th>Correo</th><th>Teléfono</th><th>Acciones</th></tr></thead>
+                <tbody id="tblRecuperaciones"></tbody>
             </table>
         </div>
 
         <!-- 6. Cupones -->
-        <div id="sCupones" class="glass-panel" style="display:none;">
-            <h2 style="color:var(--accent-green); margin-top:0;">Gestión de Cupones</h2>
-            <form onsubmit="guardarCuponAdmin(event)">
-                <input type="text" id="cCodigo" class="form-input" placeholder="Código (ej. LIMPIEZA10)" required>
-                <input type="number" id="cDesc" class="form-input" placeholder="Monto de Descuento ($)" required>
-                <input type="date" id="cFecha" class="form-input" required>
-                <input type="text" id="cTxt" class="form-input" placeholder="Descripción de condiciones" required>
-                
-                <label>Modo de Aplicación</label>
-                <select id="cModo" class="form-input" onchange="toggleCuponModoUI()">
-                    <option value="monto">Por Cantidad Alcanzada ($ Mínimo)</option>
-                    <option value="categoria">Por Categoría Específica</option>
+        <div id="sCupones" class="glass-box" style="display:none;">
+            <h2 style="color:var(--accent-green);">6. Gestión de Cupones</h2>
+            <form onsubmit="guardarCupon(event)">
+                <input type="text" id="cCodigo" placeholder="Código del Cupón" required>
+                <input type="number" id="cDescuento" placeholder="Monto a Descontar ($)" required>
+                <label>Modo de Aplicación:</label>
+                <select id="cAplicacion" onchange="toggleModoCupon()">
+                    <option value="monto">Monto Mínimo Requerido</option>
+                    <option value="categoria">Categorías Seleccionadas</option>
                 </select>
-
-                <div id="cSecMonto">
-                    <label>Monto Mínimo Requerido ($)</label>
-                    <input type="number" id="cMin" class="form-input" value="0">
+                <div id="secCuponMonto">
+                    <input type="number" id="cMontoMin" placeholder="Monto Mínimo de Compra Requerido ($)">
                 </div>
-
-                <div id="cSecCat" style="display:none;">
-                    <label>Categoría Válida</label>
-                    <input type="text" id="cCatTarget" class="form-input" placeholder="Ej. DESINFECCIÓN">
+                <div id="secCuponCat" style="display:none;">
+                    <input type="text" id="cCatTarget" placeholder="Categoría requerida (ej. CLOROS)">
                 </div>
-
+                <label>Fecha Límite (Expiración Automática)</label>
+                <input type="date" id="cFecha" required>
+                <input type="text" id="cDesc" placeholder="Descripción explicativa del cupón" required>
                 <button type="submit" class="btn-green">Crear Cupón</button>
             </form>
-            <hr style="border-color:var(--card-border); margin:25px 0;">
+            <hr style="border-color:var(--card-border); margin:20px 0;">
             <table>
-                <thead>
-                    <tr><th>Código</th><th>Descuento</th><th>Modo</th><th>Expiración</th><th>Acción</th></tr>
-                </thead>
+                <thead><tr><th>Código</th><th>Descuento</th><th>Condición</th><th>Expiración</th><th>Acción</th></tr></thead>
                 <tbody id="tblCupones"></tbody>
             </table>
         </div>
 
         <!-- 7. Notificaciones -->
-        <div id="sNotifs" class="glass-panel" style="display:none;">
-            <h2 style="color:var(--accent-green); margin-top:0;">Generar Notificaciones</h2>
-            <h3>General (Todos los usuarios)</h3>
-            <input type="text" id="notifGen" class="form-input" placeholder="Mensaje masivo...">
-            <button class="btn-green" onclick="alert('Notificación enviada a todos.')">Enviar Masivo</button>
+        <div id="sNotifs" class="glass-box" style="display:none;">
+            <h2 style="color:var(--accent-green);">7. Generar Notificaciones</h2>
+            <h3>Para Todos los Usuarios</h3>
+            <input type="text" id="notifTodos" placeholder="Mensaje para todos los clientes...">
+            <button class="btn-green" onclick="enviarNotif('todos')">Enviar Notificación General</button>
+
             <hr style="border-color:var(--card-border); margin:25px 0;">
-            <h3>Individual</h3>
-            <input type="text" id="searchUsrNotif" class="form-input" placeholder="🔍 Buscar usuario..." onkeyup="filtrarUsrsNotif()">
-            <div id="usrNotifList" style="max-height: 200px; overflow-y:auto;"></div>
+            <h3>Notificación Individual</h3>
+            <input type="text" id="buscUserNotif" placeholder="Buscar cliente por correo..." onkeyup="filtrarUsersNotif()">
+            <select id="selectUserNotif"></select>
+            <input type="text" id="notifInd" placeholder="Mensaje personal...">
+            <button class="btn-green" onclick="enviarNotif('ind')">Enviar Notificación Personal</button>
         </div>
     </div>
 
@@ -305,93 +214,83 @@
         }
 
         function validarAdmin() {
-            if (document.getElementById('adminPass').value === 'ARMM123') {
+            if(document.getElementById('adminPass').value === 'ARMM123') {
                 document.getElementById('adminLoginModal').style.display = 'none';
-                initAdmin();
-            } else {
-                alert('Contraseña incorrecta');
-            }
+                cargarTodo();
+            } else { alert('Contraseña incorrecta.'); }
         }
 
         function verSeccion(id) {
-            document.querySelectorAll('.main-content > div').forEach(div => div.style.display = 'none');
-            document.querySelectorAll('.sidebar-menu li').forEach(li => li.classList.remove('active'));
+            document.querySelectorAll('.content > div').forEach(div => div.style.display = 'none');
             document.getElementById(id).style.display = 'block';
         }
 
-        function cambiarCamposModo() {
+        function cambiarModoCampos() {
             let modo = document.getElementById('pModo').value;
-            document.getElementById('camposLitro').style.display = modo === 'Litro' ? 'block' : 'none';
-            document.getElementById('camposPieza').style.display = modo === 'Pieza' ? 'block' : 'none';
+            document.getElementById('secCamposLitro').style.display = modo === 'Litro' ? 'block' : 'none';
+            document.getElementById('secCamposPieza').style.display = modo === 'Pieza' ? 'block' : 'none';
         }
 
-        function toggleCuponModoUI() {
-            let modo = document.getElementById('cModo').value;
-            document.getElementById('cSecMonto').style.display = modo === 'monto' ? 'block' : 'none';
-            document.getElementById('cSecCat').style.display = modo === 'categoria' ? 'block' : 'none';
+        function cargarTodo() {
+            cargarPedidosAdmin();
+            cargarProductosAdmin();
+            cargarAcomodoAdmin();
+            cargarUsuariosAdmin();
+            cargarRecsAdmin();
+            cargarCuponesAdmin();
+            cargarUserNotifs();
         }
 
-        function initAdmin() {
-            renderPedidosAdmin();
-            renderProductosAdmin();
-            renderUsuariosAdmin();
-            renderRecsAdmin();
-            renderCuponesAdmin();
-            renderUsrsNotifUI();
-        }
-
-        function renderPedidosAdmin() {
-            let orders = JSON.parse(localStorage.getItem('armm_orders') || '[]');
+        function cargarPedidosAdmin() {
+            let peds = JSON.parse(localStorage.getItem('armm_pedidos') || '[]');
             let tbody = document.getElementById('tblPedidos');
-            tbody.innerHTML = orders.map((o, i) => `
-                <tr>
-                    <td>${o.id}</td>
-                    <td>${o.usuario.nom} ${o.usuario.ape}</td>
-                    <td>${o.usuario.dir}</td>
-                    <td>${o.metodo}</td>
-                    <td>$${o.total}</td>
-                    <td>${o.estado}</td>
-                    <td>${o.fechaEst}</td>
-                    <td><button class="btn-green" style="padding:4px 8px; font-size:0.75em;" onclick="actPedStatus(${i})">Editar</button></td>
-                </tr>
-            `).join('');
+            tbody.innerHTML = '';
+            peds.forEach((p, i) => {
+                tbody.innerHTML += `<tr>
+                    <td>${p.id}</td>
+                    <td>${p.usuario.nom} ${p.usuario.ape}</td>
+                    <td>${p.usuario.dir}</td>
+                    <td>${p.metodo}</td>
+                    <td>$${p.total} MXN</td>
+                    <td>${p.estado}</td>
+                    <td>${p.fechaEst}</td>
+                    <td><button class="btn-green" style="padding:4px 8px; font-size:0.8em;" onclick="actPedido(${i})">Actualizar</button></td>
+                </tr>`;
+            });
         }
 
-        function actPedStatus(i) {
-            let orders = JSON.parse(localStorage.getItem('armm_orders') || '[]');
-            let est = prompt("Nuevo estado del pedido:", orders[i].estado);
-            let fec = prompt("Fecha estimada de entrega:", orders[i].fechaEst);
-            if (est) orders[i].estado = est;
-            if (fec) orders[i].fechaEst = fec;
-            localStorage.setItem('armm_orders', JSON.stringify(orders));
-            renderPedidosAdmin();
+        function actPedido(i) {
+            let peds = JSON.parse(localStorage.getItem('armm_pedidos') || '[]');
+            let est = prompt("Nuevo estado del pedido:", peds[i].estado);
+            let fec = prompt("Fecha estimada de entrega:", peds[i].fechaEst);
+            if(est) peds[i].estado = est;
+            if(fec) peds[i].fechaEst = fec;
+            localStorage.setItem('armm_pedidos', JSON.stringify(peds));
+            cargarPedidosAdmin();
         }
 
-        function renderProductosAdmin() {
-            let prods = JSON.parse(localStorage.getItem('armm_prods') || '[]');
+        function cargarProductosAdmin() {
+            let prods = JSON.parse(localStorage.getItem('armm_productos') || '[]');
             let tbody = document.getElementById('tblProductos');
-            tbody.innerHTML = prods.map((p, i) => {
-                let precios = p.modo === 'Litro' 
-                    ? `1L: $${p.p1} | 5L: $${p.p5} | 20L: $${p.p20}` 
-                    : `Menudeo: $${p.menudeo} | Mayoreo: $${p.mayoreo}`;
-                return `
-                    <tr>
-                        <td>${p.nombre}</td>
-                        <td>${p.categoria}</td>
-                        <td>${p.modo}</td>
-                        <td>${precios}</td>
-                        <td>
-                            <button class="btn-green" style="padding:4px 8px; font-size:0.75em;" onclick="cargarProdEdit(${i})">Editar</button>
-                            <button class="btn-green" style="padding:4px 8px; font-size:0.75em; background:#d9534f; color:#fff;" onclick="borrarProd(${i})">Borrar</button>
-                        </td>
-                    </tr>
-                `;
-            }).join('');
+            tbody.innerHTML = '';
+            prods.forEach((p, i) => {
+                let px = p.modo === 'Litro' ? `1L:$${p.p1} | 5L:$${p.p5} | 20L:$${p.p20}` : `Menud:$${p.menudeo} | May:$${p.mayoreo}`;
+                tbody.innerHTML += `<tr>
+                    <td>${p.nombre}</td>
+                    <td>${p.categoria}</td>
+                    <td>${p.modo}</td>
+                    <td>${px}</td>
+                    <td>
+                        <button class="btn-green" style="padding:4px 8px; font-size:0.8em;" onclick="prepararEditProd(${i})">Editar</button>
+                        <button style="background:#ff6b6b; color:#fff; border:none; padding:4px 8px; border-radius:4px; font-size:0.8em; cursor:pointer;" onclick="borrarProd(${i})">Borrar</button>
+                    </td>
+                </tr>`;
+            });
         }
 
-        function guardarProductoAdmin(e) {
+        function guardarProducto(e) {
             e.preventDefault();
-            let prods = JSON.parse(localStorage.getItem('armm_prods') || '[]');
+            let prods = JSON.parse(localStorage.getItem('armm_productos') || '[]');
             let editId = document.getElementById('pEditId').value;
             let modo = document.getElementById('pModo').value;
 
@@ -399,7 +298,7 @@
                 id: editId ? parseInt(editId) : Date.now(),
                 nombre: document.getElementById('pNombre').value,
                 categoria: document.getElementById('pCat').value,
-                modo: modo,
+                modo,
                 p1: parseFloat(document.getElementById('p1').value) || 0,
                 p5: parseFloat(document.getElementById('p5').value) || 0,
                 p20: parseFloat(document.getElementById('p20').value) || 0,
@@ -407,155 +306,193 @@
                 mayoreo: parseFloat(document.getElementById('pMayoreo').value) || 0
             };
 
-            if (editId) {
-                let idx = prods.findIndex(p => p.id === parseInt(editId));
-                if (idx !== -1) prods[idx] = obj;
+            if(editId) {
+                let idx = prods.findIndex(p => p.id == editId);
+                if(idx !== -1) prods[idx] = obj;
             } else {
                 prods.push(obj);
             }
 
-            localStorage.setItem('armm_prods', JSON.stringify(prods));
+            localStorage.setItem('armm_productos', JSON.stringify(prods));
             document.getElementById('pEditId').value = '';
-            e.target.reset();
-            cambiarCamposModo();
-            renderProductosAdmin();
+            cargarProductosAdmin();
             alert('Producto actualizado.');
         }
 
-        function cargarProdEdit(i) {
-            let prods = JSON.parse(localStorage.getItem('armm_prods') || '[]');
+        function prepararEditProd(i) {
+            let prods = JSON.parse(localStorage.getItem('armm_productos') || '[]');
             let p = prods[i];
             document.getElementById('pEditId').value = p.id;
             document.getElementById('pNombre').value = p.nombre;
             document.getElementById('pCat').value = p.categoria;
             document.getElementById('pModo').value = p.modo;
+            cambiarModoCampos();
             document.getElementById('p1').value = p.p1;
             document.getElementById('p5').value = p.p5;
             document.getElementById('p20').value = p.p20;
             document.getElementById('pMenudeo').value = p.menudeo;
             document.getElementById('pMayoreo').value = p.mayoreo;
-            cambiarCamposModo();
         }
 
         function borrarProd(i) {
-            let prods = JSON.parse(localStorage.getItem('armm_prods') || '[]');
+            let prods = JSON.parse(localStorage.getItem('armm_productos') || '[]');
             prods.splice(i, 1);
-            localStorage.setItem('armm_prods', JSON.stringify(prods));
-            renderProductosAdmin();
+            localStorage.setItem('armm_productos', JSON.stringify(prods));
+            cargarProductosAdmin();
         }
 
-        function renderUsuariosAdmin() {
-            let users = JSON.parse(localStorage.getItem('armm_users') || '[]');
-            document.getElementById('tblUsuarios').innerHTML = users.map(u => `
-                <tr>
-                    <td>${u.nom} ${u.ape}</td>
-                    <td>${u.correo}</td>
-                    <td>${u.tel}</td>
-                    <td>${u.dir}</td>
-                    <td>${u.pass}</td>
-                </tr>
-            `).join('');
+        function cargarAcomodoAdmin() {
+            let prods = JSON.parse(localStorage.getItem('armm_productos') || '[]');
+            let box = document.getElementById('listaAcomodo');
+            box.innerHTML = '';
+            prods.forEach((p, i) => {
+                box.innerHTML += `
+                    <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(8,14,24,0.5); padding:10px; margin-bottom:6px; border-radius:8px; border:1px solid var(--card-border);">
+                        <span>${p.nombre} (${p.categoria})</span>
+                        <div>
+                            <button class="btn-green" onclick="moverProd(${i}, -1)">▲ Mover Arriba</button>
+                            <button class="btn-green" onclick="moverProd(${i}, 1)">▼ Mover Abajo</button>
+                        </div>
+                    </div>
+                `;
+            });
         }
 
-        function renderRecsAdmin() {
-            let recs = JSON.parse(localStorage.getItem('armm_recs') || '[]');
-            document.getElementById('tblRecs').innerHTML = recs.map((r, i) => `
-                <tr>
-                    <td>${r.nom} ${r.ape}</td>
-                    <td>${r.correo}</td>
-                    <td>${r.tel}</td>
+        function moverProd(idx, dir) {
+            let prods = JSON.parse(localStorage.getItem('armm_productos') || '[]');
+            if(idx + dir < 0 || idx + dir >= prods.length) return;
+            let temp = prods[idx];
+            prods[idx] = prods[idx + dir];
+            prods[idx + dir] = temp;
+            localStorage.setItem('armm_productos', JSON.stringify(prods));
+            cargarAcomodoAdmin();
+            cargarProductosAdmin();
+        }
+
+        function cargarUsuariosAdmin() {
+            let usrs = JSON.parse(localStorage.getItem('armm_usuarios') || '[]');
+            let tbody = document.getElementById('tblUsuarios');
+            tbody.innerHTML = '';
+            usrs.forEach(u => {
+                tbody.innerHTML += `<tr><td>${u.nom} ${u.ape}</td><td>${u.correo}</td><td>${u.tel}</td><td>${u.dir}</td><td>${u.pass}</td></tr>`;
+            });
+        }
+
+        function cargarRecsAdmin() {
+            let recs = JSON.parse(localStorage.getItem('armm_recuperaciones') || '[]');
+            let tbody = document.getElementById('tblRecuperaciones');
+            tbody.innerHTML = '';
+            recs.forEach((r, i) => {
+                tbody.innerHTML += `<tr>
+                    <td>${r.nom} ${r.ape}</td><td>${r.correo}</td><td>${r.tel}</td>
                     <td>
-                        <button class="btn-green" style="padding:4px 8px; font-size:0.75em;" onclick="darAcceso(${i})">Dar Acceso</button>
-                        <button class="btn-green" style="padding:4px 8px; font-size:0.75em; background:#d9534f; color:#fff;" onclick="denegarAcceso(${i})">Denegar Acceso</button>
+                        <button class="btn-green" onclick="darAcceso(${i})">Dar Acceso</button>
+                        <button style="background:#ff6b6b; color:#fff; border:none; padding:6px; border-radius:4px; cursor:pointer;" onclick="denegarAcceso(${i})">Denegar</button>
                     </td>
-                </tr>
-            `).join('');
+                </tr>`;
+            });
         }
 
         function darAcceso(i) {
-            let recs = JSON.parse(localStorage.getItem('armm_recs') || '[]');
+            let recs = JSON.parse(localStorage.getItem('armm_recuperaciones') || '[]');
             let r = recs[i];
-            let pass = prompt(`Crea contraseña para ${r.nom}:`, '123456');
-            if (pass) {
-                let users = JSON.parse(localStorage.getItem('armm_users') || '[]');
-                users.push({ nom: r.nom, ape: r.ape, tel: r.tel, correo: r.correo, dir: 'Por actualizar', pass });
-                localStorage.setItem('armm_users', JSON.stringify(users));
+            let passGen = prompt(`Asignar contraseña inicial para ${r.nom}:`, '123456');
+            if(passGen) {
+                let usrs = JSON.parse(localStorage.getItem('armm_usuarios') || '[]');
+                usrs.push({ nom: r.nom, ape: r.ape, tel: r.tel, correo: r.correo, dir: 'Por definir', pass: passGen });
+                localStorage.setItem('armm_usuarios', JSON.stringify(usrs));
 
-                let text = encodeURIComponent(`Hola ${r.nom}, tus credenciales de acceso son:\nUsuario: ${r.correo}\nContraseña: ${pass}`);
-                window.open(`https://wa.me/52${r.tel}?text=${text}`);
+                let msg = encodeURIComponent(`Hola ${r.nom}, el acceso a tu cuenta ha sido aprobado.\nUsuario: ${r.correo}\nContraseña: ${passGen}`);
+                window.open(`https://wa.me/52${r.tel}?text=${msg}`);
 
                 recs.splice(i, 1);
-                localStorage.setItem('armm_recs', JSON.stringify(recs));
-                renderRecsAdmin();
-                renderUsuariosAdmin();
+                localStorage.setItem('armm_recuperaciones', JSON.stringify(recs));
+                cargarTodo();
             }
         }
 
         function denegarAcceso(i) {
-            let recs = JSON.parse(localStorage.getItem('armm_recs') || '[]');
+            let recs = JSON.parse(localStorage.getItem('armm_recuperaciones') || '[]');
             let r = recs[i];
-            let text = encodeURIComponent(`Los datos de tu cuenta no coinciden con los registrados, crea una cuenta nueva o comunícate con nosotros al tel: 555-123-4567`);
-            window.open(`https://wa.me/52${r.tel}?text=${text}`);
-
+            let msg = encodeURIComponent(`Los datos de tu cuenta no coinciden con los registrados, crea una cuenta nueva o comunícate con nosotros al tel: 555-1234`);
+            window.open(`https://wa.me/52${r.tel}?text=${msg}`);
             recs.splice(i, 1);
-            localStorage.setItem('armm_recs', JSON.stringify(recs));
-            renderRecsAdmin();
+            localStorage.setItem('armm_recuperaciones', JSON.stringify(recs));
+            cargarTodo();
         }
 
-        function guardarCuponAdmin(e) {
+        function toggleModoCupon() {
+            let modo = document.getElementById('cAplicacion').value;
+            document.getElementById('secCuponMonto').style.display = modo === 'monto' ? 'block' : 'none';
+            document.getElementById('secCuponCat').style.display = modo === 'categoria' ? 'block' : 'none';
+        }
+
+        function guardarCupon(e) {
             e.preventDefault();
-            let cupones = JSON.parse(localStorage.getItem('armm_cupones') || '[]');
-            cupones.push({
+            let cups = JSON.parse(localStorage.getItem('armm_cupones') || '[]');
+            cups.push({
                 codigo: document.getElementById('cCodigo').value,
-                descuento: parseFloat(document.getElementById('cDesc').value),
+                descuento: parseFloat(document.getElementById('cDescuento').value),
+                aplicacion: document.getElementById('cAplicacion').value,
+                montoMinimo: parseFloat(document.getElementById('cMontoMin').value) || 0,
+                catTarget: document.getElementById('cCatTarget').value,
                 fecha: document.getElementById('cFecha').value,
-                desc: document.getElementById('cTxt').value,
-                modo: document.getElementById('cModo').value,
-                minimo: parseFloat(document.getElementById('cMin').value) || 0,
-                catTarget: document.getElementById('cCatTarget').value || ''
+                desc: document.getElementById('cDesc').value
             });
-            localStorage.setItem('armm_cupones', JSON.stringify(cupones));
-            e.target.reset();
-            renderCuponesAdmin();
-            alert('Cupón guardado.');
+            localStorage.setItem('armm_cupones', JSON.stringify(cups));
+            cargarCuponesAdmin();
+            alert('Cupón generado con éxito.');
         }
 
-        function renderCuponesAdmin() {
-            let cupones = JSON.parse(localStorage.getItem('armm_cupones') || '[]');
-            document.getElementById('tblCupones').innerHTML = cupones.map((c, i) => `
-                <tr>
-                    <td>${c.codigo}</td>
-                    <td>$${c.descuento}</td>
-                    <td>${c.modo}</td>
-                    <td>${c.fecha}</td>
-                    <td><button class="btn-green" style="padding:4px 8px; font-size:0.75em; background:#d9534f; color:#fff;" onclick="borrarCupon(${i})">Borrar</button></td>
-                </tr>
-            `).join('');
+        function cargarCuponesAdmin() {
+            let cups = JSON.parse(localStorage.getItem('armm_cupones') || '[]');
+            let tbody = document.getElementById('tblCupones');
+            tbody.innerHTML = '';
+            cups.forEach((c, i) => {
+                let cond = c.aplicacion === 'monto' ? `Mínimo: $${c.montoMinimo}` : `Categoría: ${c.catTarget}`;
+                tbody.innerHTML += `<tr>
+                    <td>${c.codigo}</td><td>$${c.descuento}</td><td>${cond}</td><td>${c.fecha}</td>
+                    <td><button style="background:#ff6b6b; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;" onclick="borrarCupon(${i})">Borrar</button></td>
+                </tr>`;
+            });
         }
 
         function borrarCupon(i) {
-            let cupones = JSON.parse(localStorage.getItem('armm_cupones') || '[]');
-            cupones.splice(i, 1);
-            localStorage.setItem('armm_cupones', JSON.stringify(cupones));
-            renderCuponesAdmin();
+            let cups = JSON.parse(localStorage.getItem('armm_cupones') || '[]');
+            cups.splice(i, 1);
+            localStorage.setItem('armm_cupones', JSON.stringify(cups));
+            cargarCuponesAdmin();
         }
 
-        function renderUsrsNotifUI() {
-            let users = JSON.parse(localStorage.getItem('armm_users') || '[]');
-            let container = document.getElementById('usrNotifList');
-            container.innerHTML = users.map(u => `
-                <div style="display:flex; justify-content:space-between; margin-bottom:6px; font-size:0.85em;">
-                    <span>${u.nom} ${u.ape} (${u.correo})</span>
-                    <button class="btn-green" style="padding:2px 6px; font-size:0.7em;" onclick="alert('Notificación enviada a ${u.nom}')">Enviar</button>
-                </div>
-            `).join('');
+        function cargarUserNotifs() {
+            let usrs = JSON.parse(localStorage.getItem('armm_usuarios') || '[]');
+            let sel = document.getElementById('selectUserNotif');
+            sel.innerHTML = usrs.map(u => `<option value="${u.correo}">${u.nom} ${u.ape} (${u.correo})</option>`).join('');
         }
 
-        function filtrarUsrsNotif() {
-            let q = document.getElementById('searchUsrNotif').value.toLowerCase();
-            document.querySelectorAll('#usrNotifList > div').forEach(div => {
-                div.style.display = div.innerText.toLowerCase().includes(q) ? 'flex' : 'none';
-            });
+        function filtrarUsersNotif() {
+            let q = document.getElementById('buscUserNotif').value.toLowerCase();
+            let usrs = JSON.parse(localStorage.getItem('armm_usuarios') || '[]');
+            let sel = document.getElementById('selectUserNotif');
+            sel.innerHTML = usrs.filter(u => u.correo.toLowerCase().includes(q) || u.nom.toLowerCase().includes(q))
+                                .map(u => `<option value="${u.correo}">${u.nom} ${u.ape} (${u.correo})</option>`).join('');
+        }
+
+        function enviarNotif(tipo) {
+            let list = JSON.parse(localStorage.getItem('armm_notificaciones') || '[]');
+            if(tipo === 'todos') {
+                let txt = document.getElementById('notifTodos').value;
+                if(!txt) return;
+                list.push({ target: 'todos', mensaje: txt });
+                alert('Notificación general enviada.');
+            } else {
+                let txt = document.getElementById('notifInd').value;
+                let target = document.getElementById('selectUserNotif').value;
+                if(!txt || !target) return;
+                list.push({ target, mensaje: txt });
+                alert('Notificación individual enviada.');
+            }
+            localStorage.setItem('armm_notificaciones', JSON.stringify(list));
         }
     </script>
 </body>
