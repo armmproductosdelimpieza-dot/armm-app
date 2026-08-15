@@ -1,372 +1,126 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin - ARMM Limpieza</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    body {
-      background: linear-gradient(rgba(10, 25, 47, 0.9), rgba(15, 52, 96, 0.9)), 
-                  url('https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=1920&q=80') center/cover fixed;
-      color: #e6f1ff; min-height: 100vh; display: flex;
-    }
-    .glass-card {
-      background: rgba(16, 37, 66, 0.6); backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 12px;
-    }
-    #login-admin { position: fixed; width: 100%; height: 100%; background: #0a192f; display: flex; justify-content: center; align-items: center; z-index: 1000; }
-    .sidebar { width: 260px; padding: 20px; background: rgba(10, 25, 47, 0.8); border-right: 1px solid rgba(255,255,255,0.1); }
-    .sidebar h2 { color: #64ffda; margin-bottom: 20px; font-size: 20px; }
-    .sidebar ul { list-style: none; }
-    .sidebar li a { display: block; padding: 12px; color: #8892b0; text-decoration: none; border-radius: 6px; margin-bottom: 5px; cursor: pointer; }
-    .sidebar li a.active, .sidebar li a:hover { background: rgba(100,255,218,0.1); color: #64ffda; }
-    .main-content { flex: 1; padding: 30px; overflow-y: auto; }
-    .section { display: none; }
-    .section.active { display: block; }
-    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-    th, td { padding: 12px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); }
-    th { color: #64ffda; }
-    .form-group { margin-bottom: 15px; }
-    .form-group label { display: block; margin-bottom: 5px; color: #8892b0; }
-    .form-group input, .form-group select, .form-group textarea {
-      width: 100%; padding: 10px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2);
-      background: rgba(255,255,255,0.05); color: #fff;
-    }
-    .btn { padding: 8px 15px; border-radius: 6px; border: none; font-weight: bold; cursor: pointer; background: #64ffda; color: #0a192f; }
-    .btn-danger { background: #ff6b6b; color: #fff; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Administrador</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #eef2f5; }
+        .login-box, .admin-panel { background: white; padding: 20px; border-radius: 5px; max-width: 600px; margin: 0 auto; }
+        .admin-panel { display: none; }
+        .section { margin-bottom: 25px; border-bottom: 1px solid #ddd; padding-bottom: 15px; }
+        .block-item { display: flex; justify-content: space-between; background: #f9f9f9; padding: 10px; margin: 5px 0; border: 1px solid #ccc; }
+    </style>
 </head>
 <body>
 
-  <!-- LOGIN ADMIN -->
-  <div id="login-admin">
-    <div class="glass-card" style="padding: 40px; width: 320px; text-align: center;">
-      <h2 style="color:#64ffda; margin-bottom: 20px;">Acceso Admin</h2>
-      <div class="form-group" style="position:relative;">
-        <input type="password" id="admin-pass" placeholder="Contraseña">
-        <i class="fas fa-eye" style="position:absolute; right:10px; top:12px; cursor:pointer;" onclick="togglePass('admin-pass')"></i>
-      </div>
-      <button class="btn" style="width:100%;" onclick="loginAdmin()">Ingresar</button>
-    </div>
-  </div>
-
-  <!-- PANEL ADMIN -->
-  <div class="sidebar">
-    <h2><i class="fas fa-user-shield"></i> Admin Panel</h2>
-    <ul>
-      <li><a class="active" onclick="showSection('sec-pedidos', this)">1. Pedidos Web</a></li>
-      <li><a onclick="showSection('sec-productos', this)">2. Productos y Edición</a></li>
-      <li><a onclick="showSection('sec-usuarios', this)">4. Usuarios Registrados</a></li>
-      <li><a onclick="showSection('sec-ayuda', this)">5. Centro de Ayuda</a></li>
-      <li><a onclick="showSection('sec-cupones', this)">6. Cupones</a></li>
-      <li><a onclick="showSection('sec-chats', this)">7. Chats de Ayuda</a></li>
-      <li><a onclick="showSection('sec-notif', this)">Notificaciones</a></li>
-    </ul>
-  </div>
-
-  <div class="main-content">
-    <!-- 1. Pedidos Web -->
-    <div id="sec-pedidos" class="section active">
-      <h2 style="color:#64ffda;">Pedidos Realizados desde la Web</h2>
-      <table class="glass-card">
-        <thead>
-          <tr>
-            <th>ID</th><th>Cliente</th><th>Dirección</th><th>Método Pago</th><th>Total</th><th>Estado</th><th>Fecha Entrega</th><th>Acción</th>
-          </tr>
-        </thead>
-        <tbody id="tabla-pedidos"></tbody>
-      </table>
+    <!-- Acceso Admin -->
+    <div id="loginBox" class="login-box">
+        <h2>Acceso Administrador</h2>
+        <input type="password" id="adminPass" placeholder="Ingresa contraseña">
+        <button onclick="validarAcceso()">Ingresar</button>
     </div>
 
-    <!-- 2. Productos y Edición -->
-    <div id="sec-productos" class="section">
-      <h2 style="color:#64ffda;">Gestión de Productos</h2>
-      <div class="glass-card" style="padding:20px; margin-bottom:20px;">
-        <h3>Agregar / Editar Producto</h3>
-        <form onsubmit="saveProduct(event)">
-          <input type="hidden" id="prod-id">
-          <div class="form-group"><label>Nombre</label><input type="text" id="prod-nombre" required></div>
-          <div class="form-group"><label>Categoría</label><input type="text" id="prod-cat" required></div>
-          <div class="form-group"><label>Precio</label><input type="number" step="0.01" id="prod-precio" required></div>
-          <div class="form-group">
-            <label>Presentación / Venta</label>
-            <select id="prod-modo">
-              <option value="Pieza">Pieza</option>
-              <option value="Litro">Litro</option>
-              <option value="Mayoreo">Mayoreo</option>
-              <option value="Menudeo">Menudeo</option>
-            </select>
-          </div>
-          <button type="submit" class="btn">Guardar Producto</button>
-        </form>
-      </div>
-      <table class="glass-card">
-        <thead>
-          <tr><th>Nombre</th><th>Categoría</th><th>Precio</th><th>Presentación</th><th>Acciones</th></tr>
-        </thead>
-        <tbody id="tabla-productos"></tbody>
-      </table>
+    <!-- Panel de Control -->
+    <div id="adminPanel" class="admin-panel">
+        <h2>Panel de Control Admin</h2>
+
+        <!-- Modificación de Orden / Bloques -->
+        <div class="section">
+            <h3>Orden de Bloques / Categorías</h3>
+            <div id="blockContainer">
+                <div class="block-item" id="block1">
+                    <span>Bloque 1: Banners Principales</span>
+                    <div>
+                        <button onclick="moverBloque('block1', 'up')">▲</button>
+                        <button onclick="moverBloque('block1', 'down')">▼</button>
+                    </div>
+                </div>
+                <div class="block-item" id="block2">
+                    <span>Bloque 2: Categorías Destacadas</span>
+                    <div>
+                        <button onclick="moverBloque('block2', 'up')">▲</button>
+                        <button onclick="moverBloque('block2', 'down')">▼</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Centro de Ayuda -->
+        <div class="section">
+            <h3>Centro de Ayuda (Soporte)</h3>
+            <form onsubmit="registrarYEnviarWhatsApp(event)">
+                <input type="text" id="helpUser" placeholder="Usuario/Credencial" required><br><br>
+                <textarea id="helpMsg" placeholder="Escribe el mensaje o problema..." required></textarea><br><br>
+                <button type="submit">Registrar y Enviar por WhatsApp</button>
+            </form>
+        </div>
+
+        <!-- Cupones con Fecha de Expiración -->
+        <div class="section">
+            <h3>Gestión de Cupones</h3>
+            <input type="text" placeholder="Código Cupón"><br><br>
+            <input type="number" placeholder="Monto / Descuento"><br><br>
+            <label>Fecha de Expiración (Autodestrucción):</label><br>
+            <input type="date" id="couponExp"><br><br>
+            <button onclick="alert('Cupón creado con éxito con fecha de expiración.')">Crear Cupón</button>
+        </div>
+
+        <!-- Notificaciones Individuales y Filtro -->
+        <div class="section">
+            <h3>Enviar Notificación</h3>
+            <input type="text" id="userFilter" placeholder="Buscar usuario..." onkeyup="filtrarUsuarios()"><br><br>
+            <select id="userSelect" size="3" style="width: 100%;">
+                <option value="1">Usuario: Juan Pérez (ID: 101)</option>
+                <option value="2">Usuario: María Gómez (ID: 102)</option>
+                <option value="3">Usuario: Carlos López (ID: 103)</option>
+            </select><br><br>
+            <textarea placeholder="Mensaje de notificación..."></textarea><br><br>
+            <button onclick="alert('Notificación enviada al usuario seleccionado.')">Enviar Individual</button>
+            <button onclick="alert('Notificación general enviada a todos.')">Enviar a Todos</button>
+        </div>
     </div>
 
-    <!-- 4. Usuarios Registrados -->
-    <div id="sec-usuarios" class="section">
-      <h2 style="color:#64ffda;">Usuarios Registrados</h2>
-      <table class="glass-card">
-        <thead>
-          <tr><th>Nombre</th><th>Apellidos</th><th>Correo</th><th>Teléfono</th><th>Dirección</th></tr>
-        </thead>
-        <tbody id="tabla-usuarios"></tbody>
-      </table>
-    </div>
+    <script>
+        function validarAcceso() {
+            var pass = document.getElementById('adminPass').value;
+            if(pass === 'ARMM123') {
+                document.getElementById('loginBox').style.display = 'none';
+                document.getElementById('adminPanel').style.display = 'block';
+            } else {
+                alert('Contraseña incorrecta.');
+            }
+        }
 
-    <!-- 5. Centro de Ayuda -->
-    <div id="sec-ayuda" class="section">
-      <h2 style="color:#64ffda;">Solicitudes de Recuperación de Acceso</h2>
-      <table class="glass-card">
-        <thead>
-          <tr><th>Nombre</th><th>Correo</th><th>Teléfono</th><th>Acciones</th></tr>
-        </thead>
-        <tbody id="tabla-ayuda"></tbody>
-      </table>
-    </div>
+        function moverBloque(id, dir) {
+            var el = document.getElementById(id);
+            if (dir === 'up' && el.previousElementSibling) {
+                el.parentNode.insertBefore(el, el.previousElementSibling);
+            } else if (dir === 'down' && el.nextElementSibling) {
+                el.parentNode.insertBefore(el.nextElementSibling, el);
+            }
+        }
 
-    <!-- 6. Cupones -->
-    <div id="sec-cupones" class="section">
-      <h2 style="color:#64ffda;">Gestión de Cupones</h2>
-      <div class="glass-card" style="padding:20px; margin-bottom:20px;">
-        <form onsubmit="saveCupon(event)">
-          <div class="form-group"><label>Código de Cupón</label><input type="text" id="cup-codigo" required></div>
-          <div class="form-group"><label>% Descuento</label><input type="number" id="cup-desc" required></div>
-          <div class="form-group"><label>Monto Mínimo (Opcional)</label><input type="number" id="cup-min"></div>
-          <div class="form-group"><label>Descripción</label><input type="text" id="cup-desc-text" required></div>
-          <button type="submit" class="btn">Crear Cupón</button>
-        </form>
-      </div>
-      <table class="glass-card">
-        <thead>
-          <tr><th>Código</th><th>% Descuento</th><th>Monto Mín.</th><th>Descripción</th><th>Acción</th></tr>
-        </thead>
-        <tbody id="tabla-cupones"></tbody>
-      </table>
-    </div>
+        function registrarYEnviarWhatsApp(e) {
+            e.preventDefault();
+            var user = document.getElementById('helpUser').value;
+            var msg = document.getElementById('helpMsg').value;
+            
+            // Simulación de registro interno de credenciales en base de datos
+            console.log(`Credenciales registradas -> Usuario: ${user}`);
+            
+            let text = encodeURIComponent(`Soporte para usuario [${user}]: ${msg}`);
+            window.open(`https://wa.me/525551234567?text=${text}`, '_blank');
+        }
 
-    <!-- 7. Chats de Ayuda -->
-    <div id="sec-chats" class="section">
-      <h2 style="color:#64ffda;">Chats de Atención</h2>
-      <div id="chats-list"></div>
-    </div>
-
-    <!-- Notificaciones -->
-    <div id="sec-notif" class="section">
-      <h2 style="color:#64ffda;">Generar Notificaciones</h2>
-      <div class="glass-card" style="padding:20px;">
-        <form onsubmit="sendNotification(event)">
-          <div class="form-group"><label>Mensaje</label><input type="text" id="notif-msg" required></div>
-          <button type="submit" class="btn">Enviar Notificación Global</button>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    function togglePass(id) {
-      const input = document.getElementById(id);
-      input.type = input.type === 'password' ? 'text' : 'password';
-    }
-
-    function loginAdmin() {
-      if (document.getElementById('admin-pass').value === 'ARMM123') {
-        document.getElementById('login-admin').style.display = 'none';
-        renderAdminAll();
-      } else { alert('Contraseña incorrecta'); }
-    }
-
-    function showSection(id, btn) {
-      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-      document.querySelectorAll('.sidebar li a').forEach(a => a.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-      btn.classList.add('active');
-    }
-
-    function renderAdminAll() {
-      renderAdminOrders();
-      renderAdminProducts();
-      renderAdminUsers();
-      renderAdminHelp();
-      renderAdminCupones();
-    }
-
-    /* Pedidos */
-    function renderAdminOrders() {
-      const orders = JSON.parse(localStorage.getItem('orders')) || [];
-      const tbody = document.getElementById('tabla-pedidos');
-      tbody.innerHTML = orders.map((o, idx) => `
-        <tr>
-          <td>${o.id}</td><td>${o.cliente}</td><td>${o.direccion}</td><td>${o.metodoPago}</td><td>$${o.total}</td>
-          <td>
-            <select onchange="updateOrderStatus(${idx}, this.value)">
-              <option value="Pendiente" ${o.estado === 'Pendiente' ? 'selected' : ''}>Pendiente</option>
-              <option value="En Camino" ${o.estado === 'En Camino' ? 'selected' : ''}>En Camino</option>
-              <option value="Entregado" ${o.estado === 'Entregado' ? 'selected' : ''}>Entregado</option>
-            </select>
-          </td>
-          <td><input type="text" value="${o.fechaEntrega}" onchange="updateOrderDate(${idx}, this.value)"></td>
-          <td><button class="btn btn-danger" onclick="deleteOrder(${idx})">Borrar</button></td>
-        </tr>
-      `).join('');
-    }
-
-    function updateOrderStatus(idx, status) {
-      const orders = JSON.parse(localStorage.getItem('orders'));
-      orders[idx].estado = status;
-      localStorage.setItem('orders', JSON.stringify(orders));
-    }
-
-    function updateOrderDate(idx, date) {
-      const orders = JSON.parse(localStorage.getItem('orders'));
-      orders[idx].fechaEntrega = date;
-      localStorage.setItem('orders', JSON.stringify(orders));
-    }
-
-    function deleteOrder(idx) {
-      const orders = JSON.parse(localStorage.getItem('orders'));
-      orders.splice(idx, 1);
-      localStorage.setItem('orders', JSON.stringify(orders));
-      renderAdminOrders();
-    }
-
-    /* Productos */
-    function renderAdminProducts() {
-      const products = JSON.parse(localStorage.getItem('products')) || [];
-      const tbody = document.getElementById('tabla-productos');
-      tbody.innerHTML = products.map((p, idx) => `
-        <tr>
-          <td>${p.nombre}</td><td>${p.categoria}</td><td>$${p.precio}</td><td>${p.modo}</td>
-          <td>
-            <button class="btn" onclick="editProduct(${idx})">Editar</button>
-            <button class="btn btn-danger" onclick="deleteProduct(${idx})">Eliminar</button>
-          </td>
-        </tr>
-      `).join('');
-    }
-
-    function saveProduct(e) {
-      e.preventDefault();
-      const products = JSON.parse(localStorage.getItem('products')) || [];
-      const id = document.getElementById('prod-id').value;
-      const newProd = {
-        id: id ? parseInt(id) : Date.now(),
-        nombre: document.getElementById('prod-nombre').value,
-        categoria: document.getElementById('prod-cat').value,
-        precio: parseFloat(document.getElementById('prod-precio').value),
-        modo: document.getElementById('prod-modo').value
-      };
-
-      if (id) {
-        const idx = products.findIndex(p => p.id === parseInt(id));
-        products[idx] = newProd;
-      } else { products.push(newProd); }
-
-      localStorage.setItem('products', JSON.stringify(products));
-      renderAdminProducts();
-      e.target.reset();
-    }
-
-    function editProduct(idx) {
-      const products = JSON.parse(localStorage.getItem('products'));
-      const p = products[idx];
-      document.getElementById('prod-id').value = p.id;
-      document.getElementById('prod-nombre').value = p.nombre;
-      document.getElementById('prod-cat').value = p.categoria;
-      document.getElementById('prod-precio').value = p.precio;
-      document.getElementById('prod-modo').value = p.modo;
-    }
-
-    function deleteProduct(idx) {
-      const products = JSON.parse(localStorage.getItem('products'));
-      products.splice(idx, 1);
-      localStorage.setItem('products', JSON.stringify(products));
-      renderAdminProducts();
-    }
-
-    /* Usuarios */
-    function renderAdminUsers() {
-      const users = JSON.parse(localStorage.getItem('users')) || [];
-      document.getElementById('tabla-usuarios').innerHTML = users.map(u => `
-        <tr><td>${u.nombre}</td><td>${u.apellidos}</td><td>${u.correo}</td><td>${u.telefono}</td><td>${u.direccion}</td></tr>
-      `).join('');
-    }
-
-    /* Centro de Ayuda */
-    function renderAdminHelp() {
-      const reqs = JSON.parse(localStorage.getItem('help_requests')) || [];
-      document.getElementById('tabla-ayuda').innerHTML = reqs.map((r, idx) => `
-        <tr>
-          <td>${r.nombre} ${r.apellidos}</td><td>${r.correo}</td><td>${r.telefono}</td>
-          <td>
-            <button class="btn" onclick="grantAccess('${r.telefono}')">Dar Acceso</button>
-            <button class="btn btn-danger" onclick="denyAccess('${r.telefono}')">Denegar Acceso</button>
-          </td>
-        </tr>
-      `).join('');
-    }
-
-    function grantAccess(tel) {
-      const user = prompt("Ingresa el correo/usuario:");
-      const pass = prompt("Ingresa la nueva contraseña:");
-      if (user && pass) {
-        window.open(`https://wa.me/52${tel}?text=Tus%20datos%20de%20acceso%20son:%20Usuario:%20${user}%20Contraseña:%20${pass}`);
-      }
-    }
-
-    function denyAccess(tel) {
-      window.open(`https://wa.me/52${tel}?text=Los%20datos%20de%20tu%20cuenta%20no%20coinciden%20con%20los%20registrados,%20crea%20una%20cuenta%20nueva%20o%20comunícate%20con%20nosotros%20al%203312345678`);
-    }
-
-    /* Cupones */
-    function renderAdminCupones() {
-      const cupones = JSON.parse(localStorage.getItem('cupones')) || [];
-      document.getElementById('tabla-cupones').innerHTML = cupones.map((c, idx) => `
-        <tr>
-          <td>${c.codigo}</td><td>${c.descuento}%</td><td>$${c.montoMin || 0}</td><td>${c.desc}</td>
-          <td><button class="btn btn-danger" onclick="deleteCupon(${idx})">Borrar</button></td>
-        </tr>
-      `).join('');
-    }
-
-    function saveCupon(e) {
-      e.preventDefault();
-      const cupones = JSON.parse(localStorage.getItem('cupones')) || [];
-      cupones.push({
-        codigo: document.getElementById('cup-codigo').value.toUpperCase(),
-        descuento: parseFloat(document.getElementById('cup-desc').value),
-        montoMin: parseFloat(document.getElementById('cup-min').value) || 0,
-        desc: document.getElementById('cup-desc-text').value
-      });
-      localStorage.setItem('cupones', JSON.stringify(cupones));
-      renderAdminCupones();
-      e.target.reset();
-    }
-
-    function deleteCupon(idx) {
-      const cupones = JSON.parse(localStorage.getItem('cupones'));
-      cupones.splice(idx, 1);
-      localStorage.setItem('cupones', JSON.stringify(cupones));
-      renderAdminCupones();
-    }
-
-    /* Notificaciones */
-    function sendNotification(e) {
-      e.preventDefault();
-      const notifs = JSON.parse(localStorage.getItem('notifications')) || [];
-      notifs.push(document.getElementById('notif-msg').value);
-      localStorage.setItem('notifications', JSON.stringify(notifs));
-      alert('Notificación enviada.');
-      e.target.reset();
-    }
-  </script>
+        function filtrarUsuarios() {
+            var filter = document.getElementById('userFilter').value.toLowerCase();
+            var options = document.getElementById('userSelect').options;
+            for (var i = 0; i < options.length; i++) {
+                var txt = options[i].text.toLowerCase();
+                options[i].style.display = txt.includes(filter) ? '' : 'none';
+            }
+        }
+    </script>
 </body>
 </html>
-
