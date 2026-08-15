@@ -3,237 +3,570 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ARMM Admin - Control de Inventario</title>
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Panel de Administración</title>
   <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
     body {
-      background: radial-gradient(circle at 50% 0%, #0f172a 0%, #020617 100%);
-      background-attachment: fixed;
+      background-color: #f4f6f9;
+      color: #333;
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
     }
 
-    .glass-apple {
-      background: rgba(15, 23, 42, 0.75);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+    /* Pantalla de Login */
+    #login-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #1a1a2e;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
     }
 
-    .btn-apple {
-      transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    .login-card {
+      background: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      width: 320px;
+      text-align: center;
     }
-    .btn-apple:active {
-      transform: scale(0.95);
+
+    .login-card h2 {
+      margin-bottom: 20px;
+      color: #1a1a2e;
+    }
+
+    .login-card input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .login-card button {
+      width: 100%;
+      padding: 10px;
+      background: #0f3460;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .login-card button:hover {
+      background: #16213e;
+    }
+
+    .error-msg {
+      color: red;
+      font-size: 14px;
+      margin-top: 10px;
+      display: none;
+    }
+
+    /* Layout Principal */
+    #admin-app {
+      display: flex;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Sidebar Navigation */
+    .sidebar {
+      width: 250px;
+      background: #1a1a2e;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar h2 {
+      padding: 20px;
+      text-align: center;
+      background: #0f3460;
+      font-size: 20px;
+    }
+
+    .sidebar nav ul {
+      list-style: none;
+    }
+
+    .sidebar nav ul li a {
+      display: block;
+      padding: 15px 20px;
+      color: #e0e0e0;
+      text-decoration: none;
+      border-bottom: 1px solid #2a2a40;
+      cursor: pointer;
+    }
+
+    .sidebar nav ul li a:hover,
+    .sidebar nav ul li a.active {
+      background: #16213e;
+      color: #fff;
+      border-left: 4px solid #e94560;
+    }
+
+    .logout-btn {
+      margin-top: auto;
+      padding: 15px;
+      background: #e94560;
+      color: white;
+      text-align: center;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    /* Content Area */
+    .main-content {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .section {
+      display: none;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      color: #0f3460;
+      border-bottom: 2px solid #f4f6f9;
+      padding-bottom: 10px;
+    }
+
+    /* Formularios y Tablas */
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .form-group input, 
+    .form-group select, 
+    .form-group textarea {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .btn {
+      padding: 8px 15px;
+      background: #0f3460;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background: #16213e;
+    }
+
+    .btn-danger {
+      background: #e94560;
+    }
+
+    .btn-danger:hover {
+      background: #c0392b;
+    }
+
+    .btn-warning {
+      background: #f39c12;
+    }
+
+    .btn-warning:hover {
+      background: #d68910;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    .chat-box {
+      border: 1px solid #ccc;
+      height: 300px;
+      overflow-y: auto;
+      padding: 10px;
+      background: #fafafa;
+      margin-bottom: 10px;
+      border-radius: 4px;
+    }
+
+    .chat-message {
+      margin-bottom: 10px;
+      padding: 8px;
+      border-radius: 4px;
+      background: #e1f5fe;
+    }
+
+    .chat-message.user {
+      background: #fff9c4;
     }
   </style>
 </head>
-<body class="text-slate-100 font-sans min-h-screen">
+<body>
 
-  <!-- MODAL BLOQUEO ACCESO ADMIN CON OJITO -->
-  <div id="modalBloqueoAdmin" class="fixed inset-0 bg-slate-950/90 backdrop-blur-lg z-50 flex items-center justify-center p-4">
-    <div class="glass-apple bg-slate-900 border border-slate-800 p-6 rounded-3xl max-w-sm w-full space-y-4 text-center shadow-2xl">
-      <div class="w-12 h-12 bg-emerald-500/20 text-emerald-400 rounded-2xl flex items-center justify-center mx-auto text-xl border border-emerald-500/30">
-        🔒
-      </div>
-      <h3 class="font-bold text-white text-base">Acceso Administrador</h3>
-      <p class="text-slate-400 text-xs">Ingresa la clave maestra para continuar.</p>
-      
-      <div class="relative text-xs">
-        <input type="password" id="adminPassInput" placeholder="Clave de Administrador" class="w-full bg-slate-950 border border-slate-800 text-white p-3 pr-10 rounded-xl focus:outline-none focus:border-emerald-500">
-        <button type="button" onclick="togglePasswordAdmin(this)" class="absolute right-3 top-2.5 text-slate-400 hover:text-white">👁️</button>
-      </div>
-
-      <button onclick="validarAccesoAdmin()" class="btn-apple w-full bg-emerald-500 text-slate-950 font-black py-3 rounded-xl hover:bg-emerald-400 transition-all">
-        Ingresar al Panel
-      </button>
+  <!-- PANTALLA DE LOGIN -->
+  <div id="login-screen">
+    <div class="login-card">
+      <h2>Panel Admin</h2>
+      <input type="password" id="admin-pass" placeholder="Ingresa la contraseña">
+      <button onclick="login()">Entrar</button>
+      <p id="login-error" class="error-msg">Contraseña incorrecta</p>
     </div>
   </div>
 
-  <!-- ENCABEZADO ADMIN -->
-  <header class="border-b border-slate-800/80 sticky top-0 glass-apple z-40">
-    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 bg-gradient-to-tr from-emerald-500 to-teal-400 rounded-2xl flex items-center justify-center text-slate-950 font-black text-xl shadow-lg shadow-emerald-500/20">
-          A
-        </div>
-        <h1 class="text-xl font-black text-white">ARMM <span class="text-xs text-emerald-400 font-normal">| Panel Admin</span></h1>
-      </div>
+  <!-- APLICACIÓN PRINCIPAL (OCULTA HASTA INICIAR SESIÓN) -->
+  <div id="admin-app" style="display: none;">
+    <aside class="sidebar">
+      <h2>Administración</h2>
+      <nav>
+        <ul>
+          <li><a class="nav-link active" onclick="showSection('pedidos', this)">Pedidos en Web</a></li>
+          <li><a class="nav-link" onclick="showSection('productos', this)">Gestión de Productos</a></li>
+          <li><a class="nav-link" onclick="showSection('categorias', this)">Agregar Categorías</a></li>
+          <li><a class="nav-link" onclick="showSection('usuarios', this)">Usuarios Registrados</a></li>
+          <li><a class="nav-link" onclick="showSection('atencion', this)">Centro de Atención</a></li>
+        </ul>
+      </nav>
+      <a class="logout-btn" onclick="logout()">Cerrar Sesión</a>
+    </aside>
 
-      <div class="flex items-center gap-3">
-        <button onclick="abrirModalCrear()" class="btn-apple bg-emerald-500 text-slate-950 px-4 py-2 rounded-xl text-xs font-black hover:bg-emerald-400">
-          + Nuevo Producto
-        </button>
-      </div>
-    </div>
-  </header>
+    <main class="main-content">
 
-  <!-- TABLA GESTIÓN -->
-  <main class="max-w-7xl mx-auto p-6 space-y-6">
-    <div class="flex justify-between items-center">
-      <h2 class="text-2xl font-black text-white">Catálogo Activo</h2>
-      <span id="cantProductos" class="text-xs font-bold bg-slate-800 border border-slate-700 text-emerald-400 px-3 py-1 rounded-full">0 Productos</span>
-    </div>
+      <!-- 1. APARTADO DE PEDIDOS -->
+      <section id="pedidos" class="section active">
+        <h1>Pedidos Recibidos en Web</h1>
+        <p>Listado de compras realizadas directamente desde la tienda online:</p>
+        <table>
+          <thead>
+            <tr>
+              <th>ID Pedido</th>
+              <th>Cliente</th>
+              <th>Productos</th>
+              <th>Total ($)</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="lista-pedidos">
+            <tr>
+              <td>#1001</td>
+              <td>Juan Pérez</td>
+              <td>1x Camiseta, 2x Gorras</td>
+              <td>$45.00</td>
+              <td><span style="color: orange; font-weight: bold;">Pendiente</span></td>
+              <td>
+                <button class="btn" onclick="completarPedido(this)">Completar</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
 
-    <div class="glass-apple rounded-3xl border border-slate-800 overflow-hidden shadow-2xl">
-      <table class="w-full text-left border-collapse text-xs">
-        <thead>
-          <tr class="bg-slate-950/60 border-b border-slate-800 text-slate-400 uppercase text-[10px] font-bold tracking-wider">
-            <th class="p-4">Producto</th>
-            <th class="p-4">Categoría</th>
-            <th class="p-4">Precio 1L</th>
-            <th class="p-4">Precio 5L</th>
-            <th class="p-4">Precio 20L</th>
-            <th class="p-4 text-right">Acciones</th>
-          </tr>
-        </thead>
-        <tbody id="tablaAdminProductos" class="divide-y divide-slate-800/60"></tbody>
-      </table>
-    </div>
-  </main>
+      <!-- 2. GESTIÓN DE PRODUCTOS (AGREGAR Y MODIFICAR) -->
+      <section id="productos" class="section">
+        <h1>Gestión de Productos</h1>
 
-  <!-- MODAL CREAR / EDITAR PRODUCTO -->
-  <div id="modalFormProducto" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-    <div class="glass-apple bg-slate-900 border border-slate-700/60 p-6 rounded-3xl max-w-md w-full space-y-4 relative">
-      <button onclick="cerrarModalForm()" class="absolute top-4 right-4 text-slate-400 hover:text-white font-black btn-apple">✕</button>
-      
-      <h3 id="lblTituloModalForm" class="text-lg font-black text-white">Crear Producto</h3>
-
-      <form id="formProducto" onsubmit="guardarProducto(event)" class="space-y-3 text-xs">
-        <input type="hidden" id="prodId">
-
-        <div>
-          <label class="text-[10px] text-slate-400 font-bold uppercase">Nombre del Producto</label>
-          <input type="text" id="prodNombre" required class="w-full bg-slate-950 border border-slate-800 text-white p-3 rounded-xl focus:outline-none focus:border-emerald-500">
-        </div>
-
-        <div>
-          <label class="text-[10px] text-slate-400 font-bold uppercase">Categoría</label>
-          <input type="text" id="prodCategoria" placeholder="Ej: Aromatizantes" class="w-full bg-slate-950 border border-slate-800 text-white p-3 rounded-xl focus:outline-none focus:border-emerald-500">
-        </div>
-
-        <div class="grid grid-cols-3 gap-2">
-          <div>
-            <label class="text-[10px] text-slate-400 font-bold uppercase">Precio 1L</label>
-            <input type="number" id="p1L" required step="0.01" class="w-full bg-slate-950 border border-slate-800 text-white p-2.5 rounded-xl focus:outline-none focus:border-emerald-500">
+        <h3>Agregar Nuevo Producto</h3>
+        <form id="form-producto" onsubmit="guardarProducto(event)" style="margin-bottom: 30px;">
+          <input type="hidden" id="prod-id">
+          <div class="form-group">
+            <label>Nombre del Producto:</label>
+            <input type="text" id="prod-nombre" required>
           </div>
-          <div>
-            <label class="text-[10px] text-slate-400 font-bold uppercase">Precio 5L</label>
-            <input type="number" id="p5L" required step="0.01" class="w-full bg-slate-950 border border-slate-800 text-white p-2.5 rounded-xl focus:outline-none focus:border-emerald-500">
+          <div class="form-group">
+            <label>Precio ($):</label>
+            <input type="number" step="0.01" id="prod-precio" required>
           </div>
-          <div>
-            <label class="text-[10px] text-slate-400 font-bold uppercase">Precio 20L</label>
-            <input type="number" id="p20L" required step="0.01" class="w-full bg-slate-950 border border-slate-800 text-white p-2.5 rounded-xl focus:outline-none focus:border-emerald-500">
+          <div class="form-group">
+            <label>Categoría:</label>
+            <select id="prod-categoria" required>
+              <option value="Ropa">Ropa</option>
+              <option value="Calzado">Calzado</option>
+              <option value="Accesorios">Accesorios</option>
+            </select>
+          </div>
+          <button type="submit" class="btn" id="btn-guardar-prod">Agregar Producto</button>
+          <button type="button" class="btn btn-danger" id="btn-cancelar-edit" onclick="cancelarEdicion()" style="display:none;">Cancelar Edición</button>
+        </form>
+
+        <h3>Lista de Productos</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Precio ($)</th>
+              <th>Categoría</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tabla-productos">
+            <tr>
+              <td>Camiseta Algodón</td>
+              <td>15.00</td>
+              <td>Ropa</td>
+              <td>
+                <button class="btn btn-warning" onclick="editarProducto(this)">Modificar</button>
+                <button class="btn btn-danger" onclick="eliminarFila(this)">Eliminar</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- 3. AGREGAR CATEGORÍAS -->
+      <section id="categorias" class="section">
+        <h1>Agregar Categorías</h1>
+        <form onsubmit="agregarCategoria(event)">
+          <div class="form-group">
+            <label>Nombre de la Nueva Categoría:</label>
+            <input type="text" id="nueva-cat" required>
+          </div>
+          <button type="submit" class="btn">Guardar Categoría</button>
+        </form>
+
+        <h3 style="margin-top: 20px;">Categorías Existentes</h3>
+        <ul id="lista-categorias" style="margin-top: 10px; padding-left: 20px;">
+          <li>Ropa</li>
+          <li>Calzado</li>
+          <li>Accesorios</li>
+        </ul>
+      </section>
+
+      <!-- 4. USUARIOS REGISTRADOS -->
+      <section id="usuarios" class="section">
+        <h1>Usuarios Registrados</h1>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Correo Electrónico</th>
+              <th>Fecha Registro</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>USR-01</td>
+              <td>Juan Pérez</td>
+              <td>juan.perez@email.com</td>
+              <td>2026-08-10</td>
+            </tr>
+            <tr>
+              <td>USR-02</td>
+              <td>María López</td>
+              <td>maria.lopez@email.com</td>
+              <td>2026-08-12</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- 5. CENTRO DE ATENCIÓN -->
+      <section id="atencion" class="section">
+        <h1>Centro de Atención al Cliente</h1>
+        <p>Mensajes directos de los usuarios:</p>
+        <div style="display: flex; gap: 20px; margin-top: 15px;">
+          <div style="width: 30%;">
+            <h3>Consultas Activas</h3>
+            <ul style="list-style: none; margin-top: 10px;">
+              <li style="padding: 10px; background: #e1f5fe; margin-bottom: 5px; cursor: pointer; border-radius: 4px;">
+                <strong>Juan Pérez</strong><br>
+                <small>Duda sobre envío</small>
+              </li>
+            </ul>
+          </div>
+          <div style="width: 70%;">
+            <h3>Conversación</h3>
+            <div class="chat-box" id="chat-box">
+              <div class="chat-message user">
+                <strong>Juan Pérez:</strong> Hola, ¿cuánto tarda en llegar mi pedido #1001?
+              </div>
+            </div>
+            <div style="display: flex; gap: 10px;">
+              <input type="text" id="mensaje-chat" placeholder="Escribe tu respuesta..." style="flex:1; padding: 8px;">
+              <button class="btn" onclick="enviarMensajeChat()">Enviar</button>
+            </div>
           </div>
         </div>
+      </section>
 
-        <button type="submit" class="btn-apple w-full bg-emerald-500 text-slate-950 font-black py-3 rounded-xl hover:bg-emerald-400 transition-all shadow-lg">
-          Guardar Cambios
-        </button>
-      </form>
-    </div>
+    </main>
   </div>
 
   <script>
-    const socket = io();
-    let listaProductos = [];
+    // CONTRASEÑA DE ACCESO
+    const CLAVE_CORRECTA = "ARMM123";
 
-    // MOSTRAR/OCULTAR CONTRASEÑA ADMIN (OJITO)
-    function togglePasswordAdmin(btn) {
-      const input = document.getElementById('adminPassInput');
-      if (input.type === 'password') {
-        input.type = 'text';
-        btn.innerText = '🙈';
+    function login() {
+      const passInput = document.getElementById("admin-pass").value;
+      const errorMsg = document.getElementById("login-error");
+
+      if (passInput === CLAVE_CORRECTA) {
+        document.getElementById("login-screen").style.display = "none";
+        document.getElementById("admin-app").style.display = "flex";
+        errorMsg.style.display = "none";
       } else {
-        input.type = 'password';
-        btn.innerText = '👁️';
+        errorMsg.style.display = "block";
       }
     }
 
-    function validarAccesoAdmin() {
-      const pass = document.getElementById('adminPassInput').value;
-      if (pass === 'armm123') { // Clave de acceso configurable
-        document.getElementById('modalBloqueoAdmin').classList.add('hidden');
-      } else {
-        alert('Clave incorrecta');
-      }
+    function logout() {
+      document.getElementById("admin-screen") ? null : location.reload();
     }
 
-    socket.on('inventario_actualizado', data => {
-      listaProductos = data;
-      renderTablaAdmin();
-    });
+    // Navegación entre pestañas
+    function showSection(sectionId, element) {
+      const sections = document.querySelectorAll('.section');
+      sections.forEach(sec => sec.classList.remove('active'));
 
-    function renderTablaAdmin() {
-      const tbody = document.getElementById('tablaAdminProductos');
-      document.getElementById('cantProductos').innerText = `${listaProductos.length} Productos`;
+      const links = document.querySelectorAll('.nav-link');
+      links.forEach(link => link.classList.remove('active'));
 
-      if (!listaProductos.length) {
-        tbody.innerHTML = '<tr><td colspan="6" class="p-8 text-center text-slate-500">No hay productos registrados.</td></tr>';
-        return;
-      }
-
-      tbody.innerHTML = listaProductos.map(p => `
-        <tr class="hover:bg-slate-800/30">
-          <td class="p-4 font-bold text-white">${p.nombre}</td>
-          <td class="p-4 text-emerald-400">${p.categoria || 'General'}</td>
-          <td class="p-4">$${p.precios['1L'] || 0} MXN</td>
-          <td class="p-4">$${p.precios['5L'] || 0} MXN</td>
-          <td class="p-4">$${p.precios['20L'] || 0} MXN</td>
-          <td class="p-4 text-right space-x-2">
-            <button onclick="editarProducto(${p.id})" class="btn-apple bg-blue-500/20 text-blue-400 border border-blue-500/30 px-3 py-1 rounded-lg">Editar</button>
-            <button onclick="eliminarProducto(${p.id})" class="btn-apple bg-red-500/20 text-red-400 border border-red-500/30 px-3 py-1 rounded-lg">Eliminar</button>
-          </td>
-        </tr>
-      `).join('');
+      document.getElementById(sectionId).classList.add('active');
+      element.classList.add('active');
     }
 
-    function abrirModalCrear() {
-      document.getElementById('lblTituloModalForm').innerText = 'Nuevo Producto';
-      document.getElementById('prodId').value = '';
-      document.getElementById('formProducto').reset();
-      document.getElementById('modalFormProducto').classList.remove('hidden');
-    }
-
-    function editarProducto(id) {
-      const p = listaProductos.find(item => item.id === id);
-      if (!p) return;
-
-      document.getElementById('lblTituloModalForm').innerText = 'Editar Producto';
-      document.getElementById('prodId').value = p.id;
-      document.getElementById('prodNombre').value = p.nombre;
-      document.getElementById('prodCategoria').value = p.categoria || '';
-      document.getElementById('p1L').value = p.precios['1L'] || 0;
-      document.getElementById('p5L').value = p.precios['5L'] || 0;
-      document.getElementById('p20L').value = p.precios['20L'] || 0;
-
-      document.getElementById('modalFormProducto').classList.remove('hidden');
-    }
-
-    function cerrarModalForm() {
-      document.getElementById('modalFormProducto').classList.add('hidden');
-    }
+    // Modificar / Agregar Producto
+    let filaEditando = null;
 
     function guardarProducto(e) {
       e.preventDefault();
-      const id = document.getElementById('prodId').value;
-      const productoData = {
-        id: id ? parseInt(id) : Date.now(),
-        nombre: document.getElementById('prodNombre').value,
-        categoria: document.getElementById('prodCategoria').value,
-        precios: {
-          '1L': parseFloat(document.getElementById('p1L').value),
-          '5L': parseFloat(document.getElementById('p5L').value),
-          '20L': parseFloat(document.getElementById('p20L').value)
-        }
-      };
+      const nombre = document.getElementById("prod-nombre").value;
+      const precio = parseFloat(document.getElementById("prod-precio").value).toFixed(2);
+      const categoria = document.getElementById("prod-categoria").value;
 
-      socket.emit('guardar_producto', productoData);
-      cerrarModalForm();
+      if (filaEditando) {
+        // Actualización de producto existente (Nombre, Precio y Categoría)
+        filaEditando.cells[0].innerText = nombre;
+        filaEditando.cells[1].innerText = precio;
+        filaEditando.cells[2].innerText = categoria;
+        cancelarEdicion();
+      } else {
+        // Crear nuevo producto
+        const tabla = document.getElementById("tabla-productos");
+        const nuevaFila = tabla.insertRow();
+        nuevaFila.innerHTML = `
+          <td>${nombre}</td>
+          <td>${precio}</td>
+          <td>${categoria}</td>
+          <td>
+            <button class="btn btn-warning" onclick="editarProducto(this)">Modificar</button>
+            <button class="btn btn-danger" onclick="eliminarFila(this)">Eliminar</button>
+          </td>
+        `;
+      }
+      document.getElementById("form-producto").reset();
     }
 
-    function eliminarProducto(id) {
-      if (confirm('¿Eliminar este producto permanentemente?')) {
-        socket.emit('eliminar_producto', id);
+    function editarProducto(btn) {
+      filaEditando = btn.parentElement.parentElement;
+      document.getElementById("prod-nombre").value = filaEditando.cells[0].innerText;
+      document.getElementById("prod-precio").value = filaEditando.cells[1].innerText;
+      document.getElementById("prod-categoria").value = filaEditando.cells[2].innerText;
+
+      document.getElementById("btn-guardar-prod").innerText = "Guardar Cambios";
+      document.getElementById("btn-cancelar-edit").style.display = "inline-block";
+    }
+
+    function cancelarEdicion() {
+      filaEditando = null;
+      document.getElementById("form-producto").reset();
+      document.getElementById("btn-guardar-prod").innerText = "Agregar Producto";
+      document.getElementById("btn-cancelar-edit").style.display = "none";
+    }
+
+    function eliminarFila(btn) {
+      btn.parentElement.parentElement.remove();
+    }
+
+    // Agregar Categorías
+    function agregarCategoria(e) {
+      e.preventDefault();
+      const input = document.getElementById("nueva-cat");
+      const valor = input.value.trim();
+
+      if (valor !== "") {
+        // Añadir a la lista visible
+        const lista = document.getElementById("lista-categorias");
+        const li = document.createElement("li");
+        li.textContent = valor;
+        lista.appendChild(li);
+
+        // Añadir al selector del formulario de productos
+        const select = document.getElementById("prod-categoria");
+        const option = document.createElement("option");
+        option.value = valor;
+        option.textContent = valor;
+        select.appendChild(option);
+
+        input.value = "";
+      }
+    }
+
+    // Gestionar Pedidos Web
+    function completarPedido(btn) {
+      const celdaEstado = btn.parentElement.previousElementSibling;
+      celdaEstado.innerHTML = '<span style="color: green; font-weight: bold;">Completado</span>';
+      btn.remove();
+    }
+
+    // Chat del Centro de Atención
+    function enviarMensajeChat() {
+      const input = document.getElementById("mensaje-chat");
+      if (input.value.trim() !== "") {
+        const chatBox = document.getElementById("chat-box");
+        const msg = document.createElement("div");
+        msg.className = "chat-message";
+        msg.innerHTML = `<strong>Soporte:</strong> ${input.value}`;
+        chatBox.appendChild(msg);
+        chatBox.scrollTop = chatBox.scrollHeight;
+        input.value = "";
       }
     }
   </script>
