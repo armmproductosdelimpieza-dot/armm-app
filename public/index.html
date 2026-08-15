@@ -3,417 +3,183 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ARMM Productos de Limpieza</title>
+    <title>ARMM Productos y Accesorios de Limpieza</title>
     <style>
         :root {
-            --bg-main: #070d19;
-            --card-bg: rgba(15, 25, 46, 0.7);
-            --card-border: rgba(0, 230, 153, 0.15);
+            --bg-dark: #070c14;
+            --card-glass: rgba(16, 28, 51, 0.65);
+            --border-glass: rgba(0, 230, 153, 0.2);
             --accent-green: #00e699;
-            --accent-hover: #00b377;
+            --accent-green-hover: #00b377;
             --text-light: #e2e8f0;
-            --text-muted: #8a99ad;
-            --glass-blur: blur(16px);
+            --text-muted: #94a3b8;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: radial-gradient(circle at top right, #0f2238, var(--bg-main));
+            margin: 0; padding: 0;
+            background-color: var(--bg-dark);
             color: var(--text-light);
-            margin: 0;
-            padding: 0;
+            background-image: radial-gradient(circle at 10% 20%, rgba(0, 230, 153, 0.08) 0%, transparent 40%),
+                              radial-gradient(circle at 90% 80%, rgba(10, 25, 47, 0.8) 0%, transparent 50%);
+            background-attachment: fixed;
             min-height: 100vh;
         }
 
-        /* Notice Banner */
-        .banner-leyenda {
-            background: linear-gradient(90deg, rgba(0,230,153,0.2), rgba(0,230,153,0.05));
-            border-bottom: 1px solid var(--card-border);
-            text-align: center;
-            padding: 8px 15px;
-            font-size: 0.85rem;
-            color: var(--accent-green);
-            backdrop-filter: var(--glass-blur);
+        .leyenda {
+            background: rgba(255, 235, 59, 0.15);
+            border-bottom: 1px solid rgba(255, 235, 59, 0.3);
+            backdrop-filter: blur(8px);
+            padding: 10px 15px; text-align: center; font-weight: 600; font-size: 0.9em; color: #ffeb3b;
         }
+        .leyenda a { color: #00e699; text-decoration: underline; }
 
-        /* Header / Navbar */
         header {
-            background: rgba(10, 17, 34, 0.8);
-            backdrop-filter: var(--glass-blur);
-            border-bottom: 1px solid var(--card-border);
-            padding: 15px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 90;
+            background: rgba(10, 17, 34, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-glass);
+            padding: 15px 40px; display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 50;
         }
 
-        .brand-logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
+        .logo-sec { display: flex; align-items: center; gap: 12px; }
         .logo-icon {
-            background: var(--accent-green);
-            color: #070d19;
-            font-weight: 900;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            box-shadow: 0 0 15px rgba(0, 230, 153, 0.4);
+            width: 42px; height: 42px; background: var(--accent-green); color: #070c14;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-weight: 900; font-size: 1.3em; box-shadow: 0 0 15px rgba(0,230,153,0.4);
         }
+        .logo-title { font-size: 1.2em; font-weight: 800; letter-spacing: 0.5px; margin: 0; }
+        .slogan { font-size: 0.75em; color: var(--accent-green); text-transform: uppercase; letter-spacing: 1px; }
 
-        .brand-title {
-            font-size: 1.3rem;
-            font-weight: 800;
-            letter-spacing: 0.5px;
-            margin: 0;
-            color: #fff;
+        .header-btns { display: flex; gap: 12px; align-items: center; }
+        .user-btn, .cart-btn {
+            background: rgba(0, 230, 153, 0.1); border: 1px solid var(--accent-green);
+            color: var(--accent-green); padding: 8px 18px; font-weight: 700; border-radius: 20px;
+            cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 8px;
+            backdrop-filter: blur(5px);
         }
+        .user-btn:hover, .cart-btn:hover { background: var(--accent-green); color: #070c14; transform: translateY(-2px); }
 
-        .brand-slogan {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin: 0;
-        }
-
-        .nav-actions {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        /* Glass Buttons */
-        .btn-glass {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--card-border);
-            color: var(--text-light);
-            padding: 8px 16px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.85rem;
-            transition: all 0.3s ease;
-            backdrop-filter: var(--glass-blur);
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .btn-glass:hover {
-            background: rgba(0, 230, 153, 0.15);
-            border-color: var(--accent-green);
-            color: #fff;
-            transform: translateY(-2px);
-        }
-
-        .btn-green-accent {
-            background: var(--accent-green);
-            color: #070d19;
-            border: none;
-            padding: 10px 18px;
-            border-radius: 8px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 230, 153, 0.2);
-            width: 100%;
-        }
-
-        .btn-green-accent:hover {
-            background: var(--accent-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 230, 153, 0.35);
-        }
-
-        /* Main Container */
-        .container {
-            max-width: 1100px;
-            margin: 30px auto;
-            padding: 0 20px;
-        }
-
-        /* Search Input */
-        .search-wrapper {
-            position: relative;
-            margin-bottom: 35px;
-        }
+        .container { padding: 30px 40px; max-width: 1200px; margin: auto; }
 
         .search-bar {
-            width: 100%;
-            background: rgba(15, 25, 46, 0.6);
-            border: 1px solid var(--card-border);
-            border-radius: 30px;
-            padding: 14px 20px 14px 45px;
-            color: #fff;
-            font-size: 0.95rem;
-            backdrop-filter: var(--glass-blur);
-            box-sizing: border-box;
-            outline: none;
-            transition: border-color 0.3s ease;
+            width: 100%; padding: 14px 20px; background: rgba(16, 28, 51, 0.5);
+            border: 1px solid var(--border-glass); border-radius: 30px; font-size: 1em;
+            color: #fff; box-sizing: border-box; margin-bottom: 35px; outline: none;
+            backdrop-filter: blur(10px); transition: all 0.3s ease;
         }
+        .search-bar:focus { border-color: var(--accent-green); box-shadow: 0 0 15px rgba(0,230,153,0.2); }
 
-        .search-bar:focus {
-            border-color: var(--accent-green);
-            box-shadow: 0 0 12px rgba(0, 230, 153, 0.2);
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 18px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-        }
-
-        /* Grid & Cards */
-        .section-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-            color: #fff;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px;
-        }
-
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
         .card {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 14px;
-            padding: 20px;
-            backdrop-filter: var(--glass-blur);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-            transition: transform 0.3s ease, border-color 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+            background: var(--card-glass); border: 1px solid var(--border-glass);
+            padding: 22px; border-radius: 16px; backdrop-filter: blur(12px);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); transition: transform 0.3s ease, border-color 0.3s ease;
+            display: flex; flex-direction: column; justify-content: space-between;
         }
-
-        .card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(0, 230, 153, 0.4);
+        .card:hover { transform: translateY(-5px); border-color: var(--accent-green); }
+        .card-cat {
+            align-self: flex-start; background: rgba(0, 230, 153, 0.15); color: var(--accent-green);
+            font-size: 0.7em; font-weight: 800; padding: 4px 10px; border-radius: 12px;
+            text-transform: uppercase; margin-bottom: 12px;
         }
-
-        .card-tag {
-            align-self: flex-start;
-            background: rgba(0, 230, 153, 0.1);
-            color: var(--accent-green);
-            font-size: 0.7rem;
-            font-weight: 700;
-            padding: 4px 10px;
-            border-radius: 12px;
-            margin-bottom: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+        .card h3 { margin: 0 0 15px 0; font-size: 1.2em; color: #fff; }
+        
+        select.pres-select {
+            width: 100%; padding: 10px; background: rgba(7, 12, 20, 0.8);
+            border: 1px solid var(--border-glass); color: #fff; border-radius: 8px;
+            margin-bottom: 15px; outline: none; cursor: pointer;
         }
-
-        .card-title {
-            font-size: 1.15rem;
-            font-weight: 700;
-            margin: 0 0 15px 0;
-            color: #fff;
+        .btn-add-cart {
+            background: var(--accent-green); color: #070c14; border: none; padding: 12px;
+            border-radius: 8px; font-weight: 800; cursor: pointer; transition: background 0.3s ease;
+            width: 100%; display: flex; justify-content: center; align-items: center; gap: 8px;
         }
+        .btn-add-cart:hover { background: var(--accent-green-hover); }
 
-        .card-select {
-            width: 100%;
-            background: rgba(7, 13, 25, 0.8);
-            border: 1px solid var(--card-border);
-            color: #fff;
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            outline: none;
-            font-size: 0.85rem;
-        }
-
-        /* About Section */
-        .about-box {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 14px;
-            padding: 25px;
-            margin-top: 50px;
-            backdrop-filter: var(--glass-blur);
-        }
-
-        .reviews-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
-        }
-
-        .review-card {
-            background: rgba(7, 13, 25, 0.5);
-            border-left: 3px solid var(--accent-green);
-            padding: 12px;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            color: var(--text-light);
-        }
-
-        /* Modals */
+        /* Modales */
         .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(8px);
-            justify-content: center;
-            align-items: center;
-            z-index: 200;
-            animation: fadeIn 0.2s ease-out;
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(8px);
+            justify-content: center; align-items: center; z-index: 100;
+            animation: fadeIn 0.3s ease;
         }
-
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         .modal-content {
-            background: rgba(15, 25, 46, 0.95);
-            border: 1px solid var(--card-border);
-            border-radius: 16px;
-            padding: 30px;
-            width: 380px;
-            max-height: 85vh;
-            overflow-y: auto;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-            position: relative;
+            background: rgba(16, 28, 51, 0.95); border: 1px solid var(--border-glass);
+            padding: 30px; border-radius: 20px; width: 380px; max-height: 85vh;
+            overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.6); position: relative;
         }
-
+        .modal-content h3 { color: var(--accent-green); margin-top: 0; margin-bottom: 20px; text-align: center; }
         .modal-content input, .modal-content select {
-            width: 100%;
-            background: rgba(7, 13, 25, 0.8);
-            border: 1px solid var(--card-border);
-            color: #fff;
-            padding: 10px 12px;
-            margin: 8px 0;
-            border-radius: 8px;
-            box-sizing: border-box;
-            outline: none;
-            font-size: 0.85rem;
+            width: 100%; padding: 11px; margin: 8px 0; background: rgba(7, 12, 20, 0.6);
+            border: 1px solid var(--border-glass); border-radius: 8px; color: #fff;
+            box-sizing: border-box; outline: none;
         }
-
-        .modal-content input:focus { border-color: var(--accent-green); }
-
         .pwd-container { position: relative; }
-        .eye-icon {
-            position: absolute;
-            right: 12px;
-            top: 18px;
-            cursor: pointer;
-            user-select: none;
-            font-size: 0.9rem;
-            opacity: 0.7;
-        }
+        .eye-icon { position: absolute; right: 12px; top: 18px; cursor: pointer; user-select: none; }
 
-        .close-btn {
-            position: absolute;
-            top: 15px;
-            right: 20px;
-            cursor: pointer;
-            color: var(--text-muted);
-            font-size: 1.2rem;
+        .btn-action {
+            background: var(--accent-green); color: #070c14; border: none; padding: 12px;
+            border-radius: 8px; width: 100%; margin-top: 12px; cursor: pointer; font-weight: 800;
+            transition: all 0.3s ease;
         }
+        .btn-action:hover { opacity: 0.9; }
+        .btn-cancel { background: rgba(255,255,255,0.1); color: #fff; }
 
-        .user-avatar-btn {
-            background: rgba(0,230,153,0.15);
-            border: 1px solid var(--accent-green);
-            color: var(--accent-green);
-            border-radius: 20px;
-            padding: 6px 14px;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .menu-list-item {
-            padding: 10px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            cursor: pointer;
-            transition: background 0.2s;
-            font-size: 0.9rem;
-        }
-
-        .menu-list-item:hover {
-            background: rgba(0, 230, 153, 0.1);
-            color: var(--accent-green);
+        .review-card {
+            background: rgba(255,255,255,0.03); border-left: 3px solid var(--accent-green);
+            padding: 12px 15px; margin-top: 12px; border-radius: 0 8px 8px 0; font-style: italic;
         }
     </style>
 </head>
 <body>
 
-    <!-- Leyenda Superior -->
-    <div class="banner-leyenda">
-        Regístrate para realizar un pedido o realízalo directamente a nuestro <a href="https://wa.me/525551234567" target="_blank" style="color:var(--accent-green); text-decoration:underline;">WhatsApp</a>
-    </div>
+    <div class="leyenda">⚠️ Regístrate para realizar un pedido o realízalo directamente a nuestro <a href="https://wa.me/525551234567" target="_blank">WhatsApp</a></div>
 
-    <!-- Bloque 1: Portada -->
+    <!-- 1er Bloque: Portada, Eslogan y Nombre -->
     <header>
-        <div class="brand-logo">
+        <div class="logo-sec">
             <div class="logo-icon">A</div>
             <div>
-                <h1 class="brand-title">ARMM</h1>
-                <p class="brand-slogan">PRODUCTOS Y ACCESORIOS DE LIMPIEZA</p>
+                <div class="logo-title">ARMM</div>
+                <div class="slogan">Productos y Accesorios de Limpieza</div>
             </div>
         </div>
-        <div class="nav-actions">
-            <span id="userAuthSection">
-                <button class="btn-glass" onclick="abrirModal('modalRegistro')">Registrarse</button>
-                <button class="btn-glass" onclick="abrirModal('modalLogin')">Iniciar Sesión</button>
-            </span>
-            <button class="btn-glass" onclick="abrirModal('modalCarrito')">
-                🛒 Carrito (<span id="cartCount">0</span>)
-            </button>
+        <div class="header-btns" id="headerAuthArea">
+            <button class="user-btn" onclick="abrirModal('modalRegistro')">Registrarse</button>
+            <button class="user-btn" onclick="abrirModal('modalLogin')">Iniciar Sesión</button>
+            <button class="cart-btn" onclick="abrirModal('modalCarrito')">🛒 Carrito (<span id="cartCount">0</span>)</button>
         </div>
     </header>
 
     <div class="container">
-        <!-- Bloque 2: Buscador -->
-        <div class="search-wrapper">
-            <span class="search-icon">🔍</span>
-            <input type="text" class="search-bar" id="searchInput" placeholder="Buscar aromatizante, cloro, jarquería..." onkeyup="filtrarProductos()">
-        </div>
+        <!-- 2da Sección: Buscador -->
+        <input type="text" class="search-bar" id="searchInput" placeholder="🔍 Buscar aromatizante, cloro, jarcería..." onkeyup="filtrarProductos()">
 
-        <!-- Bloque 3: Acomodo de Productos -->
-        <div class="section-title">Nuestros Productos</div>
+        <!-- 3ra Sección: Productos (Ordenados desde Admin) -->
+        <h2 style="color: #fff; border-bottom: 1px solid var(--border-glass); padding-bottom: 10px;">Nuestros Productos</h2>
         <div class="grid" id="productGrid"></div>
 
-        <!-- Bloque 4: Más Sobre la Empresa -->
-        <div class="about-box">
-            <h3 style="margin-top:0; color:var(--accent-green);">Sobre ARMM Productos de Limpieza</h3>
-            <p style="font-size:0.9rem; color:var(--text-light); line-height:1.5;">
-                <strong>Propósito:</strong> Ofrecerte todo para la limpieza y hasta la puerta de tu hogar. Contamos con más de 3 años trabajando continuamente para brindarte una limpieza mejor y garantizada.
-            </p>
-            <p style="font-size:0.85rem; color:var(--text-muted);">
-                📞 WhatsApp: 555-1234 | ✉️ Correo: armmproductosdelimpieza@gmail.com
-            </p>
+        <!-- 4ta Sección: Más sobre la empresa y Reseñas -->
+        <div style="margin-top: 60px; background: var(--card-glass); border: 1px solid var(--border-glass); padding: 30px; border-radius: 20px;">
+            <h2 style="color: var(--accent-green); margin-top: 0;">Sobre la Empresa</h2>
+            <p><strong>Propósito:</strong> Ofrecerte todo para la limpieza y hasta la puerta de tu hogar.</p>
+            <p>Tenemos más de 3 años trabajando para una limpieza mejor.</p>
+            <p><strong>Contacto Directo:</strong> WhatsApp: <a href="https://wa.me/525551234567" style="color:var(--accent-green);">555-1234</a> | Correo: <a href="mailto:armmproductosdelimpieza@gmail.com" style="color:var(--accent-green);">armmproductosdelimpieza@gmail.com</a></p>
 
-            <h4 style="margin-bottom:10px;">Reseñas de Clientes</h4>
-            <div class="reviews-grid">
-                <div class="review-card">"Excelente calidad en los limpiadores y entregas siempre a tiempo." - Sofía R.</div>
-                <div class="review-card">"Los mejores precios en mayoreo, súper recomendado para negocios." - Carlos M.</div>
-                <div class="review-card">"Muy buena atención por WhatsApp y respuestas inmediatas." - Lucía G.</div>
-            </div>
+            <h3 style="color: var(--accent-green); margin-top: 25px;">Reseñas de Nuestros Clientes</h3>
+            <div class="review-card">"Excelente servicio, todo llegó impecable hasta mi casa." - Maria G.</div>
+            <div class="review-card">"Los precios por mayoreo valen totalmente la pena, súper recomendados." - Carlos M.</div>
         </div>
     </div>
 
-    <!-- MODAL REGISTRO -->
+    <!-- Modal Registro -->
     <div id="modalRegistro" class="modal">
         <div class="modal-content">
-            <span class="close-btn" onclick="cerrarModal('modalRegistro')">&times;</span>
-            <h3 style="margin-top:0; color:var(--accent-green);">Registro de Usuario</h3>
+            <h3>Registro de Usuario</h3>
             <input type="text" id="regNombre" placeholder="Nombre(s)">
             <input type="text" id="regApellido" placeholder="Apellidos">
             <input type="tel" id="regTel" placeholder="Teléfono">
@@ -428,142 +194,94 @@
                 <input type="password" id="regPassConfirm" placeholder="Confirmar Contraseña *">
                 <span class="eye-icon" onclick="togglePass('regPassConfirm')">👁️</span>
             </div>
-            <button class="btn-green-accent" style="margin-top:10px;" id="btnEjecutarReg" onclick="ejecutarRegistro()">Registrarse</button>
+            <button class="btn-action" id="btnEjecutarReg" onclick="ejecutarRegistro()">Registrarse</button>
+            <button class="btn-action btn-cancel" onclick="cerrarModal('modalRegistro')">Cancelar</button>
         </div>
     </div>
 
-    <!-- MODAL LOGIN -->
+    <!-- Modal Iniciar Sesión -->
     <div id="modalLogin" class="modal">
         <div class="modal-content">
-            <span class="close-btn" onclick="cerrarModal('modalLogin')">&times;</span>
-            <h3 style="margin-top:0; color:var(--accent-green);">Iniciar Sesión</h3>
+            <h3>Iniciar Sesión</h3>
             <input type="text" id="loginUser" placeholder="Correo o Teléfono">
             <div class="pwd-container">
                 <input type="password" id="loginPass" placeholder="Contraseña">
                 <span class="eye-icon" onclick="togglePass('loginPass')">👁️</span>
             </div>
-            <p style="font-size:0.8rem; margin: 5px 0 15px 0;">
-                <a href="#" onclick="cerrarModal('modalLogin'); abrirModal('modalRecuperar');" style="color:var(--text-muted); text-decoration:none;">¿Olvidaste tu contraseña?</a>
-            </p>
-            <button class="btn-green-accent" onclick="ejecutarLogin()">Acceder</button>
+            <p style="font-size: 0.85em; text-align: right;"><a href="#" style="color:var(--accent-green);" onclick="cerrarModal('modalLogin'); abrirModal('modalRecuperar')">¿Olvidaste tu contraseña?</a></p>
+            <button class="btn-action" onclick="ejecutarLogin()">Acceder</button>
+            <button class="btn-action btn-cancel" onclick="cerrarModal('modalLogin')">Cancelar</button>
         </div>
     </div>
 
-    <!-- MODAL RECUPERAR CONTRASEÑA -->
+    <!-- Modal Recuperar Contraseña -->
     <div id="modalRecuperar" class="modal">
         <div class="modal-content">
-            <span class="close-btn" onclick="cerrarModal('modalRecuperar')">&times;</span>
-            <h3 style="margin-top:0; color:var(--accent-green);">Recuperar Contraseña</h3>
+            <h3>Recuperar Contraseña</h3>
             <input type="text" id="recNombre" placeholder="Nombre">
             <input type="text" id="recApellido" placeholder="Apellido">
             <input type="email" id="recCorreo" placeholder="Correo Registrado">
             <input type="tel" id="recTel" placeholder="Teléfono Registrado">
-            <p style="font-size:0.75rem; color:var(--text-muted); margin: 10px 0;">
-                Te estaremos informando la situación de tu cuenta por tu WhatsApp.
-            </p>
-            <button class="btn-green-accent" onclick="solicitarRecuperacion()">Enviar al centro de atención</button>
+            <p style="font-size:0.8em; color:var(--text-muted); text-align: center;">Te estaremos informando la situación de tu cuenta por tu WhatsApp.</p>
+            <button class="btn-action" onclick="solicitarRecuperacion()">Enviar al Centro de Atención</button>
+            <button class="btn-action btn-cancel" onclick="cerrarModal('modalRecuperar')">Cancelar</button>
         </div>
     </div>
 
-    <!-- MODAL MENU DE USUARIO (MONITO) -->
+    <!-- Modal Menú del Usuario -->
     <div id="modalUserMenu" class="modal">
         <div class="modal-content">
-            <span class="close-btn" onclick="cerrarModal('modalUserMenu')">&times;</span>
-            <h3 style="margin-top:0; color:var(--accent-green);" id="usrMenuTitle">👤 Mi Cuenta</h3>
-            
-            <div id="menuOpcionesPrincipal">
-                <div class="menu-list-item" onclick="verSubSeccion('secDatosPersonales')">👤 Cuenta / Datos Personales</div>
-                <div class="menu-list-item" onclick="verSubSeccion('secPedidos')">📦 Pedidos e Historial</div>
-                <div class="menu-list-item" onclick="verSubSeccion('secNotifs')">🔔 Notificaciones</div>
-                <div class="menu-list-item" onclick="verSubSeccion('secFavs')">⭐ Favoritos</div>
-                <div class="menu-list-item" onclick="verSubSeccion('secChat')">💬 Chat de Ayuda</div>
-                <button class="btn-glass" style="width:100%; margin-top:15px; color:#ff5555; border-color:rgba(255,85,85,0.3);" onclick="cerrarSesion()">Cerrar Sesión</button>
+            <h3 id="usrMenuTitle">Mi Cuenta</h3>
+            <div id="usrDatosSec">
+                <h4>Datos Personales</h4>
+                <div id="usrInfo" style="font-size: 0.9em; color: var(--text-muted); line-height: 1.6;"></div>
+                <hr style="border-color: var(--border-glass); margin: 15px 0;">
+                <h4 style="margin-bottom: 5px;">Cambiar Contraseña</h4>
+                <div class="pwd-container"><input type="password" id="usrActPass" placeholder="Contraseña Actual"><span class="eye-icon" onclick="togglePass('usrActPass')">👁️</span></div>
+                <p style="font-size:0.8em; margin: 2px 0 8px 0;"><a href="#" style="color:var(--accent-green);" onclick="cerrarModal('modalUserMenu'); abrirModal('modalRecuperar')">¿Olvidaste tu contraseña?</a></p>
+                <div class="pwd-container"><input type="password" id="usrNewPass" placeholder="Contraseña Nueva"><span class="eye-icon" onclick="togglePass('usrNewPass')">👁️</span></div>
+                <div class="pwd-container"><input type="password" id="usrConfPass" placeholder="Confirmar Contraseña"><span class="eye-icon" onclick="togglePass('usrConfPass')">👁️</span></div>
+                <button class="btn-action" onclick="cambiarPasswordAccion()">Actualizar Contraseña</button>
             </div>
-
-            <!-- Subsección Datos Personales / Cambiar Pass -->
-            <div id="secDatosPersonales" style="display:none;">
-                <p id="usrInfo" style="font-size:0.85rem; color:var(--text-light);"></p>
-                <hr style="border-color:var(--card-border);">
-                <h4 style="margin:10px 0;">Cambiar Contraseña</h4>
-                <div class="pwd-container">
-                    <input type="password" id="usrActPass" placeholder="Ingresa contraseña actual">
-                    <span class="eye-icon" onclick="togglePass('usrActPass')">👁️</span>
-                </div>
-                <p style="font-size:0.75rem; margin: 2px 0 8px 0;">
-                    <a href="#" onclick="cerrarModal('modalUserMenu'); abrirModal('modalRecuperar');" style="color:var(--text-muted);">¿Olvidaste tu contraseña?</a>
-                </p>
-                <div class="pwd-container">
-                    <input type="password" id="usrNewPass" placeholder="Contraseña nueva">
-                    <span class="eye-icon" onclick="togglePass('usrNewPass')">👁️</span>
-                </div>
-                <div class="pwd-container">
-                    <input type="password" id="usrConfPass" placeholder="Confirmar contraseña">
-                    <span class="eye-icon" onclick="togglePass('usrConfPass')">👁️</span>
-                </div>
-                <button class="btn-green-accent" style="margin-top:8px;" onclick="cambiarPasswordAccion()">Guardar Contraseña</button>
-                <button class="btn-glass" style="width:100%; margin-top:5px;" onclick="volverMenuUser()">Volver</button>
-            </div>
-
-            <!-- Subsección Pedidos -->
-            <div id="secPedidos" style="display:none;">
-                <h4>Seguimiento de Pedidos</h4>
-                <div id="usrPedidosList" style="font-size:0.85rem;"></div>
-                <button class="btn-glass" style="width:100%; margin-top:10px;" onclick="volverMenuUser()">Volver</button>
-            </div>
-
-            <!-- Subsección Notificaciones -->
-            <div id="secNotifs" style="display:none;">
-                <h4>Mis Notificaciones</h4>
-                <div id="usrNotifsList" style="font-size:0.85rem; color:var(--text-muted);">No tienes notificaciones nuevas.</div>
-                <button class="btn-glass" style="width:100%; margin-top:10px;" onclick="volverMenuUser()">Volver</button>
-            </div>
-
-            <!-- Subsección Favoritos -->
-            <div id="secFavs" style="display:none;">
-                <h4>Favoritos</h4>
-                <p style="font-size:0.85rem; color:var(--text-muted);">Sin productos en favoritos.</p>
-                <button class="btn-glass" style="width:100%; margin-top:10px;" onclick="volverMenuUser()">Volver</button>
-            </div>
-
-            <!-- Subsección Chat -->
-            <div id="secChat" style="display:none;">
-                <h4>Chat de Ayuda</h4>
-                <p style="font-size:0.85rem; color:var(--text-muted);">Soporte directo activo vía WhatsApp.</p>
-                <button class="btn-green-accent" onclick="window.open('https://wa.me/525551234567')">Abrir WhatsApp</button>
-                <button class="btn-glass" style="width:100%; margin-top:10px;" onclick="volverMenuUser()">Volver</button>
-            </div>
+            <hr style="border-color: var(--border-glass); margin: 15px 0;">
+            <button class="btn-action" onclick="verPedidos()">📦 Pedidos e Historial</button>
+            <button class="btn-action" onclick="verNotificaciones()">🔔 Notificaciones</button>
+            <button class="btn-action" onclick="alert('Favoritos guardados correctamente.')">⭐ Favoritos</button>
+            <button class="btn-action" onclick="abrirChatAyuda()">💬 Chat de Ayuda</button>
+            <button class="btn-action" style="background:#e53e3e; color:#fff;" onclick="cerrarSesion()">Cerrar Sesión</button>
+            <button class="btn-action btn-cancel" onclick="cerrarModal('modalUserMenu')">Cerrar</button>
         </div>
     </div>
 
-    <!-- MODAL CARRITO -->
+    <!-- Modal Carrito -->
     <div id="modalCarrito" class="modal">
         <div class="modal-content">
-            <span class="close-btn" onclick="cerrarModal('modalCarrito')">&times;</span>
-            <h3 style="margin-top:0; color:var(--accent-green);">Carrito de Compras</h3>
-            <div id="cartItemsContainer" style="font-size:0.85rem; margin-bottom:15px;">El carrito está vacío.</div>
-            <p style="font-size:0.9rem;">Subtotal: <strong>$<span id="cartSubtotal">0</span></strong></p>
+            <h3>Carrito de Compras</h3>
+            <div id="cartItemsContainer" style="max-height: 180px; overflow-y: auto; margin-bottom: 10px;">El carrito está vacío.</div>
+            <p><strong>Subtotal: $<span id="cartSubtotal">0</span> MXN</strong></p>
             
-            <a href="#" onclick="toggleCuponesSec()" style="font-size:0.8rem; color:var(--accent-green);">Ver cupones disponibles</a>
-            <div id="cuponesSec" style="display:none; margin:10px 0; background:rgba(7,13,25,0.6); padding:10px; border-radius:8px;">
+            <a href="#" onclick="toggleCuponesSec()" style="font-size:0.9em; color:var(--accent-green);">Ver cupones disponibles</a>
+            <div id="cuponesSec" style="display:none; margin-top:10px; border:1px solid var(--border-glass); padding:10px; border-radius:8px; background: rgba(0,0,0,0.3);">
                 <div id="cuponesLista"></div>
-                <p id="cuponMsg" style="color:#ff5555; font-size:0.75rem; margin-top:5px;"></p>
+                <p id="cuponMsg" style="color:#e53e3e; font-size:0.8em; margin-top:5px;"></p>
             </div>
 
-            <p style="font-size:1.1rem; font-weight:bold; margin-top:10px; color:#fff;">Total: $<span id="cartTotal">0</span></p>
+            <p style="font-size: 1.2em; font-weight:bold; margin-top:15px; color:var(--accent-green);">Total: $<span id="cartTotal">0</span> MXN</p>
 
-            <button class="btn-green-accent" style="margin-bottom:8px;" onclick="procesarPago('SPEI')">PAGAR CON SPEI</button>
-            <button class="btn-glass" style="width:100%;" onclick="procesarPago('RECIBIR')">Realizar pedido y pagar al recibirlo</button>
+            <button class="btn-action" style="background:#28a745; color:#fff;" onclick="procesarPago('SPEI')">PAGAR CON SPEI</button>
+            <button class="btn-action" style="background:#007bff; color:#fff;" onclick="procesarPago('RECIBIR')">Realizar pedido y pagar al recibirlo</button>
+            <button class="btn-action btn-cancel" onclick="cerrarModal('modalCarrito')">Cerrar</button>
         </div>
     </div>
 
-    <!-- MODAL PAGO AL RECIBIR -->
+    <!-- Modal Metodo de Pago al Recibir -->
     <div id="modalPagoRecibir" class="modal">
         <div class="modal-content">
-            <span class="close-btn" onclick="cerrarModal('modalPagoRecibir')">&times;</span>
-            <h3 style="margin-top:0; color:var(--accent-green);">Método de Pago</h3>
-            <label style="display:block; margin:10px 0; font-size:0.9rem;"><input type="radio" name="pagoTipo" value="Efectivo" checked> Efectivo</label>
-            <label style="display:block; margin:10px 0; font-size:0.9rem;"><input type="radio" name="pagoTipo" value="Pago con tarjeta"> Pago con Tarjeta</label>
-            <button class="btn-green-accent" style="margin-top:15px;" onclick="confirmarPedidoRecibir()">Realizar pedido</button>
+            <h3>Pago al Recibir</h3>
+            <label style="display:block; margin: 10px 0;"><input type="radio" name="pagoTipo" value="Efectivo" checked> Efectivo</label>
+            <label style="display:block; margin: 10px 0;"><input type="radio" name="pagoTipo" value="Pago con Tarjeta"> Pago con Tarjeta</label>
+            <button class="btn-action" onclick="confirmarPedidoRecibir()">Realizar Pedido</button>
+            <button class="btn-action btn-cancel" onclick="cerrarModal('modalPagoRecibir')">Cancelar</button>
         </div>
     </div>
 
@@ -571,30 +289,32 @@
         let carrito = [];
         let cuponAplicado = null;
         let usuarioActual = null;
-        let flujoPedidoPendiente = false;
 
-        const productosBase = [
-            {"nombre": "Cloro Concentrado", "categoria": "DESINFECCIÓN", "tipo": "litro", "p1": 18, "p5": 85, "p20": 280, "pMay": 0, "pMen": 0},
-            {"nombre": "Detergente Líquido Multiusos", "categoria": "LIMPIEZA GENERAL", "tipo": "litro", "p1": 25, "p5": 110, "p20": 390, "pMay": 0, "pMen": 0},
-            {"nombre": "Suavizante de Telas", "categoria": "CUIDADO DE ROPA", "tipo": "litro", "p1": 22, "p5": 100, "p20": 350, "pMay": 0, "pMen": 0},
-            {"nombre": "Desengrasante Industrial", "categoria": "ESPECIALIZADOS", "tipo": "litro", "p1": 35, "p5": 160, "p20": 580, "pMay": 0, "pMen": 0},
-            {"nombre": "Escoba de Jarcia", "categoria": "JARCERÍA", "tipo": "piezas", "p1": 0, "p5": 0, "p20": 0, "pMay": 45, "pMen": 60}
+        const productosDefault = [
+            { id: 1, nombre: "Cloro Concentrado", categoria: "DESINFECCIÓN", modo: "Litro", p1: 18, p5: 80, p20: 250, pMay: 0, pMen: 0 },
+            { id: 2, nombre: "Detergente Líquido Multiusos", categoria: "LIMPIEZA GENERAL", modo: "Litro", p1: 25, p5: 110, p20: 380, pMay: 0, pMen: 0 },
+            { id: 3, nombre: "Suavizante de Telas", categoria: "CUIDADO DE ROPA", modo: "Litro", p1: 22, p5: 95, p20: 320, pMay: 0, pMen: 0 },
+            { id: 4, nombre: "Desengrasante Industrial", categoria: "ESPECIALIZADOS", modo: "Pieza", p1: 0, p5: 0, p20: 0, pMay: 30, pMen: 35 }
         ];
 
         function init() {
             if(!localStorage.getItem('armm_productos')) {
-                localStorage.setItem('armm_productos', JSON.stringify(productosBase));
+                localStorage.setItem('armm_productos', JSON.stringify(productosDefault));
             }
-            if(!localStorage.getItem('armm_usuarios')) localStorage.setItem('armm_usuarios', JSON.stringify([]));
-            if(!localStorage.getItem('armm_pedidos')) localStorage.setItem('armm_pedidos', JSON.stringify([]));
-            if(!localStorage.getItem('armm_recuperaciones')) localStorage.setItem('armm_recuperaciones', JSON.stringify([]));
-            if(!localStorage.getItem('armm_cupones')) localStorage.setItem('armm_cupones', JSON.stringify([]));
-            if(!localStorage.getItem('armm_notificaciones')) localStorage.setItem('armm_notificaciones', JSON.stringify([]));
-
+            if(!localStorage.getItem('armm_usuarios')) {
+                localStorage.setItem('armm_usuarios', JSON.stringify([]));
+            }
+            if(!localStorage.getItem('armm_pedidos')) {
+                localStorage.setItem('armm_pedidos', JSON.stringify([]));
+            }
+            if(!localStorage.getItem('armm_recuperaciones')) {
+                localStorage.setItem('armm_recuperaciones', JSON.stringify([]));
+            }
+            
             let usr = localStorage.getItem('armm_sesion_activa');
             if(usr) {
                 usuarioActual = JSON.parse(usr);
-                generarMenuIconoUsuario();
+                actualizarHeaderUsuario();
             }
             cargarProductos();
         }
@@ -612,38 +332,36 @@
             const data = JSON.parse(localStorage.getItem('armm_productos') || '[]');
             grid.innerHTML = '';
 
-            data.forEach((p, idx) => {
-                let card = document.createElement('div');
-                card.className = 'card';
-                card.setAttribute('data-name', p.nombre.toLowerCase());
-                card.setAttribute('data-category', p.categoria.toLowerCase());
+            data.forEach((p) => {
+                let div = document.createElement('div');
+                div.className = 'card';
+                div.setAttribute('data-name', p.nombre.toLowerCase());
+                div.setAttribute('data-category', p.categoria.toLowerCase());
 
-                let selectHtml = '';
-                if(p.tipo === 'litro') {
-                    selectHtml = `
-                        <select class="card-select" id="sel_${idx}">
-                            <option value="${p.p1}">1 Litro - $${p.p1} MXN</option>
-                            <option value="${p.p5}">5 Litros - $${p.p5} MXN</option>
-                            <option value="${p.p20}">20 Litros - $${p.p20} MXN</option>
-                        </select>`;
+                let optionsHTML = '';
+                if(p.modo === 'Litro') {
+                    if(p.p1 > 0) optionsHTML += `<option value="${p.p1}">1 Litro - $${p.p1} MXN</option>`;
+                    if(p.p5 > 0) optionsHTML += `<option value="${p.p5}">5 Litros - $${p.p5} MXN</option>`;
+                    if(p.p20 > 0) optionsHTML += `<option value="${p.p20}">20 Litros - $${p.p20} MXN</option>`;
                 } else {
-                    selectHtml = `
-                        <select class="card-select" id="sel_${idx}">
-                            <option value="${p.pMen}">Menudeo - $${p.pMen} MXN</option>
-                            <option value="${p.pMay}">Mayoreo - $${p.pMay} MXN</option>
-                        </select>`;
+                    if(p.pMen > 0) optionsHTML += `<option value="${p.pMen}">Menudeo - $${p.pMen} MXN</option>`;
+                    if(p.pMay > 0) optionsHTML += `<option value="${p.pMay}">Mayoreo - $${p.pMay} MXN</option>`;
                 }
 
-                card.innerHTML = `
+                div.innerHTML = `
                     <div>
-                        <div class="card-tag">${p.categoria}</div>
-                        <h3 class="card-title">${p.nombre}</h3>
-                        <label style="font-size:0.75rem; color:var(--text-muted); display:block; margin-bottom:5px;">Selecciona Presentación:</label>
-                        ${selectHtml}
+                        <span class="card-cat">${p.categoria}</span>
+                        <h3>${p.nombre}</h3>
                     </div>
-                    <button class="btn-green-accent" onclick="agregarAlCarrito(${idx})">🛒 Agregar al Carrito</button>
+                    <div>
+                        <label style="font-size:0.75em; color:var(--text-muted); display:block; margin-bottom:4px;">Selecciona Presentación:</label>
+                        <select class="pres-select" id="select_prod_${p.id}">
+                            ${optionsHTML}
+                        </select>
+                        <button class="btn-add-cart" onclick="agregarAlCarrito(${p.id})">🛒 Agregar al Carrito</button>
+                    </div>
                 `;
-                grid.appendChild(card);
+                grid.appendChild(div);
             });
         }
 
@@ -656,14 +374,21 @@
             });
         }
 
-        function agregarAlCarrito(idx) {
-            const data = JSON.parse(localStorage.getItem('armm_productos'));
-            const prod = data[idx];
-            const select = document.getElementById(`sel_${idx}`);
-            const precio = parseFloat(select.value);
-            const presTexto = select.options[select.selectedIndex].text;
+        function agregarAlCarrito(prodId) {
+            let prods = JSON.parse(localStorage.getItem('armm_productos') || '[]');
+            let p = prods.find(item => item.id === prodId);
+            let select = document.getElementById(`select_prod_${prodId}`);
+            let precio = parseFloat(select.value);
+            let presentacionTexto = select.options[select.selectedIndex].text;
 
-            carrito.push({ nombre: prod.nombre, categoria: prod.categoria, precio, presTexto });
+            carrito.push({
+                prodId: p.id,
+                nombre: p.nombre,
+                categoria: p.categoria,
+                presentacion: presentacionTexto,
+                precio: precio
+            });
+
             document.getElementById('cartCount').innerText = carrito.length;
             renderCarrito();
         }
@@ -672,75 +397,88 @@
             let container = document.getElementById('cartItemsContainer');
             let subtotal = 0;
             container.innerHTML = '';
-
+            
             if(carrito.length === 0) {
-                container.innerHTML = 'El carrito está vacío.';
+                container.innerHTML = '<div style="color:var(--text-muted); text-align:center;">El carrito está vacío.</div>';
             } else {
-                carrito.forEach((c) => {
+                carrito.forEach((c, idx) => {
                     subtotal += c.precio;
-                    container.innerHTML += `<div style="display:flex; justify-content:space-between; margin-bottom:6px;">
-                        <span>${c.nombre} (${c.presTexto})</span>
-                        <strong>$${c.precio}</strong>
-                    </div>`;
+                    container.innerHTML += `
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; background:rgba(255,255,255,0.05); padding:8px; border-radius:6px;">
+                            <div style="font-size:0.85em;"><strong>${c.nombre}</strong><br><small style="color:var(--text-muted);">${c.presentacion}</small></div>
+                            <div style="font-weight:bold; color:var(--accent-green);">$${c.precio} <span style="color:red; cursor:pointer; margin-left:8px;" onclick="eliminarDelCarrito(${idx})">✕</span></div>
+                        </div>`;
                 });
             }
 
             document.getElementById('cartSubtotal').innerText = subtotal;
             let total = subtotal;
-            if(cuponAplicado) total = Math.max(0, subtotal - cuponAplicado.descuento);
+            if(cuponAplicado) {
+                total = Math.max(0, subtotal - cuponAplicado.descuento);
+            }
             document.getElementById('cartTotal').innerText = total;
+        }
+
+        function eliminarDelCarrito(index) {
+            carrito.splice(index, 1);
+            document.getElementById('cartCount').innerText = carrito.length;
+            renderCarrito();
         }
 
         function toggleCuponesSec() {
             let sec = document.getElementById('cuponesSec');
             sec.style.display = sec.style.display === 'none' ? 'block' : 'none';
-            if(sec.style.display === 'block') cargarCuponesDisponibles();
+            if(sec.style.display === 'block') cargarCupones();
         }
 
-        function cargarCuponesDisponibles() {
+        function cargarCupones() {
             let cupones = JSON.parse(localStorage.getItem('armm_cupones') || '[]');
             let list = document.getElementById('cuponesLista');
             list.innerHTML = '';
-            let hoy = new Date().toISOString().split('T')[0];
+            let fechaHoy = new Date().toISOString().split('T')[0];
 
-            let validos = cupones.filter(c => c.fecha >= hoy);
-            if(validos.length === 0) {
-                list.innerHTML = '<span style="font-size:0.8rem; color:var(--text-muted);">No hay cupones activos.</span>';
+            let cuponesValidos = cupones.filter(c => c.fecha >= fechaHoy);
+
+            if(cuponesValidos.length === 0) {
+                list.innerHTML = '<small style="color:var(--text-muted);">No hay cupones activos.</small>';
                 return;
             }
 
-            validos.forEach((c, i) => {
-                list.innerHTML += `<div style="margin-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.05); padding-bottom:5px;">
-                    <strong style="color:var(--accent-green);">${c.codigo}</strong> (-$${c.descuento})<br>
-                    <small style="color:var(--text-muted);">${c.desc}</small><br>
-                    <button class="btn-glass" style="padding:2px 8px; font-size:0.75rem; margin-top:4px;" onclick="aplicarCuponObj(${i})">Aplicar Cupón</button>
-                </div>`;
+            cuponesValidos.forEach(c => {
+                list.innerHTML += `
+                    <div style="margin-bottom:8px; border-bottom:1px dashed var(--border-glass); padding-bottom:5px;">
+                        <strong style="color:var(--accent-green);">${c.codigo}</strong> (-$${c.descuento} MXN)<br>
+                        <small style="color:var(--text-muted);">${c.desc}</small><br>
+                        <button class="btn-action" style="padding:4px; font-size:0.75em; margin-top:4px;" onclick="aplicarCupon('${c.codigo}', ${c.descuento}, ${c.minimo}, '${c.tipoAplica}', '${c.filtro}')">Aplicar Cupón</button>
+                    </div>`;
             });
         }
 
-        function aplicarCuponObj(idx) {
-            let cupones = JSON.parse(localStorage.getItem('armm_cupones') || '[]');
-            let c = cupones[idx];
+        function aplicarCupon(codigo, descuento, minimo, tipoAplica, filtro) {
             let subtotal = parseFloat(document.getElementById('cartSubtotal').innerText);
             let msg = document.getElementById('cuponMsg');
-            let cumple = true;
+            msg.innerText = "";
 
-            if(c.aplicacion === 'monto' && subtotal < c.montoMin) cumple = false;
-            if(c.aplicacion === 'categoria') {
-                cumple = carrito.some(item => item.categoria.toLowerCase() === c.categoria.toLowerCase());
+            if(tipoAplica === 'monto' && subtotal < minimo) {
+                msg.innerText = `Su compra no cumple con el monto mínimo de $${minimo} MXN del cupón.`;
+                return;
             }
 
-            if(!cumple) {
-                msg.innerText = "Su compra no cumple con las condiciones del cupón, revise la descripción.";
-            } else {
-                cuponAplicado = c;
-                msg.style.color = 'var(--accent-green)';
-                msg.innerText = "¡Cupón aplicado con éxito!";
-                renderCarrito();
+            if(tipoAplica === 'categoria') {
+                let cumpleCat = carrito.some(item => item.categoria.toLowerCase() === filtro.toLowerCase());
+                if(!cumpleCat) {
+                    msg.innerText = `El cupón solo aplica para productos de la categoría: ${filtro}.`;
+                    return;
+                }
             }
+
+            cuponAplicado = {codigo, descuento};
+            msg.style.color = "var(--accent-green)";
+            msg.innerText = "¡Cupón aplicado con éxito!";
+            renderCarrito();
         }
 
-        function ejecutarRegistro() {
+        function ejecutarRegistro(continuaPedido = false) {
             let nom = document.getElementById('regNombre').value;
             let ape = document.getElementById('regApellido').value;
             let tel = document.getElementById('regTel').value;
@@ -749,7 +487,7 @@
             let pass = document.getElementById('regPass').value;
             let passConf = document.getElementById('regPassConfirm').value;
 
-            if(!nom || !ape || !tel || !dir || !correo || !pass) return alert("Llena todos los campos.");
+            if(!nom || !ape || !tel || !dir || !correo || !pass) return alert("Llena todos los campos obligatorios.");
             if(pass !== passConf) return alert("Las contraseñas no coinciden.");
 
             let usuarios = JSON.parse(localStorage.getItem('armm_usuarios') || '[]');
@@ -759,13 +497,13 @@
 
             usuarioActual = nuevo;
             localStorage.setItem('armm_sesion_activa', JSON.stringify(nuevo));
-            
-            generarMenuIconoUsuario();
+            actualizarHeaderUsuario();
             cerrarModal('modalRegistro');
-
-            if(flujoPedidoPendiente) {
-                flujoPedidoPendiente = false;
+            
+            if(continuaPedido) {
                 abrirModal('modalCarrito');
+            } else {
+                alert("¡Registro exitoso!");
             }
         }
 
@@ -778,18 +516,17 @@
             if(encontrado) {
                 usuarioActual = encontrado;
                 localStorage.setItem('armm_sesion_activa', JSON.stringify(encontrado));
-                generarMenuIconoUsuario();
+                actualizarHeaderUsuario();
                 cerrarModal('modalLogin');
             } else {
-                alert("Usuario o contraseña incorrectos.");
+                alert("Correo/Teléfono o contraseña incorrectos.");
             }
         }
 
-        function generarMenuIconoUsuario() {
-            document.getElementById('userAuthSection').innerHTML = `
-                <button class="user-avatar-btn" onclick="abrirModal('modalUserMenu')">
-                    👤 <span>${usuarioActual.nom}</span>
-                </button>
+        function actualizarHeaderUsuario() {
+            document.getElementById('headerAuthArea').innerHTML = `
+                <button class="user-btn" onclick="abrirModal('modalUserMenu')">👤 ${usuarioActual.nom}</button>
+                <button class="cart-btn" onclick="abrirModal('modalCarrito')">🛒 Carrito (<span id="cartCount">${carrito.length}</span>)</button>
             `;
             document.getElementById('usrInfo').innerHTML = `
                 <strong>Nombre:</strong> ${usuarioActual.nom} ${usuarioActual.ape}<br>
@@ -797,19 +534,6 @@
                 <strong>Teléfono:</strong> ${usuarioActual.tel}<br>
                 <strong>Dirección:</strong> ${usuarioActual.dir}
             `;
-            cargarNotificacionesUsuario();
-        }
-
-        function verSubSeccion(idSec) {
-            document.getElementById('menuOpcionesPrincipal').style.display = 'none';
-            document.querySelectorAll('#modalUserMenu .modal-content > div:not(#menuOpcionesPrincipal)').forEach(d => d.style.display = 'none');
-            document.getElementById(idSec).style.display = 'block';
-            if(idSec === 'secPedidos') cargarHistorialPedidos();
-        }
-
-        function volverMenuUser() {
-            document.querySelectorAll('#modalUserMenu .modal-content > div').forEach(d => d.style.display = 'none');
-            document.getElementById('menuOpcionesPrincipal').style.display = 'block';
         }
 
         function solicitarRecuperacion() {
@@ -819,6 +543,7 @@
                 correo: document.getElementById('recCorreo').value,
                 tel: document.getElementById('recTel').value
             };
+            if(!data.nom || !data.correo || !data.tel) return alert("Ingresa tus datos completos.");
             let recs = JSON.parse(localStorage.getItem('armm_recuperaciones') || '[]');
             recs.push(data);
             localStorage.setItem('armm_recuperaciones', JSON.stringify(recs));
@@ -831,8 +556,8 @@
             let nva = document.getElementById('usrNewPass').value;
             let conf = document.getElementById('usrConfPass').value;
 
-            if(act !== usuarioActual.pass) return alert("La contraseña actual no coincide.");
-            if(nva !== conf) return alert("Las contraseñas no coinciden.");
+            if(act !== usuarioActual.pass) return alert("La contraseña actual es incorrecta.");
+            if(nva !== conf) return alert("Las contraseñas nuevas no coinciden.");
 
             let usuarios = JSON.parse(localStorage.getItem('armm_usuarios') || '[]');
             let idx = usuarios.findIndex(u => u.correo === usuarioActual.correo);
@@ -842,35 +567,7 @@
                 localStorage.setItem('armm_usuarios', JSON.stringify(usuarios));
                 localStorage.setItem('armm_sesion_activa', JSON.stringify(usuarioActual));
                 alert("Contraseña actualizada con éxito.");
-                volverMenuUser();
-            }
-        }
-
-        function cargarHistorialPedidos() {
-            let peds = JSON.parse(localStorage.getItem('armm_pedidos') || '[]');
-            let misPeds = peds.filter(p => p.usuario.correo === usuarioActual.correo);
-            let container = document.getElementById('usrPedidosList');
-            container.innerHTML = '';
-
-            if(misPeds.length === 0) {
-                container.innerText = 'No tienes pedidos registrados.';
-                return;
-            }
-
-            misPeds.forEach(p => {
-                container.innerHTML += `<div style="border-bottom:1px solid rgba(255,255,255,0.1); padding:8px 0;">
-                    <strong>Pedido #${p.id}</strong> - Total: $${p.total}<br>
-                    <small style="color:var(--text-muted);">Estado: ${p.estado} | Entrega: ${p.fechaEst}</small>
-                </div>`;
-            });
-        }
-
-        function cargarNotificacionesUsuario() {
-            let notifs = JSON.parse(localStorage.getItem('armm_notificaciones') || '[]');
-            let misNotifs = notifs.filter(n => n.destino === 'todos' || n.destino === usuarioActual.correo);
-            let container = document.getElementById('usrNotifsList');
-            if(misNotifs.length > 0) {
-                container.innerHTML = misNotifs.map(n => `<p style="border-bottom:1px solid rgba(255,255,255,0.05); padding:4px 0;">💬 ${n.mensaje}</p>`).join('');
+                cerrarModal('modalUserMenu');
             }
         }
 
@@ -883,7 +580,8 @@
             if(carrito.length === 0) return alert("El carrito está vacío.");
             if(!usuarioActual) {
                 cerrarModal('modalCarrito');
-                flujoPedidoPendiente = true;
+                alert("Regístrate para poder realizar tu pedido.");
+                document.getElementById('btnEjecutarReg').setAttribute('onclick', 'ejecutarRegistro(true)');
                 document.getElementById('btnEjecutarReg').innerText = "Continuar con el pedido";
                 abrirModal('modalRegistro');
                 return;
@@ -892,7 +590,7 @@
             if(metodo === 'SPEI') {
                 let idPed = 'PED-' + Math.floor(Math.random() * 90000 + 10000);
                 guardarPedido(idPed, 'SPEI');
-                let msg = encodeURIComponent(`Hola, realizé el pedido #${idPed} mediante SPEI. Adjunto comprobante.`);
+                let msg = encodeURIComponent(`Hola, envío comprobante del pedido #${idPed}. Total: $${document.getElementById('cartTotal').innerText} MXN`);
                 window.open(`https://wa.me/525551234567?text=${msg}`);
             } else {
                 cerrarModal('modalCarrito');
@@ -903,11 +601,11 @@
         function confirmarPedidoRecibir() {
             let tipo = document.querySelector('input[name="pagoTipo"]:checked').value;
             let idPed = 'PED-' + Math.floor(Math.random() * 90000 + 10000);
-            guardarPedido(idPed, `Pagar al recibir (${tipo})`);
+            guardarPedido(idPed, `Al Recibir (${tipo})`);
             cerrarModal('modalPagoRecibir');
-            alert("Pedido registrado. Redirigiendo a seguimiento.");
+            alert("Pedido realizado con éxito. Redirigiendo a seguimiento de pedidos.");
             abrirModal('modalUserMenu');
-            verSubSeccion('secPedidos');
+            verPedidos();
         }
 
         function guardarPedido(id, metodo) {
@@ -918,14 +616,43 @@
                 items: carrito,
                 total: document.getElementById('cartTotal').innerText,
                 metodo,
-                estado: 'Registrado',
-                fechaEst: 'Por confirmar'
+                estado: 'Pendiente',
+                fechaEst: 'Por confirmar',
+                chat: []
             });
             localStorage.setItem('armm_pedidos', JSON.stringify(pedidos));
             carrito = [];
             cuponAplicado = null;
             document.getElementById('cartCount').innerText = 0;
             renderCarrito();
+        }
+
+        function verPedidos() {
+            let peds = JSON.parse(localStorage.getItem('armm_pedidos') || '[]');
+            let misPeds = peds.filter(p => p.usuario.correo === usuarioActual.correo);
+            if(misPeds.length === 0) return alert('No tienes pedidos registrados.');
+
+            let txt = misPeds.map(p => `Pedido #${p.id}\nEstado: ${p.estado}\nFecha Entrega Est: ${p.fechaEst}\nTotal: $${p.total} MXN\n---`).join('\n');
+            alert("SEGUIMIENTO DE PEDIDOS:\n\n" + txt);
+        }
+
+        function verNotificaciones() {
+            let notifs = JSON.parse(localStorage.getItem('armm_notificaciones') || '[]');
+            let misNotifs = notifs.filter(n => n.destino === 'todos' || n.destino === usuarioActual.correo);
+            if(misNotifs.length === 0) return alert('No tienes notificaciones nuevas.');
+            
+            let txt = misNotifs.map(n => `• ${n.mensaje}`).join('\n');
+            alert("NOTIFICACIONES:\n\n" + txt);
+        }
+
+        function abrirChatAyuda() {
+            let msg = prompt("Escribe tu duda para el centro de ayuda:");
+            if(msg) {
+                let chats = JSON.parse(localStorage.getItem('armm_chats') || '[]');
+                chats.push({ cliente: usuarioActual.nom + " " + usuarioActual.ape, correo: usuarioActual.correo, mensaje: msg });
+                localStorage.setItem('armm_chats', JSON.stringify(chats));
+                alert("Mensaje enviado al administrador.");
+            }
         }
 
         window.onload = init;
