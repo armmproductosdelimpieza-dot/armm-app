@@ -1,508 +1,212 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gestión de Productos y Administración - ARMM</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
-    body { background-color: #060d17; color: #e2e8f0; min-height: 100vh; display: flex; }
-    
-    .glass-card { background: #0d1929; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; }
-
-    #login-admin { position: fixed; width: 100%; height: 100%; background: #060d17; display: flex; justify-content: center; align-items: center; z-index: 1000; }
-    
-    .sidebar { width: 260px; padding: 20px; background: #081220; border-right: 1px solid rgba(255,255,255,0.05); }
-    .sidebar h2 { color: #10b981; margin-bottom: 25px; font-size: 18px; font-weight: 800; display:flex; align-items:center; gap:10px; }
-    .sidebar ul { list-style: none; }
-    .sidebar li a { display: block; padding: 12px 15px; color: #94a3b8; text-decoration: none; border-radius: 6px; margin-bottom: 5px; cursor: pointer; font-weight: 600; }
-    .sidebar li a.active, .sidebar li a:hover { background: rgba(16, 185, 129, 0.1); color: #10b981; }
-
-    .main-content { flex: 1; padding: 35px; overflow-y: auto; }
-    .section { display: none; }
-    .section.active { display: block; }
-
-    h2.section-title { font-size: 24px; font-weight: 800; color: #10b981; margin-bottom: 20px; }
-
-    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-    th, td { padding: 14px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px; }
-    th { color: #10b981; font-weight: 700; background: rgba(255,255,255,0.01); }
-
-    .form-group { margin-bottom: 16px; }
-    .form-group label { display: block; margin-bottom: 6px; color: #94a3b8; font-size: 13px; font-weight: 600; }
-    .form-group input, .form-group select, .form-group textarea {
-      width: 100%; padding: 10px 14px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1);
-      background: #081220; color: #fff; outline: none; font-size: 14px;
-    }
-
-    .btn { padding: 10px 20px; border-radius: 6px; border: none; font-weight: 700; cursor: pointer; background: #10b981; color: #060d17; transition: 0.2s; }
-    .btn:hover { background: #059669; }
-    .btn-danger { background: #f87171; color: #fff; }
-    .btn-danger:hover { background: #dc2626; }
-    .price-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Administrador - ARMM</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #0f172a; color: #f8fafc; }
+        .login-box, .admin-panel { background: #1e293b; padding: 20px; border-radius: 8px; max-width: 900px; margin: 0 auto; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        .admin-panel { display: none; }
+        .section { margin-bottom: 25px; border-bottom: 1px solid #334155; padding-bottom: 20px; }
+        input, select, textarea { width: 100%; padding: 10px; margin-top: 5px; margin-bottom: 15px; background: #0f172a; border: 1px solid #334155; color: white; border-radius: 4px; box-sizing: border-box; }
+        button { background: #10b981; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        button:hover { background: #059669; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid #334155; padding: 10px; text-align: left; }
+        th { background: #0f172a; }
+        .flex-row { display: flex; gap: 10px; }
+        .flex-row div { flex: 1; }
+    </style>
 </head>
 <body>
 
-  <!-- ACCESO ADMIN -->
-  <div id="login-admin">
-    <div class="glass-card" style="padding: 40px; width: 340px; text-align: center;">
-      <h2 style="color:#10b981; margin-bottom: 20px;">Acceso Administrador</h2>
-      <div class="form-group" style="position:relative;">
-        <input type="password" id="admin-pass" placeholder="Contraseña de acceso">
-        <i class="fas fa-eye" style="position:absolute; right:12px; top:12px; cursor:pointer; color:#94a3b8;" onclick="togglePass('admin-pass')"></i>
-      </div>
-      <button class="btn" style="width:100%; margin-top:10px;" onclick="loginAdmin()">Ingresar a la Web Admin</button>
-    </div>
-  </div>
-
-  <!-- PANEL LATERAL DE NAVEGACIÓN -->
-  <div class="sidebar">
-    <h2><i class="fas fa-shield-alt"></i> Web Admin</h2>
-    <ul>
-      <li><a class="active" onclick="showSection('sec-pedidos', this)">1. Pedidos Realizados</a></li>
-      <li><a onclick="showSection('sec-productos', this)">2. Gestión de Productos</a></li>
-      <li><a onclick="showSection('sec-usuarios', this)">3. Usuarios Registrados</a></li>
-      <li><a onclick="showSection('sec-ayuda', this)">4. Centro de Ayuda</a></li>
-      <li><a onclick="showSection('sec-cupones', this)">5. Gestión de Cupones</a></li>
-      <li><a onclick="showSection('sec-notif', this)">6. Generar Notificaciones</a></li>
-    </ul>
-  </div>
-
-  <div class="main-content">
-    
-    <!-- 1. Pedidos -->
-    <div id="sec-pedidos" class="section active">
-      <h2 class="section-title">Pedidos Hechos Directamente de la Página Pública</h2>
-      <table class="glass-card">
-        <thead>
-          <tr>
-            <th>ID</th><th>Cliente</th><th>Dirección</th><th>Método de Pago</th><th>Total</th><th>Estado</th><th>Fecha Entrega</th><th>Chat</th>
-          </tr>
-        </thead>
-        <tbody id="tabla-pedidos"></tbody>
-      </table>
+    <!-- Acceso Admin -->
+    <div id="loginBox" class="login-box">
+        <h2>Acceso Administrador</h2>
+        <input type="password" id="adminPass" placeholder="Ingresa contraseña (ARMM123)">
+        <button onclick="validarAcceso()">Ingresar</button>
     </div>
 
-    <!-- 2. Productos, Edición y Acomodo -->
-    <div id="sec-productos" class="section">
-      <h2 class="section-title">Gestión de Productos</h2>
-      <div class="glass-card" style="padding:24px; margin-bottom:25px;">
-        <h3 style="color:#fff; margin-bottom:15px; font-size:18px;">Agregar / Editar Producto</h3>
-        <form onsubmit="saveProduct(event)">
-          <input type="hidden" id="prod-id">
-          
-          <div class="form-group"><label>Nombre</label><input type="text" id="prod-nombre" required></div>
-          <div class="form-group"><label>Categoría</label><input type="text" id="prod-cat" required></div>
-          
-          <div class="form-group">
-            <label>Presentación / Venta</label>
-            <select id="prod-tipo" onchange="renderPriceInputs()">
-              <option value="Pieza">Pieza / Piezas</option>
-              <option value="Litro">Litro (20L, 5L, 1L)</option>
-              <option value="MayoreoMenudeo">Mayoreo y Menudeo</option>
+    <!-- Panel de Control -->
+    <div id="adminPanel" class="admin-panel">
+        <h2>Gestión de Productos y Administración ARMM</h2>
+
+        <!-- Formulario Agregar / Editar Producto -->
+        <div class="section">
+            <h3>Agregar / Editar Producto</h3>
+            <form onsubmit="guardarProducto(event)">
+                <label>Nombre del Producto</label>
+                <input type="text" id="pNombre" required placeholder="Ej. BASE CLORO PARA 20 LTS">
+
+                <label>Categoría</label>
+                <input type="text" id="pCategoria" required placeholder="Ej. CLORO / BASES / PINOL">
+
+                <div class="flex-row">
+                    <div>
+                        <label>Precio 1L ($)</label>
+                        <input type="number" id="pPrecio1L" placeholder="18">
+                    </div>
+                    <div>
+                        <label>Precio 5L ($)</label>
+                        <input type="number" id="pPrecio5L" placeholder="90">
+                    </div>
+                    <div>
+                        <label>Precio 20L ($)</label>
+                        <input type="number" id="pPrecio20L" placeholder="160">
+                    </div>
+                </div>
+
+                <button type="submit" style="background: #10b981;">Guardar Producto</button>
+            </form>
+
+            <h3 style="margin-top: 25px;">Lista de Productos Registrados</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Categoría</th>
+                        <th>Precios (1L / 5L / 20L)</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaProductos"></tbody>
+            </table>
+        </div>
+
+        <!-- Centro de Ayuda -->
+        <div class="section">
+            <h3>Centro de Ayuda (Soporte)</h3>
+            <form onsubmit="registrarYEnviarWhatsApp(event)">
+                <input type="text" id="helpUser" placeholder="Usuario/Credencial" required>
+                <textarea id="helpMsg" placeholder="Escribe el mensaje o problema..." required></textarea>
+                <button type="submit">Registrar y Enviar por WhatsApp</button>
+            </form>
+        </div>
+
+        <!-- Cupones -->
+        <div class="section">
+            <h3>Gestión de Cupones con Fecha de Expiración</h3>
+            <input type="text" placeholder="Código Cupón">
+            <input type="number" placeholder="Monto / Descuento">
+            <label>Fecha de Expiración (Autodestrucción):</label>
+            <input type="date" id="couponExp">
+            <button type="button" onclick="alert('Cupón creado con éxito.')">Crear Cupón</button>
+        </div>
+
+        <!-- Notificaciones -->
+        <div class="section">
+            <h3>Notificaciones Individuales</h3>
+            <input type="text" id="userFilter" placeholder="Buscar usuario..." onkeyup="filtrarUsuarios()">
+            <select id="userSelect" size="3">
+                <option value="1">Usuario: Juan Pérez (ID: 101)</option>
+                <option value="2">Usuario: María Gómez (ID: 102)</option>
             </select>
-          </div>
-
-          <div id="price-fields-container" class="form-group"></div>
-          <button type="submit" class="btn">Guardar Producto</button>
-        </form>
-      </div>
-
-      <table class="glass-card">
-        <thead>
-          <tr>
-            <th>Nombre</th><th>Categoría</th><th>Precio / Opciones</th><th>Presentación</th><th>Acomodo</th><th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody id="tabla-productos"></tbody>
-      </table>
+            <textarea placeholder="Mensaje de notificación..."></textarea>
+            <button type="button" onclick="alert('Notificación enviada.')">Enviar Individual</button>
+        </div>
     </div>
 
-    <!-- 3. Usuarios -->
-    <div id="sec-usuarios" class="section">
-      <h2 class="section-title">Usuarios Registrados</h2>
-      <table class="glass-card">
-        <thead>
-          <tr><th>Nombre</th><th>Apellidos</th><th>Correo</th><th>Teléfono</th><th>Dirección</th><th>Contraseña</th></tr>
-        </thead>
-        <tbody id="tabla-usuarios"></tbody>
-      </table>
-    </div>
+    <script>
+        const productosIniciales = [
+            { nombre: "CLORO", categoria: "CLOROS", precio1L: 14, precio5L: 70, precio20L: 220 },
+            { nombre: "CLORO USO INDUSTRIAL", categoria: "CLOROS", precio1L: 18, precio5L: 90, precio20L: 255 },
+            { nombre: "PASTILLAS DE CLORO (1KG)", categoria: "CLOROS", precio1L: 0, precio5L: 0, precio20L: 120 },
+            { nombre: "PINO (VERDE)", categoria: "PINOL", precio1L: 14, precio5L: 75, precio20L: 190 },
+            { nombre: "PINOL C/EXCEDENTE", categoria: "PINOL", precio1L: 22, precio5L: 110, precio20L: 290 },
+            { nombre: "PINOL AROMAS", categoria: "PINOL", precio1L: 16, precio5L: 65, precio20L: 160 },
+            { nombre: "BASE CLORO USO INDUSTRIAL", categoria: "BASES", precio1L: 0, precio5L: 0, precio20L: 195 },
+            { nombre: "BASE CLORO PARA 20 LTS", categoria: "BASES", precio1L: 18, precio5L: 90, precio20L: 160 },
+            { nombre: "MULTIUSOS AROMA PERFUME", categoria: "BASES", precio1L: 0, precio5L: 0, precio20L: 180 },
+            { nombre: "JABON ROMA BICARBONATO", categoria: "DETERGENTES", precio1L: 24, precio5L: 105, precio20L: 290 },
+            { nombre: "SUAVIZANTE DE ROPA NORMAL", categoria: "SUAVIZANTES", precio1L: 24, precio5L: 120, precio20L: 295 },
+            { nombre: "JABON PARA MANOS", categoria: "LAVAMANOS", precio1L: 26, precio5L: 130, precio20L: 340 },
+            { nombre: "LAVATRASTES", categoria: "LAVATRASTES", precio1L: 29, precio5L: 145, precio20L: 495 },
+            { nombre: "DESENGRAZANTE", categoria: "LIMPIEZA PROFUNDA", precio1L: 25, precio5L: 105, precio20L: 380 }
+        ];
 
-    <!-- 4. Centro de Ayuda -->
-    <div id="sec-ayuda" class="section">
-      <h2 class="section-title">Centro de Ayuda - Solicitudes de Acceso</h2>
-      <table class="glass-card">
-        <thead>
-          <tr><th>Cliente</th><th>Correo</th><th>Teléfono</th><th>Acciones</th></tr>
-        </thead>
-        <tbody id="tabla-ayuda"></tbody>
-      </table>
-    </div>
+        function validarAcceso() {
+            var pass = document.getElementById('adminPass').value;
+            if(pass === 'ARMM123') {
+                document.getElementById('loginBox').style.display = 'none';
+                document.getElementById('adminPanel').style.display = 'block';
+                cargarTablaAdmin();
+            } else {
+                alert('Contraseña incorrecta.');
+            }
+        }
 
-    <!-- 5. Cupones -->
-    <div id="sec-cupones" class="section">
-      <h2 class="section-title">Gestión de Cupones</h2>
-      <div class="glass-card" style="padding:24px; margin-bottom:25px;">
-        <form onsubmit="saveCupon(event)">
-          <div class="form-group"><label>Código de Cupón</label><input type="text" id="cup-codigo" required></div>
-          <div class="form-group"><label>% Descuento</label><input type="number" id="cup-desc" required></div>
-          <div class="form-group"><label>Fecha de Término</label><input type="date" id="cup-fecha-fin" required></div>
-          
-          <div class="form-group">
-            <label>Modo de Aplicación</label>
-            <select id="cup-aplicacion" onchange="toggleCuponFields()">
-              <option value="monto">Por Cantidad Alcanzada en Compra ($)</option>
-              <option value="categoria">Por Categoría Específica</option>
-            </select>
-          </div>
+        function obtenerProductos() {
+            let prods = localStorage.getItem('armm_productos');
+            if(!prods) {
+                localStorage.setItem('armm_productos', JSON.stringify(productosIniciales));
+                return productosIniciales;
+            }
+            return JSON.parse(prods);
+        }
 
-          <div class="form-group" id="field-monto-min">
-            <label>Monto Mínimo de Compra ($)</label>
-            <input type="number" id="cup-min">
-          </div>
+        function guardarProducto(e) {
+            e.preventDefault();
+            let nombre = document.getElementById('pNombre').value;
+            let categoria = document.getElementById('pCategoria').value;
+            let precio1L = document.getElementById('pPrecio1L').value || 0;
+            let precio5L = document.getElementById('pPrecio5L').value || 0;
+            let precio20L = document.getElementById('pPrecio20L').value || 0;
 
-          <div class="form-group" id="field-cat-sel" style="display:none;">
-            <label>Categoría Aplicable</label>
-            <input type="text" id="cup-cat-name" placeholder="Ej. Desinfección">
-          </div>
+            let lista = obtenerProductos();
+            lista.push({ nombre, categoria, precio1L, precio5L, precio20L });
+            localStorage.setItem('armm_productos', JSON.stringify(lista));
 
-          <div class="form-group"><label>Descripción del Cupón</label><input type="text" id="cup-desc-text" required></div>
-          <button type="submit" class="btn">Crear Cupón</button>
-        </form>
-      </div>
+            alert('¡Producto guardado exitosamente!');
+            document.getElementById('pNombre').value = '';
+            document.getElementById('pCategoria').value = '';
+            document.getElementById('pPrecio1L').value = '';
+            document.getElementById('pPrecio5L').value = '';
+            document.getElementById('pPrecio20L').value = '';
+            
+            cargarTablaAdmin();
+        }
 
-      <table class="glass-card">
-        <thead>
-          <tr><th>Código</th><th>% Descuento</th><th>Vence</th><th>Condición</th><th>Descripción</th><th>Acción</th></tr>
-        </thead>
-        <tbody id="tabla-cupones"></tbody>
-      </table>
-    </div>
+        function eliminarProducto(index) {
+            let lista = obtenerProductos();
+            lista.splice(index, 1);
+            localStorage.setItem('armm_productos', JSON.stringify(lista));
+            cargarTablaAdmin();
+        }
 
-    <!-- 6. Generar Notificaciones -->
-    <div id="sec-notif" class="section">
-      <h2 class="section-title">Generar Notificaciones</h2>
-      <div class="glass-card" style="padding:24px;">
-        <form onsubmit="sendNotification(event)">
-          <div class="form-group">
-            <label>Seleccionar Destinatario</label>
-            <select id="notif-user-target"></select>
-          </div>
-          <div class="form-group"><label>Mensaje</label><input type="text" id="notif-msg" required></div>
-          <button type="submit" class="btn">Enviar Notificación</button>
-        </form>
-      </div>
-    </div>
+        function cargarTablaAdmin() {
+            let lista = obtenerProductos();
+            let tbody = document.getElementById('tablaProductos');
+            tbody.innerHTML = '';
 
-  </div>
+            lista.forEach((p, idx) => {
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${p.nombre}</td>
+                    <td>${p.categoria}</td>
+                    <td>1L: $${p.precio1L} | 5L: $${p.precio5L} | 20L: $${p.precio20L}</td>
+                    <td><button style="background: #ef4444;" onclick="eliminarProducto(${idx})">Eliminar</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
 
-  <script>
-    function togglePass(id) {
-      const input = document.getElementById(id);
-      input.type = input.type === 'password' ? 'text' : 'password';
-    }
+        function registrarYEnviarWhatsApp(e) {
+            e.preventDefault();
+            var user = document.getElementById('helpUser').value;
+            var msg = document.getElementById('helpMsg').value;
+            let text = encodeURIComponent(`Soporte para usuario [${user}]: ${msg}`);
+            window.open(`https://wa.me/523351097726?text=${text}`, '_blank');
+        }
 
-    function loginAdmin() {
-      if (document.getElementById('admin-pass').value === 'ARMM123') {
-        document.getElementById('login-admin').style.display = 'none';
-        renderAdminAll();
-      } else { alert('Contraseña incorrecta'); }
-    }
-
-    function showSection(id, btn) {
-      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-      document.querySelectorAll('.sidebar li a').forEach(a => a.classList.remove('active'));
-      document.getElementById(id).classList.add('active');
-      btn.classList.add('active');
-    }
-
-    function renderAdminAll() {
-      renderPriceInputs();
-      renderAdminProducts();
-      renderAdminOrders();
-      renderAdminUsers();
-      renderAdminHelp();
-      renderAdminCupones();
-      populateNotifUsers();
-    }
-
-    function renderPriceInputs() {
-      const tipo = document.getElementById('prod-tipo').value;
-      const container = document.getElementById('price-fields-container');
-
-      if (tipo === 'Litro') {
-        container.innerHTML = `
-          <label>Precios por Litro ($)</label>
-          <div class="price-grid">
-            <div><label style="font-size:11px;">Precio 1L</label><input type="number" id="price-1l" required></div>
-            <div><label style="font-size:11px;">Precio 5L</label><input type="number" id="price-5l" required></div>
-            <div><label style="font-size:11px;">Precio 20L</label><input type="number" id="price-20l" required></div>
-          </div>`;
-      } else if (tipo === 'MayoreoMenudeo') {
-        container.innerHTML = `
-          <div class="price-grid" style="grid-template-columns: 1fr 1fr;">
-            <div><label>Precio Menudeo ($)</label><input type="number" id="price-menudeo" required></div>
-            <div><label>Precio Mayoreo ($)</label><input type="number" id="price-mayoreo" required></div>
-          </div>`;
-      } else {
-        container.innerHTML = `<label>Precio Pieza ($)</label><input type="number" id="price-pieza" required>`;
-      }
-    }
-
-    /* Productos */
-    function saveProduct(e) {
-      e.preventDefault();
-      const products = JSON.parse(localStorage.getItem('products')) || [];
-      const id = document.getElementById('prod-id').value;
-      const tipo = document.getElementById('prod-tipo').value;
-
-      let preciosObj = {};
-      if (tipo === 'Litro') {
-        preciosObj = {
-          p1l: parseFloat(document.getElementById('price-1l').value),
-          p5l: parseFloat(document.getElementById('price-5l').value),
-          p20l: parseFloat(document.getElementById('price-20l').value)
-        };
-      } else if (tipo === 'MayoreoMenudeo') {
-        preciosObj = {
-          menudeo: parseFloat(document.getElementById('price-menudeo').value),
-          mayoreo: parseFloat(document.getElementById('price-mayoreo').value)
-        };
-      } else {
-        preciosObj = { pieza: parseFloat(document.getElementById('price-pieza').value) };
-      }
-
-      const newProd = {
-        id: id ? parseInt(id) : Date.now(),
-        nombre: document.getElementById('prod-nombre').value,
-        categoria: document.getElementById('prod-cat').value,
-        tipo: tipo,
-        precios: preciosObj
-      };
-
-      if (id) {
-        const idx = products.findIndex(p => p.id === parseInt(id));
-        products[idx] = newProd;
-      } else { products.push(newProd); }
-
-      localStorage.setItem('products', JSON.stringify(products));
-      renderAdminProducts();
-      e.target.reset();
-      renderPriceInputs();
-    }
-
-    function renderAdminProducts() {
-      const products = JSON.parse(localStorage.getItem('products')) || [];
-      const tbody = document.getElementById('tabla-productos');
-      tbody.innerHTML = products.map((p, idx) => {
-        let precioTxt = '';
-        if (p.tipo === 'Litro') precioTxt = `1L: $${p.precios.p1l} | 5L: $${p.precios.p5l} | 20L: $${p.precios.p20l}`;
-        else if (p.tipo === 'MayoreoMenudeo') precioTxt = `Menudeo: $${p.precios.menudeo} | Mayoreo: $${p.precios.mayoreo}`;
-        else precioTxt = `Pieza: $${p.precios.pieza}`;
-
-        return `
-          <tr>
-            <td>${p.nombre}</td>
-            <td>${p.categoria}</td>
-            <td>${precioTxt}</td>
-            <td>${p.tipo}</td>
-            <td>
-              <button class="btn" style="padding:2px 6px; font-size:10px;" onclick="moveProduct(${idx}, -1)"><i class="fas fa-arrow-up"></i></button>
-              <button class="btn" style="padding:2px 6px; font-size:10px;" onclick="moveProduct(${idx}, 1)"><i class="fas fa-arrow-down"></i></button>
-            </td>
-            <td>
-              <button class="btn" style="padding:6px 12px; font-size:12px;" onclick="editProduct(${idx})">Editar</button>
-              <button class="btn btn-danger" style="padding:6px 12px; font-size:12px;" onclick="deleteProduct(${idx})">Eliminar</button>
-            </td>
-          </tr>`;
-      }).join('');
-    }
-
-    function moveProduct(idx, dir) {
-      const products = JSON.parse(localStorage.getItem('products'));
-      if (idx + dir < 0 || idx + dir >= products.length) return;
-      const temp = products[idx];
-      products[idx] = products[idx + dir];
-      products[idx + dir] = temp;
-      localStorage.setItem('products', JSON.stringify(products));
-      renderAdminProducts();
-    }
-
-    function editProduct(idx) {
-      const products = JSON.parse(localStorage.getItem('products'));
-      const p = products[idx];
-      document.getElementById('prod-id').value = p.id;
-      document.getElementById('prod-nombre').value = p.nombre;
-      document.getElementById('prod-cat').value = p.categoria;
-      document.getElementById('prod-tipo').value = p.tipo;
-
-      renderPriceInputs();
-
-      if (p.tipo === 'Litro') {
-        document.getElementById('price-1l').value = p.precios.p1l;
-        document.getElementById('price-5l').value = p.precios.p5l;
-        document.getElementById('price-20l').value = p.precios.p20l;
-      } else if (p.tipo === 'MayoreoMenudeo') {
-        document.getElementById('price-menudeo').value = p.precios.menudeo;
-        document.getElementById('price-mayoreo').value = p.precios.mayoreo;
-      } else {
-        document.getElementById('price-pieza').value = p.precios.pieza;
-      }
-    }
-
-    function deleteProduct(idx) {
-      const products = JSON.parse(localStorage.getItem('products'));
-      products.splice(idx, 1);
-      localStorage.setItem('products', JSON.stringify(products));
-      renderAdminProducts();
-    }
-
-    /* Pedidos */
-    function renderAdminOrders() {
-      const orders = JSON.parse(localStorage.getItem('orders')) || [];
-      document.getElementById('tabla-pedidos').innerHTML = orders.map((o, idx) => `
-        <tr>
-          <td>${o.id}</td><td>${o.cliente}</td><td>${o.direccion}</td><td>${o.metodoPago}</td><td>$${o.total}</td>
-          <td>
-            <select onchange="updateOrderStatus(${idx}, this.value)">
-              <option value="Pendiente" ${o.estado === 'Pendiente' ? 'selected' : ''}>Pendiente</option>
-              <option value="En Camino" ${o.estado === 'En Camino' ? 'selected' : ''}>En Camino</option>
-              <option value="Entregado" ${o.estado === 'Entregado' ? 'selected' : ''}>Entregado</option>
-            </select>
-          </td>
-          <td><input type="text" value="${o.fechaEntrega}" onchange="updateOrderDate(${idx}, this.value)"></td>
-          <td>
-            <button class="btn" style="padding:4px 8px; font-size:11px;" onclick="replyOrderChat(${idx})">Responder Chat</button>
-          </td>
-        </tr>`).join('');
-    }
-
-    function updateOrderStatus(idx, val) { const o = JSON.parse(localStorage.getItem('orders')); o[idx].estado = val; localStorage.setItem('orders', JSON.stringify(o)); }
-    function updateOrderDate(idx, val) { const o = JSON.parse(localStorage.getItem('orders')); o[idx].fechaEntrega = val; localStorage.setItem('orders', JSON.stringify(o)); }
-    
-    function replyOrderChat(idx) {
-      const orders = JSON.parse(localStorage.getItem('orders'));
-      const txt = prompt("Respuesta para el cliente:");
-      if (!txt) return;
-      if (!orders[idx].chat) orders[idx].chat = [];
-      orders[idx].chat.push({ author: "Soporte Admin", text: txt });
-      localStorage.setItem('orders', JSON.stringify(orders));
-      alert("Respuesta enviada.");
-    }
-
-    /* Usuarios */
-    function renderAdminUsers() {
-      const users = JSON.parse(localStorage.getItem('users')) || [];
-      document.getElementById('tabla-usuarios').innerHTML = users.map(u => `
-        <tr><td>${u.nombre}</td><td>${u.apellidos}</td><td>${u.correo}</td><td>${u.telefono}</td><td>${u.direccion}</td><td>${u.pass}</td></tr>`).join('');
-    }
-
-    /* Centro de Ayuda */
-    function renderAdminHelp() {
-      const reqs = JSON.parse(localStorage.getItem('help_requests')) || [];
-      document.getElementById('tabla-ayuda').innerHTML = reqs.map((r, idx) => `
-        <tr>
-          <td>${r.nombre} ${r.apellidos}</td><td>${r.correo}</td><td>${r.telefono}</td>
-          <td>
-            <button class="btn" onclick="grantAccess('${r.correo}', '${r.telefono}', ${idx})">Dar Acceso</button>
-            <button class="btn btn-danger" onclick="denyAccess('${r.telefono}', ${idx})">Denegar Acceso</button>
-          </td>
-        </tr>`).join('');
-    }
-
-    function grantAccess(correo, tel, idx) {
-      const users = JSON.parse(localStorage.getItem('users')) || [];
-      const reqs = JSON.parse(localStorage.getItem('help_requests'));
-      const u = prompt("Generar/Confirmar usuario (correo):", correo);
-      const p = prompt("Generar contraseña:");
-
-      if (u && p) {
-        users.push({ nombre: reqs[idx].nombre, apellidos: reqs[idx].apellidos, correo: u, telefono: tel, direccion: "Registrado por Soporte", pass: p });
-        localStorage.setItem('users', JSON.stringify(users));
-        reqs.splice(idx, 1);
-        localStorage.setItem('help_requests', JSON.stringify(reqs));
-        
-        window.open(`https://wa.me/52${tel}?text=Acceso%20concedido:%20Usuario:%20${u}%20Pass:%20${p}`);
-        renderAdminHelp();
-        renderAdminUsers();
-      }
-    }
-
-    function denyAccess(tel, idx) {
-      const reqs = JSON.parse(localStorage.getItem('help_requests'));
-      reqs.splice(idx, 1);
-      localStorage.setItem('help_requests', JSON.stringify(reqs));
-      window.open(`https://wa.me/52${tel}?text=Los%20datos%20de%20tu%20cuenta%20no%20coinciden%20con%20los%20registrados,%20crea%20una%20cuenta%20nueva%20o%20comun%C3%ADcate%20con%20nosotros%20al%203312345678`);
-      renderAdminHelp();
-    }
-
-    /* Cupones */
-    function toggleCuponFields() {
-      const mode = document.getElementById('cup-aplicacion').value;
-      document.getElementById('field-monto-min').style.display = mode === 'monto' ? 'block' : 'none';
-      document.getElementById('field-cat-sel').style.display = mode === 'categoria' ? 'block' : 'none';
-    }
-
-    function saveCupon(e) {
-      e.preventDefault();
-      const cupones = JSON.parse(localStorage.getItem('cupones')) || [];
-      const mode = document.getElementById('cup-aplicacion').value;
-
-      cupones.push({
-        codigo: document.getElementById('cup-codigo').value.toUpperCase(),
-        descuento: parseFloat(document.getElementById('cup-desc').value),
-        fechaFin: document.getElementById('cup-fecha-fin').value,
-        aplicacion: mode,
-        montoMin: mode === 'monto' ? parseFloat(document.getElementById('cup-min').value) : 0,
-        categoriaSel: mode === 'categoria' ? document.getElementById('cup-cat-name').value : '',
-        desc: document.getElementById('cup-desc-text').value
-      });
-
-      localStorage.setItem('cupones', JSON.stringify(cupones));
-      renderAdminCupones();
-      e.target.reset();
-    }
-
-    function renderAdminCupones() {
-      const cupones = JSON.parse(localStorage.getItem('cupones')) || [];
-      document.getElementById('tabla-cupones').innerHTML = cupones.map((c, idx) => `
-        <tr>
-          <td>${c.codigo}</td><td>${c.descuento}%</td><td>${c.fechaFin}</td>
-          <td>${c.aplicacion === 'monto' ? 'Monto mín: $' + c.montoMin : 'Cat: ' + c.categoriaSel}</td>
-          <td>${c.desc}</td>
-          <td><button class="btn btn-danger" onclick="deleteCupon(${idx})">Borrar</button></td>
-        </tr>`).join('');
-    }
-
-    function deleteCupon(idx) {
-      const cupones = JSON.parse(localStorage.getItem('cupones'));
-      cupones.splice(idx, 1);
-      localStorage.setItem('cupones', JSON.stringify(cupones));
-      renderAdminCupones();
-    }
-
-    /* Notificaciones */
-    function populateNotifUsers() {
-      const users = JSON.parse(localStorage.getItem('users')) || [];
-      const sel = document.getElementById('notif-user-target');
-      sel.innerHTML = `<option value="all">Todos los clientes (Global)</option>` + users.map(u => `<option value="${u.correo}">${u.nombre} ${u.apellidos} (${u.correo})</option>`).join('');
-    }
-
-    function sendNotification(e) {
-      e.preventDefault();
-      const notifs = JSON.parse(localStorage.getItem('notifications')) || [];
-      notifs.push({
-        destinatario: document.getElementById('notif-user-target').value,
-        mensaje: document.getElementById('notif-msg').value,
-        fecha: new Date().toLocaleDateString()
-      });
-      localStorage.setItem('notifications', JSON.stringify(notifs));
-      alert('Notificación enviada.');
-      e.target.reset();
-    }
-  </script>
+        function filtrarUsuarios() {
+            var filter = document.getElementById('userFilter').value.toLowerCase();
+            var options = document.getElementById('userSelect').options;
+            for (var i = 0; i < options.length; i++) {
+                var txt = options[i].text.toLowerCase();
+                options[i].style.display = txt.includes(filter) ? '' : 'none';
+            }
+        }
+    </script>
 </body>
 </html>
