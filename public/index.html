@@ -11,7 +11,7 @@
         .leyenda { background: #ffeb3b; padding: 5px 10px; text-align: center; font-weight: bold; font-size: 0.85em; }
         .container { padding: 20px; }
         .search-bar { margin-bottom: 20px; width: 100%; padding: 10px; box-sizing: border-box; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; }
         .card { background: #fff; border: 1px solid #ddd; padding: 15px; border-radius: 5px; text-align: center; }
         .user-menu { position: relative; display: inline-block; }
         .dropdown { display: none; position: absolute; right: 0; background: white; border: 1px solid #ccc; box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 200px; z-index: 10; }
@@ -43,14 +43,11 @@
     </header>
 
     <div class="container">
-        <!-- BLOQUE 2: Buscador -->
         <input type="text" class="search-bar" id="searchInput" placeholder="Buscar productos o categorías..." onkeyup="filtrarProductos()">
 
-        <!-- BLOQUE 1 & Catalogo -->
         <h2>Productos</h2>
         <div class="grid" id="productGrid"></div>
 
-        <!-- Carrito -->
         <hr>
         <h2>Carrito de Compras</h2>
         <div id="carritoItems">El carrito está vacío.</div>
@@ -58,7 +55,6 @@
         <button onclick="pagarSPEI()">Pagar con SPEI (WhatsApp)</button>
         <button onclick="pagarAlRecibir()">Pagar al Recibir (Efectivo/Tarjeta)</button>
 
-        <!-- BLOQUE 3: Sobre la Empresa y Reseñas -->
         <hr>
         <h2>Sobre la Empresa</h2>
         <p><strong>Propósito:</strong> Ofrecer productos de calidad al mejor precio.</p>
@@ -70,7 +66,6 @@
         <div class="review-card">"Los productos son de muy buena calidad." - María G.</div>
     </div>
 
-    <!-- Modal Olvidaste / Cambiar Contraseña -->
     <div id="passModal" class="modal">
         <div class="modal-content">
             <h3>Cambiar Contraseña</h3>
@@ -94,18 +89,30 @@
                     div.className = 'card';
                     div.setAttribute('data-name', p.nombre.toLowerCase());
                     div.setAttribute('data-category', p.categoria.toLowerCase());
+
+                    let detallePrecios = p.presentacion === 'Pieza' 
+                        ? `Menudeo: $${p.p1 || '-'} | Mayoreo: $${p.p20 || '-'}`
+                        : `1L: $${p.p1 || '-'} | 5L: $${p.p5 || '-'} | 20L: $${p.p20 || '-'}`;
+
                     div.innerHTML = `
                         <h3>${p.nombre}</h3>
-                        <p>Categoría: ${p.categoria}</p>
-                        <p><strong>Precios:</strong> 1L: $${p.p1 || '-'} | 5L: $${p.p5 || '-'} | 20L: $${p.p20 || '-'}</p>
+                        <p><strong>Categoría:</strong> ${p.categoria}</p>
+                        <p style="font-size: 0.9em; color: #555;">${detallePrecios}</p>
                         <button onclick="agregarAlCarrito('${p.nombre}')">Agregar al Carrito</button>
                     `;
                     grid.appendChild(div);
                 });
             } else {
-                grid.innerHTML = '<p>No hay productos registrados aún.</p>';
+                grid.innerHTML = '<p>No hay productos registrados. Ingresa al panel de Admin para inicializar la lista.</p>';
             }
         }
+
+        // Sincronización automática en tiempo real si el admin realiza cambios en otra pestaña
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'armm_productos') {
+                cargarProductosWeb();
+            }
+        });
 
         function toggleMenu() {
             var dd = document.getElementById('userDropdown');
@@ -152,3 +159,4 @@
     </script>
 </body>
 </html>
+
