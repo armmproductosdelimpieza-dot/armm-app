@@ -3,210 +3,177 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel Administrador - ARMM</title>
+    <title>Web Admin</title>
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; background: #0f172a; color: #f8fafc; }
-        .login-box, .admin-panel { background: #1e293b; padding: 20px; border-radius: 8px; max-width: 900px; margin: 0 auto; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
-        .admin-panel { display: none; }
-        .section { margin-bottom: 25px; border-bottom: 1px solid #334155; padding-bottom: 20px; }
-        input, select, textarea { width: 100%; padding: 10px; margin-top: 5px; margin-bottom: 15px; background: #0f172a; border: 1px solid #334155; color: white; border-radius: 4px; box-sizing: border-box; }
-        button { background: #10b981; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; }
-        button:hover { background: #059669; }
+        body { font-family: Arial, sans-serif; margin: 0; background-color: #0b1329; color: #fff; display: flex; }
+        .sidebar { width: 220px; background-color: #0a1122; padding: 20px; min-height: 100vh; }
+        .sidebar h2 { color: #00e699; font-size: 1.2em; margin-bottom: 30px; }
+        .sidebar ul { list-style: none; padding: 0; }
+        .sidebar li { margin-bottom: 20px; color: #8a99ad; cursor: pointer; }
+        .sidebar li.active { color: #00e699; background: #0f2238; padding: 10px; border-radius: 5px; }
+        .content { flex: 1; padding: 30px; }
+        .content h1 { color: #00e699; margin-top: 0; }
+        .card-box { background-color: #101c38; padding: 25px; border-radius: 8px; margin-bottom: 25px; border: 1px solid #1a2b4c; }
+        .card-box h3 { margin-top: 0; color: #fff; }
+        label { display: block; font-size: 0.85em; color: #8a99ad; margin-bottom: 5px; margin-top: 15px; }
+        input, select { width: 100%; padding: 10px; background-color: #070d1d; border: 1px solid #1a2b4c; color: #fff; border-radius: 4px; box-sizing: border-box; }
+        .row-3 { display: flex; gap: 15px; }
+        .row-3 > div { flex: 1; }
+        .btn-green { background-color: #00e699; color: #0b1329; border: none; padding: 10px 20px; font-weight: bold; border-radius: 5px; cursor: pointer; margin-top: 15px; }
+        .btn-green:hover { background-color: #00c482; }
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { border: 1px solid #334155; padding: 10px; text-align: left; }
-        th { background: #0f172a; }
-        .flex-row { display: flex; gap: 10px; }
-        .flex-row div { flex: 1; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #1a2b4c; }
+        th { color: #00e699; font-size: 0.9em; }
     </style>
 </head>
 <body>
 
-    <!-- Acceso Admin -->
-    <div id="loginBox" class="login-box">
-        <h2>Acceso Administrador</h2>
-        <input type="password" id="adminPass" placeholder="Ingresa contraseña (ARMM123)">
-        <button onclick="validarAcceso()">Ingresar</button>
+    <div class="sidebar">
+        <h2>🛡️ Web Admin</h2>
+        <ul>
+            <li>1. Pedidos Realizados</li>
+            <li class="active">2. Gestión de Productos</li>
+            <li>3. Usuarios Registrados</li>
+            <li>4. Centro de Ayuda</li>
+            <li>5. Gestión de Cupones</li>
+            <li>6. Generar Notificaciones</li>
+        </ul>
     </div>
 
-    <!-- Panel de Control -->
-    <div id="adminPanel" class="admin-panel">
-        <h2>Gestión de Productos y Administración ARMM</h2>
+    <div class="content">
+        <h1>Gestión de Productos</h1>
 
-        <!-- Formulario Agregar / Editar Producto -->
-        <div class="section">
+        <div class="card-box">
             <h3>Agregar / Editar Producto</h3>
             <form onsubmit="guardarProducto(event)">
-                <label>Nombre del Producto</label>
-                <input type="text" id="pNombre" required placeholder="Ej. BASE CLORO PARA 20 LTS">
+                <label>Nombre</label>
+                <input type="text" id="nombre" required>
 
                 <label>Categoría</label>
-                <input type="text" id="pCategoria" required placeholder="Ej. CLORO / BASES / PINOL">
+                <input type="text" id="categoria" required>
 
-                <div class="flex-row">
+                <label>Presentación / Venta</label>
+                <select id="presentacion">
+                    <option value="Litro (20L, 5L, 1L)">Litro (20L, 5L, 1L)</option>
+                    <option value="Pieza">Pieza</option>
+                </select>
+
+                <label>Precios por Litro ($)</label>
+                <div class="row-3">
                     <div>
-                        <label>Precio 1L ($)</label>
-                        <input type="number" id="pPrecio1L" placeholder="18">
+                        <label>Precio 1L</label>
+                        <input type="number" id="p1">
                     </div>
                     <div>
-                        <label>Precio 5L ($)</label>
-                        <input type="number" id="pPrecio5L" placeholder="90">
+                        <label>Precio 5L</label>
+                        <input type="number" id="p5">
                     </div>
                     <div>
-                        <label>Precio 20L ($)</label>
-                        <input type="number" id="pPrecio20L" placeholder="160">
+                        <label>Precio 20L</label>
+                        <input type="number" id="p20">
                     </div>
                 </div>
 
-                <button type="submit" style="background: #10b981;">Guardar Producto</button>
+                <button type="submit" class="btn-green">Guardar Producto</button>
             </form>
+        </div>
 
-            <h3 style="margin-top: 25px;">Lista de Productos Registrados</h3>
+        <div class="card-box">
             <table>
                 <thead>
                     <tr>
                         <th>Nombre</th>
                         <th>Categoría</th>
-                        <th>Precios (1L / 5L / 20L)</th>
+                        <th>Precio / Opciones</th>
+                        <th>Presentación</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
-                <tbody id="tablaProductos"></tbody>
+                <tbody id="tablaAdmin"></tbody>
             </table>
-        </div>
-
-        <!-- Centro de Ayuda -->
-        <div class="section">
-            <h3>Centro de Ayuda (Soporte)</h3>
-            <form onsubmit="registrarYEnviarWhatsApp(event)">
-                <input type="text" id="helpUser" placeholder="Usuario/Credencial" required>
-                <textarea id="helpMsg" placeholder="Escribe el mensaje o problema..." required></textarea>
-                <button type="submit">Registrar y Enviar por WhatsApp</button>
-            </form>
-        </div>
-
-        <!-- Cupones -->
-        <div class="section">
-            <h3>Gestión de Cupones con Fecha de Expiración</h3>
-            <input type="text" placeholder="Código Cupón">
-            <input type="number" placeholder="Monto / Descuento">
-            <label>Fecha de Expiración (Autodestrucción):</label>
-            <input type="date" id="couponExp">
-            <button type="button" onclick="alert('Cupón creado con éxito.')">Crear Cupón</button>
-        </div>
-
-        <!-- Notificaciones -->
-        <div class="section">
-            <h3>Notificaciones Individuales</h3>
-            <input type="text" id="userFilter" placeholder="Buscar usuario..." onkeyup="filtrarUsuarios()">
-            <select id="userSelect" size="3">
-                <option value="1">Usuario: Juan Pérez (ID: 101)</option>
-                <option value="2">Usuario: María Gómez (ID: 102)</option>
-            </select>
-            <textarea placeholder="Mensaje de notificación..."></textarea>
-            <button type="button" onclick="alert('Notificación enviada.')">Enviar Individual</button>
         </div>
     </div>
 
     <script>
-        const productosIniciales = [
-            { nombre: "CLORO", categoria: "CLOROS", precio1L: 14, precio5L: 70, precio20L: 220 },
-            { nombre: "CLORO USO INDUSTRIAL", categoria: "CLOROS", precio1L: 18, precio5L: 90, precio20L: 255 },
-            { nombre: "PASTILLAS DE CLORO (1KG)", categoria: "CLOROS", precio1L: 0, precio5L: 0, precio20L: 120 },
-            { nombre: "PINO (VERDE)", categoria: "PINOL", precio1L: 14, precio5L: 75, precio20L: 190 },
-            { nombre: "PINOL C/EXCEDENTE", categoria: "PINOL", precio1L: 22, precio5L: 110, precio20L: 290 },
-            { nombre: "PINOL AROMAS", categoria: "PINOL", precio1L: 16, precio5L: 65, precio20L: 160 },
-            { nombre: "BASE CLORO USO INDUSTRIAL", categoria: "BASES", precio1L: 0, precio5L: 0, precio20L: 195 },
-            { nombre: "BASE CLORO PARA 20 LTS", categoria: "BASES", precio1L: 18, precio5L: 90, precio20L: 160 },
-            { nombre: "MULTIUSOS AROMA PERFUME", categoria: "BASES", precio1L: 0, precio5L: 0, precio20L: 180 },
-            { nombre: "JABON ROMA BICARBONATO", categoria: "DETERGENTES", precio1L: 24, precio5L: 105, precio20L: 290 },
-            { nombre: "SUAVIZANTE DE ROPA NORMAL", categoria: "SUAVIZANTES", precio1L: 24, precio5L: 120, precio20L: 295 },
-            { nombre: "JABON PARA MANOS", categoria: "LAVAMANOS", precio1L: 26, precio5L: 130, precio20L: 340 },
-            { nombre: "LAVATRASTES", categoria: "LAVATRASTES", precio1L: 29, precio5L: 145, precio20L: 495 },
-            { nombre: "DESENGRAZANTE", categoria: "LIMPIEZA PROFUNDA", precio1L: 25, precio5L: 105, precio20L: 380 }
+        // Catálogo extraído del Excel
+        const productosExcel = [
+            {"nombre": "CLORO", "categoria": "CLOROS", "presentacion": "Litro (20L, 5L, 1L)", "p1": 14.0, "p5": 70.0, "p20": 220.0},
+            {"nombre": "CLORO USO INDUSTRIAL", "categoria": "CLOROS", "presentacion": "Litro (20L, 5L, 1L)", "p1": 18.0, "p5": 90.0, "p20": 255.0},
+            {"nombre": "PASTILLAS DE CLORO", "categoria": "CLOROS", "presentacion": "Litro (20L, 5L, 1L)", "p1": 0, "p5": 0, "p20": 120.0},
+            {"nombre": "PINO (VERDE)", "categoria": "PINOL", "presentacion": "Litro (20L, 5L, 1L)", "p1": 14.0, "p5": 75.0, "p20": 190.0},
+            {"nombre": "PINOL C/EXCEDENTE", "categoria": "PINOL", "presentacion": "Litro (20L, 5L, 1L)", "p1": 22.0, "p5": 110.0, "p20": 290.0},
+            {"nombre": "PINO EXTRA", "categoria": "PINOL", "presentacion": "Litro (20L, 5L, 1L)", "p1": 26.0, "p5": 115.0, "p20": 370.0},
+            {"nombre": "PINOL AROMAS", "categoria": "PINOL", "presentacion": "Litro (20L, 5L, 1L)", "p1": 16.0, "p5": 65.0, "p20": 160.0},
+            {"nombre": "PINOL AROMAS PLUS", "categoria": "PINOL", "presentacion": "Litro (20L, 5L, 1L)", "p1": 22.0, "p5": 95.0, "p20": 310.0},
+            {"nombre": "BASE CLORO USO INDUSTRIAL", "categoria": "BASES", "presentacion": "Litro (20L, 5L, 1L)", "p1": 0, "p5": 0, "p20": 195.0},
+            {"nombre": "BASE CLORO PARA 20 LTS", "categoria": "BASES", "presentacion": "Litro (20L, 5L, 1L)", "p1": 18.0, "p5": 90.0, "p20": 160.0},
+            {"nombre": "MULTIUSOS AROMA PERFUME", "categoria": "BASES", "presentacion": "Litro (20L, 5L, 1L)", "p1": 0, "p5": 0, "p20": 180.0},
+            {"nombre": "MULTIUSOS DOBLE AROMA", "categoria": "BASES", "presentacion": "Litro (20L, 5L, 1L)", "p1": 0, "p5": 0, "p20": 260.0},
+            {"nombre": "JABON ROMA BICARBONATO", "categoria": "DETERGENTES", "presentacion": "Litro (20L, 5L, 1L)", "p1": 24.0, "p5": 105.0, "p20": 290.0},
+            {"nombre": "SUAVIZANTE DE ROPA NORMAL", "categoria": "SUAVIZANTES", "presentacion": "Litro (20L, 5L, 1L)", "p1": 24.0, "p5": 120.0, "p20": 295.0},
+            {"nombre": "JABON PARA MANOS", "categoria": "LAVAMANOS", "presentacion": "Litro (20L, 5L, 1L)", "p1": 26.0, "p5": 130.0, "p20": 340.0},
+            {"nombre": "LAVATRASTES", "categoria": "LAVATRASTES", "presentacion": "Litro (20L, 5L, 1L)", "p1": 29.0, "p5": 145.0, "p20": 495.0},
+            {"nombre": "DESENGRAZANTE", "categoria": "LIMPIEZA PROFUNDA", "presentacion": "Litro (20L, 5L, 1L)", "p1": 25.0, "p5": 105.0, "p20": 380.0},
+            {"nombre": "CAJA HIGIENICO DALIA 180", "categoria": "JARCERÍA", "presentacion": "Pieza", "p1": 0, "p5": 0, "p20": 490.0},
+            {"nombre": "TRAPEADOR MICROFIBRA ESPAÑOLA", "categoria": "JARCERÍA", "presentacion": "Pieza", "p1": 115.0, "p5": 0, "p20": 98.0},
+            {"nombre": "ESCOBA VENECIANA", "categoria": "JARCERÍA", "presentacion": "Pieza", "p1": 95.5, "p5": 0, "p20": 85.5}
         ];
 
-        function validarAcceso() {
-            var pass = document.getElementById('adminPass').value;
-            if(pass === 'ARMM123') {
-                document.getElementById('loginBox').style.display = 'none';
-                document.getElementById('adminPanel').style.display = 'block';
-                cargarTablaAdmin();
-            } else {
-                alert('Contraseña incorrecta.');
+        function obtenerLista() {
+            let p = localStorage.getItem('armm_productos');
+            if(!p) {
+                localStorage.setItem('armm_productos', JSON.stringify(productosExcel));
+                return productosExcel;
             }
+            return JSON.parse(p);
         }
 
-        function obtenerProductos() {
-            let prods = localStorage.getItem('armm_productos');
-            if(!prods) {
-                localStorage.setItem('armm_productos', JSON.stringify(productosIniciales));
-                return productosIniciales;
-            }
-            return JSON.parse(prods);
-        }
-
-        function guardarProducto(e) {
-            e.preventDefault();
-            let nombre = document.getElementById('pNombre').value;
-            let categoria = document.getElementById('pCategoria').value;
-            let precio1L = document.getElementById('pPrecio1L').value || 0;
-            let precio5L = document.getElementById('pPrecio5L').value || 0;
-            let precio20L = document.getElementById('pPrecio20L').value || 0;
-
-            let lista = obtenerProductos();
-            lista.push({ nombre, categoria, precio1L, precio5L, precio20L });
-            localStorage.setItem('armm_productos', JSON.stringify(lista));
-
-            alert('¡Producto guardado exitosamente!');
-            document.getElementById('pNombre').value = '';
-            document.getElementById('pCategoria').value = '';
-            document.getElementById('pPrecio1L').value = '';
-            document.getElementById('pPrecio5L').value = '';
-            document.getElementById('pPrecio20L').value = '';
-            
-            cargarTablaAdmin();
-        }
-
-        function eliminarProducto(index) {
-            let lista = obtenerProductos();
-            lista.splice(index, 1);
-            localStorage.setItem('armm_productos', JSON.stringify(lista));
-            cargarTablaAdmin();
-        }
-
-        function cargarTablaAdmin() {
-            let lista = obtenerProductos();
-            let tbody = document.getElementById('tablaProductos');
+        function renderTabla() {
+            let lista = obtenerLista();
+            let tbody = document.getElementById('tablaAdmin');
             tbody.innerHTML = '';
 
-            lista.forEach((p, idx) => {
+            lista.forEach((prod, index) => {
                 let tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td>${p.nombre}</td>
-                    <td>${p.categoria}</td>
-                    <td>1L: $${p.precio1L} | 5L: $${p.precio5L} | 20L: $${p.precio20L}</td>
-                    <td><button style="background: #ef4444;" onclick="eliminarProducto(${idx})">Eliminar</button></td>
+                    <td>${prod.nombre}</td>
+                    <td>${prod.categoria}</td>
+                    <td>1L: $${prod.p1 || '-'} | 5L: $${prod.p5 || '-'} | 20L: $${prod.p20 || '-'}</td>
+                    <td>${prod.presentacion}</td>
+                    <td><button style="background:red; color:white; border:none; padding:5px 10px; border-radius:3px; cursor:pointer;" onclick="eliminar(${index})">Eliminar</button></td>
                 `;
                 tbody.appendChild(tr);
             });
         }
 
-        function registrarYEnviarWhatsApp(e) {
+        function guardarProducto(e) {
             e.preventDefault();
-            var user = document.getElementById('helpUser').value;
-            var msg = document.getElementById('helpMsg').value;
-            let text = encodeURIComponent(`Soporte para usuario [${user}]: ${msg}`);
-            window.open(`https://wa.me/523351097726?text=${text}`, '_blank');
+            let nuevo = {
+                nombre: document.getElementById('nombre').value,
+                categoria: document.getElementById('categoria').value,
+                presentacion: document.getElementById('presentacion').value,
+                p1: document.getElementById('p1').value || 0,
+                p5: document.getElementById('p5').value || 0,
+                p20: document.getElementById('p20').value || 0
+            };
+
+            let lista = obtenerLista();
+            lista.push(nuevo);
+            localStorage.setItem('armm_productos', JSON.stringify(lista));
+
+            alert('¡Producto guardado e integrado a la Web Pública!');
+            document.querySelector('form').reset();
+            renderTabla();
         }
 
-        function filtrarUsuarios() {
-            var filter = document.getElementById('userFilter').value.toLowerCase();
-            var options = document.getElementById('userSelect').options;
-            for (var i = 0; i < options.length; i++) {
-                var txt = options[i].text.toLowerCase();
-                options[i].style.display = txt.includes(filter) ? '' : 'none';
-            }
+        function eliminar(index) {
+            let lista = obtenerLista();
+            lista.splice(index, 1);
+            localStorage.setItem('armm_productos', JSON.stringify(lista));
+            renderTabla();
         }
+
+        window.onload = renderTabla;
     </script>
 </body>
 </html>
