@@ -5,158 +5,585 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ARMM Productos y Accesorios de Limpieza</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f9; }
-        header { background: #333; color: #fff; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
-        .slogan { font-size: 0.9em; color: #ccc; }
-        .leyenda { background: #ffeb3b; padding: 5px 10px; text-align: center; font-weight: bold; font-size: 0.85em; }
-        .container { padding: 20px; }
-        .search-bar { margin-bottom: 20px; width: 100%; padding: 10px; box-sizing: border-box; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 15px; }
-        .card { background: #fff; border: 1px solid #ddd; padding: 15px; border-radius: 5px; text-align: center; }
-        .user-menu { position: relative; display: inline-block; }
-        .dropdown { display: none; position: absolute; right: 0; background: white; border: 1px solid #ccc; box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 200px; z-index: 10; }
-        .dropdown a, .dropdown div { display: block; padding: 10px; text-decoration: none; color: #333; cursor: pointer; }
-        .dropdown a:hover { background: #f0f0f0; }
-        .modal { display: none; position: fixed; top: 0; left:0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; }
-        .modal-content { background: white; padding: 20px; border-radius: 5px; width: 300px; }
-        .review-card { background: #fff; border-left: 4px solid #007bff; padding: 10px; margin-top: 10px; font-style: italic; }
+        :root {
+            --bg-dark: #0a111e;
+            --card-bg: rgba(16, 28, 50, 0.65);
+            --card-border: rgba(0, 230, 153, 0.2);
+            --accent-green: #00e699;
+            --accent-green-hover: #00b377;
+            --text-main: #ffffff;
+            --text-muted: #8a99ad;
+        }
+
+        * { box-sizing: border-box; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+        body { background-color: var(--bg-dark); color: var(--text-main); margin: 0; padding: 0; min-height: 100vh; overflow-x: hidden; }
+
+        /* Liquid Glass Bar */
+        .glass-nav {
+            background: rgba(10, 17, 30, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--card-border);
+            position: sticky; top: 0; z-index: 90;
+            padding: 15px 40px; display: flex; justify-content: space-between; align-items: center;
+        }
+
+        .brand-logo { display: flex; align-items: center; gap: 12px; }
+        .brand-avatar { background: var(--accent-green); color: var(--bg-dark); font-weight: 900; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2em; box-shadow: 0 0 15px rgba(0,230,153,0.4); }
+        .brand-title { font-size: 1.3em; font-weight: 800; letter-spacing: 0.5px; }
+        .brand-subtitle { font-size: 0.75em; color: var(--accent-green); text-transform: uppercase; letter-spacing: 1px; }
+
+        .banner-alert { background: linear-gradient(90deg, rgba(0,230,153,0.15), rgba(10,17,30,0.8)); border-bottom: 1px solid var(--card-border); text-align: center; padding: 10px; font-size: 0.88em; color: #e0e0e0; }
+        .banner-alert a { color: var(--accent-green); font-weight: bold; text-decoration: none; }
+
+        .nav-actions { display: flex; gap: 12px; align-items: center; }
+        .glass-btn {
+            background: rgba(255, 255, 255, 0.05); border: 1px solid var(--card-border);
+            color: var(--text-main); padding: 8px 18px; border-radius: 20px;
+            cursor: pointer; transition: all 0.3s ease; font-weight: 600; font-size: 0.9em;
+            display: flex; align-items: center; gap: 8px; backdrop-filter: blur(8px);
+        }
+        .glass-btn:hover { background: var(--accent-green); color: var(--bg-dark); box-shadow: 0 0 12px rgba(0,230,153,0.5); transform: translateY(-1px); }
+        .cart-badge { background: var(--accent-green); color: var(--bg-dark); border-radius: 50%; padding: 2px 7px; font-size: 0.8em; font-weight: 800; }
+
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+
+        /* Search Bar */
+        .search-container { position: relative; margin-bottom: 40px; }
+        .search-input {
+            width: 100%; background: rgba(16, 28, 50, 0.5); border: 1px solid var(--card-border);
+            padding: 16px 20px 16px 45px; border-radius: 30px; color: #fff; font-size: 1em;
+            backdrop-filter: blur(10px); transition: all 0.3s ease; outline: none;
+        }
+        .search-input:focus { border-color: var(--accent-green); box-shadow: 0 0 20px rgba(0,230,153,0.2); }
+        .search-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); opacity: 0.6; }
+
+        /* Products Grid */
+        .section-title { font-size: 2em; margin-bottom: 25px; font-weight: 800; }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; }
+
+        .glass-card {
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            border-radius: 16px; padding: 22px; backdrop-filter: blur(12px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden;
+        }
+        .glass-card:hover { transform: translateY(-5px); border-color: var(--accent-green); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .tag-category { background: rgba(0, 230, 153, 0.12); color: var(--accent-green); padding: 4px 10px; border-radius: 12px; font-size: 0.7em; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; display: inline-block; margin-bottom: 12px; border: 1px solid rgba(0, 230, 153, 0.3); }
+
+        .product-title { font-size: 1.25em; font-weight: 700; margin: 0 0 15px 0; }
+        .select-label { font-size: 0.75em; color: var(--text-muted); display: block; margin-bottom: 6px; }
+        .glass-select {
+            width: 100%; background: rgba(7, 13, 29, 0.8); border: 1px solid var(--card-border);
+            color: #fff; padding: 10px 14px; border-radius: 8px; margin-bottom: 15px; outline: none; cursor: pointer;
+        }
+        .btn-add {
+            width: 100%; background: var(--accent-green); color: var(--bg-dark); border: none;
+            padding: 12px; border-radius: 10px; font-weight: 800; cursor: pointer; transition: all 0.3s ease;
+            display: flex; justify-content: center; align-items: center; gap: 8px;
+        }
+        .btn-add:hover { background: #00ffaa; box-shadow: 0 0 15px rgba(0,230,153,0.6); }
+
+        /* Modals Glassmorphism */
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(4, 8, 15, 0.85); backdrop-filter: blur(12px);
+            justify-content: center; align-items: center; z-index: 1000; animation: fadeIn 0.3s ease;
+        }
+        .modal-content {
+            background: rgba(16, 28, 50, 0.9); border: 1px solid var(--card-border);
+            padding: 30px; border-radius: 20px; width: 90%; max-width: 450px;
+            max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+        }
+        .input-glass {
+            width: 100%; background: rgba(7, 13, 29, 0.9); border: 1px solid var(--card-border);
+            padding: 12px 15px; border-radius: 8px; color: #fff; margin-bottom: 12px; outline: none;
+        }
+        .input-glass:focus { border-color: var(--accent-green); }
+        .pwd-field { position: relative; }
+        .eye-toggle { position: absolute; right: 12px; top: 12px; cursor: pointer; opacity: 0.7; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
     </style>
 </head>
 <body>
 
-    <div class="leyenda">⚠️ Para completar tu registro o resolver dudas, contáctanos por WhatsApp.</div>
+    <div class="banner-alert">
+        ⚠️ Regístrate para realizar un pedido o realízalo directamente a nuestro <a href="https://wa.me/525551234567" target="_blank">WhatsApp</a>
+    </div>
 
-    <header>
-        <div>
-            <h1>Mi Tienda</h1>
-            <div class="slogan">Tu tienda de confianza con más de 3 años de experiencia.</div>
-        </div>
-        <div class="user-menu">
-            <button onclick="toggleMenu()">👤 Mi Cuenta</button>
-            <div id="userDropdown" class="dropdown">
-                <div><strong>Mis Datos</strong></div>
-                <div><strong>Mis Pedidos</strong></div>
-                <div onclick="abrirChat()">Chat de Soporte</div>
-                <a onclick="abrirModalPass()">Cambiar Contraseña</a>
+    <!-- 1er Bloque: Header Glass -->
+    <header class="glass-nav">
+        <div class="brand-logo">
+            <div class="brand-avatar">A</div>
+            <div>
+                <div class="brand-title">ARMM</div>
+                <div class="brand-subtitle">Productos y Accesorios de Limpieza</div>
             </div>
+        </div>
+        <div class="nav-actions">
+            <div id="userHeaderActions">
+                <button class="glass-btn" onclick="abrirModal('modalRegistro')">Registrarse</button>
+                <button class="glass-btn" onclick="abrirModal('modalLogin')">Iniciar Sesión</button>
+            </div>
+            <button class="glass-btn" onclick="abrirModal('modalCarrito')">
+                🛒 Carrito <span class="cart-badge" id="cartCount">0</span>
+            </button>
         </div>
     </header>
 
     <div class="container">
-        <input type="text" class="search-bar" id="searchInput" placeholder="Buscar productos o categorías..." onkeyup="filtrarProductos()">
+        <!-- 2da Sección: Buscador -->
+        <div class="search-container">
+            <span class="search-icon">🔍</span>
+            <input type="text" class="search-input" id="searchInput" placeholder="Buscar aromatizante, cloro, jarquería..." onkeyup="filtrarProductos()">
+        </div>
 
-        <h2>Productos</h2>
-        <div class="grid" id="productGrid"></div>
+        <!-- 3ra Sección: Productos -->
+        <h2 class="section-title">Nuestros Productos</h2>
+        <div class="product-grid" id="productGrid"></div>
 
-        <hr>
-        <h2>Carrito de Compras</h2>
-        <div id="carritoItems">El carrito está vacío.</div>
-        <h3>Método de Pago</h3>
-        <button onclick="pagarSPEI()">Pagar con SPEI (WhatsApp)</button>
-        <button onclick="pagarAlRecibir()">Pagar al Recibir (Efectivo/Tarjeta)</button>
+        <!-- 4ta Sección: Sobre la Empresa -->
+        <div class="glass-card" style="margin-top: 60px;">
+            <h2 style="color: var(--accent-green);">Sobre Nosotros</h2>
+            <p><strong>Propósito:</strong> Ofrecerte todo para la limpieza y hasta la puerta de tu hogar.</p>
+            <p>Contamos con más de 3 años trabajando continuamente para brindarte una limpieza mejor de alta calidad.</p>
+            <p><strong>Contacto Directo:</strong> WhatsApp: <a href="https://wa.me/525551234567" style="color: var(--accent-green);">555-1234</a> | Correo: <a href="mailto:armmproductosdelimpieza@gmail.com" style="color: var(--accent-green);">armmproductosdelimpieza@gmail.com</a></p>
 
-        <hr>
-        <h2>Sobre la Empresa</h2>
-        <p><strong>Propósito:</strong> Ofrecer productos de calidad al mejor precio.</p>
-        <p><strong>Contacto:</strong> contacto@mitienda.com | Tel: 555-1234</p>
-        <p><strong>Experiencia:</strong> Más de 3 años entregando satisfacción.</p>
-        
-        <h3>Reseñas de Clientes</h3>
-        <div class="review-card">"Excelente servicio y entrega rápida." - Juan P.</div>
-        <div class="review-card">"Los productos son de muy buena calidad." - María G.</div>
+            <h3 style="margin-top: 20px;">Reseñas de Clientes</h3>
+            <div style="background: rgba(0,230,153,0.05); padding: 12px; border-left: 3px solid var(--accent-green); margin-bottom: 8px; border-radius: 4px;">
+                "Excelente atención y los productos rinden muchísimo. Recomendados al 100%." - Laura S.
+            </div>
+            <div style="background: rgba(0,230,153,0.05); padding: 12px; border-left: 3px solid var(--accent-green); border-radius: 4px;">
+                "Entrega súper rápida hasta la puerta de mi negocio. Siempre les compro a ellos." - Roberto G.
+            </div>
+        </div>
     </div>
 
-    <div id="passModal" class="modal">
+    <!-- Modal Registro -->
+    <div id="modalRegistro" class="modal">
         <div class="modal-content">
-            <h3>Cambiar Contraseña</h3>
-            <input type="password" placeholder="Nueva contraseña" style="width:100%; margin-bottom:10px;"><br>
-            <a href="#" onclick="alert('Se enviaron instrucciones a tu correo registrado.')" style="font-size:0.8em;">¿Olvidaste tu contraseña?</a><br><br>
-            <button onclick="cerrarModalPass()">Guardar</button>
-            <button onclick="cerrarModalPass()">Cancelar</button>
+            <h3 style="margin-top:0; color:var(--accent-green)">Crear Cuenta</h3>
+            <input type="text" class="input-glass" id="regNombre" placeholder="Nombre(s)">
+            <input type="text" class="input-glass" id="regApellido" placeholder="Apellidos">
+            <input type="tel" class="input-glass" id="regTel" placeholder="Teléfono">
+            <input type="text" class="input-glass" id="regDir" placeholder="Dirección Completa">
+            <input type="email" class="input-glass" id="regCorreo" placeholder="Correo electrónico">
+            <div class="pwd-field">
+                <input type="password" class="input-glass" id="regPass" placeholder="Generar Contraseña *">
+                <span class="eye-toggle" onclick="toggleEye('regPass')">👁️</span>
+            </div>
+            <div class="pwd-field">
+                <input type="password" class="input-glass" id="regPassConfirm" placeholder="Confirmar Contraseña *">
+                <span class="eye-toggle" onclick="toggleEye('regPassConfirm')">👁️</span>
+            </div>
+            <button class="btn-add" onclick="ejecutarRegistro()">Registrarse</button>
+            <button class="glass-btn" style="width:100%; margin-top:10px; justify-content:center;" onclick="cerrarModal('modalRegistro')">Cancelar</button>
+        </div>
+    </div>
+
+    <!-- Modal Login -->
+    <div id="modalLogin" class="modal">
+        <div class="modal-content">
+            <h3 style="margin-top:0; color:var(--accent-green)">Iniciar Sesión</h3>
+            <input type="text" class="input-glass" id="loginUser" placeholder="Correo o Teléfono">
+            <div class="pwd-field">
+                <input type="password" class="input-glass" id="loginPass" placeholder="Contraseña">
+                <span class="eye-toggle" onclick="toggleEye('loginPass')">👁️</span>
+            </div>
+            <p style="font-size:0.8em;"><a href="#" style="color:var(--accent-green)" onclick="cerrarModal('modalLogin'); abrirModal('modalRecuperar')">¿Olvidaste tu contraseña?</a></p>
+            <button class="btn-add" onclick="ejecutarLogin()">Acceder</button>
+            <button class="glass-btn" style="width:100%; margin-top:10px; justify-content:center;" onclick="cerrarModal('modalLogin')">Cancelar</button>
+        </div>
+    </div>
+
+    <!-- Modal Recuperar Contraseña -->
+    <div id="modalRecuperar" class="modal">
+        <div class="modal-content">
+            <h3 style="margin-top:0; color:var(--accent-green)">Recuperar Contraseña</h3>
+            <input type="text" class="input-glass" id="recNombre" placeholder="Nombre">
+            <input type="text" class="input-glass" id="recApellido" placeholder="Apellido">
+            <input type="email" class="input-glass" id="recCorreo" placeholder="Correo Registrado">
+            <input type="tel" class="input-glass" id="recTel" placeholder="Teléfono Registrado">
+            <p style="font-size:0.8em; color:var(--text-muted);">Te estaremos informando la situación de tu cuenta por tu WhatsApp.</p>
+            <button class="btn-add" onclick="solicitarRecuperacion()">Enviar al centro de atención</button>
+            <button class="glass-btn" style="width:100%; margin-top:10px; justify-content:center;" onclick="cerrarModal('modalRecuperar')">Cancelar</button>
+        </div>
+    </div>
+
+    <!-- Modal Menú del Usuario -->
+    <div id="modalUserMenu" class="modal">
+        <div class="modal-content">
+            <h3 style="margin-top:0; color:var(--accent-green)" id="usrMenuTitle">👤 Mi Cuenta</h3>
+            <div style="background:rgba(0,0,0,0.2); padding:12px; border-radius:8px; margin-bottom:15px;" id="usrInfo"></div>
+            
+            <details style="margin-bottom:15px;">
+                <summary style="cursor:pointer; color:var(--accent-green); font-weight:bold;">Cambiar Contraseña</summary>
+                <div style="margin-top:10px;">
+                    <div class="pwd-field">
+                        <input type="password" class="input-glass" id="usrActPass" placeholder="Contraseña Actual">
+                        <span class="eye-toggle" onclick="toggleEye('usrActPass')">👁️</span>
+                    </div>
+                    <p style="font-size:0.8em;"><a href="#" style="color:var(--accent-green)" onclick="cerrarModal('modalUserMenu'); abrirModal('modalRecuperar')">¿Olvidaste tu contraseña?</a></p>
+                    <div class="pwd-field">
+                        <input type="password" class="input-glass" id="usrNewPass" placeholder="Contraseña Nueva">
+                        <span class="eye-toggle" onclick="toggleEye('usrNewPass')">👁️</span>
+                    </div>
+                    <div class="pwd-field">
+                        <input type="password" class="input-glass" id="usrConfPass" placeholder="Confirmar Contraseña">
+                        <span class="eye-toggle" onclick="toggleEye('usrConfPass')">👁️</span>
+                    </div>
+                    <button class="btn-add" onclick="cambiarPasswordAccion()">Actualizar Contraseña</button>
+                </div>
+            </details>
+
+            <button class="glass-btn" style="width:100%; margin-bottom:8px;" onclick="verPedidos()">📦 Pedidos e Historial</button>
+            <button class="glass-btn" style="width:100%; margin-bottom:8px;" onclick="verNotificaciones()">🔔 Notificaciones</button>
+            <button class="glass-btn" style="width:100%; margin-bottom:8px;" onclick="alert('Función de favoritos guardada.')">⭐ Favoritos</button>
+            <button class="glass-btn" style="width:100%; margin-bottom:15px;" onclick="alert('Abriendo chat directo con atención a clientes...')">💬 Chat de Ayuda</button>
+            
+            <button class="btn-add" style="background:#ff4d4d; color:#fff;" onclick="cerrarSesion()">Cerrar Sesión</button>
+            <button class="glass-btn" style="width:100%; margin-top:8px; justify-content:center;" onclick="cerrarModal('modalUserMenu')">Cerrar</button>
+        </div>
+    </div>
+
+    <!-- Modal Carrito -->
+    <div id="modalCarrito" class="modal">
+        <div class="modal-content">
+            <h3 style="margin-top:0; color:var(--accent-green)">Carrito de Compras</h3>
+            <div id="cartItemsContainer" style="max-height:200px; overflow-y:auto; margin-bottom:15px;"></div>
+            <p>Subtotal: <strong>$<span id="cartSubtotal">0</span> MXN</strong></p>
+            
+            <a href="#" style="color:var(--accent-green); font-size:0.9em;" onclick="toggleCuponesSec()">Ver cupones disponibles</a>
+            <div id="cuponesSec" style="display:none; background:rgba(0,0,0,0.3); padding:10px; border-radius:8px; margin-top:8px;">
+                <div id="cuponesLista"></div>
+                <div id="cuponMsg" style="color:#ff6b6b; font-size:0.8em; margin-top:5px;"></div>
+            </div>
+
+            <h3 style="color:var(--accent-green); margin-top:15px;">Total: $<span id="cartTotal">0</span> MXN</h3>
+
+            <button class="btn-add" style="margin-bottom:10px;" onclick="procesarPago('SPEI')">PAGAR CON SPEI</button>
+            <button class="btn-add" style="background:#00b3ff; color:#fff;" onclick="procesarPago('RECIBIR')">Realizar pedido y pagar al recibirlo</button>
+            <button class="glass-btn" style="width:100%; margin-top:10px; justify-content:center;" onclick="cerrarModal('modalCarrito')">Cerrar</button>
+        </div>
+    </div>
+
+    <!-- Modal Pago al Recibir -->
+    <div id="modalPagoRecibir" class="modal">
+        <div class="modal-content">
+            <h3 style="margin-top:0; color:var(--accent-green)">Forma de Pago al Recibir</h3>
+            <label style="display:block; margin-bottom:10px;"><input type="radio" name="pagoTipo" value="Efectivo" checked> Efectivo</label>
+            <label style="display:block; margin-bottom:20px;"><input type="radio" name="pagoTipo" value="Tarjeta"> Pago con Tarjeta</label>
+            <button class="btn-add" onclick="confirmarPedidoRecibir()">Realizar Pedido</button>
+            <button class="glass-btn" style="width:100%; margin-top:10px; justify-content:center;" onclick="cerrarModal('modalPagoRecibir')">Cancelar</button>
         </div>
     </div>
 
     <script>
-        function cargarProductosWeb() {
-            const grid = document.getElementById('productGrid');
-            const data = localStorage.getItem('armm_productos');
-            grid.innerHTML = '';
+        let carrito = [];
+        let cuponAplicado = null;
+        let usuarioActual = null;
 
-            if (data) {
-                const productos = JSON.parse(data);
-                productos.forEach(p => {
-                    let div = document.createElement('div');
-                    div.className = 'card';
-                    div.setAttribute('data-name', p.nombre.toLowerCase());
-                    div.setAttribute('data-category', p.categoria.toLowerCase());
+        const productosDefault = [
+            { id: 1, nombre: "Cloro Concentrado", categoria: "DESINFECCIÓN", presentaciones: [{ nombre: "1 Litro", precio: 18 }, { nombre: "5 Litros", precio: 80 }, { nombre: "20 Litros", precio: 280 }] },
+            { id: 2, nombre: "Detergente Líquido Multiusos", categoria: "LIMPIEZA GENERAL", presentaciones: [{ nombre: "1 Litro", precio: 25 }, { nombre: "5 Litros", precio: 110 }] },
+            { id: 3, nombre: "Suavizante de Telas", categoria: "CUIDADO DE ROPA", presentaciones: [{ nombre: "1 Litro", precio: 22 }, { nombre: "5 Litros", precio: 95 }] },
+            { id: 4, nombre: "Desengrasante Industrial", categoria: "ESPECIALIZADOS", presentaciones: [{ nombre: "1 Litro", precio: 35 }, { nombre: "5 Litros", precio: 150 }] }
+        ];
 
-                    let detallePrecios = p.presentacion === 'Pieza' 
-                        ? `Menudeo: $${p.p1 || '-'} | Mayoreo: $${p.p20 || '-'}`
-                        : `1L: $${p.p1 || '-'} | 5L: $${p.p5 || '-'} | 20L: $${p.p20 || '-'}`;
-
-                    div.innerHTML = `
-                        <h3>${p.nombre}</h3>
-                        <p><strong>Categoría:</strong> ${p.categoria}</p>
-                        <p style="font-size: 0.9em; color: #555;">${detallePrecios}</p>
-                        <button onclick="agregarAlCarrito('${p.nombre}')">Agregar al Carrito</button>
-                    `;
-                    grid.appendChild(div);
-                });
-            } else {
-                grid.innerHTML = '<p>No hay productos registrados. Ingresa al panel de Admin para inicializar la lista.</p>';
+        function init() {
+            if(!localStorage.getItem('armm_productos')) {
+                localStorage.setItem('armm_productos', JSON.stringify(productosDefault));
             }
-        }
+            if(!localStorage.getItem('armm_usuarios')) localStorage.setItem('armm_usuarios', JSON.stringify([]));
+            if(!localStorage.getItem('armm_pedidos')) localStorage.setItem('armm_pedidos', JSON.stringify([]));
+            if(!localStorage.getItem('armm_recuperaciones')) localStorage.setItem('armm_recuperaciones', JSON.stringify([]));
+            if(!localStorage.getItem('armm_notificaciones')) localStorage.setItem('armm_notificaciones', JSON.stringify([]));
 
-        // Sincronización automática en tiempo real si el admin realiza cambios en otra pestaña
-        window.addEventListener('storage', (e) => {
-            if (e.key === 'armm_productos') {
-                cargarProductosWeb();
+            let usr = localStorage.getItem('armm_sesion_activa');
+            if(usr) {
+                usuarioActual = JSON.parse(usr);
+                actualizarHeaderUsuario();
             }
-        });
-
-        function toggleMenu() {
-            var dd = document.getElementById('userDropdown');
-            dd.style.display = dd.style.display === 'block' ? 'none' : 'block';
-        }
-
-        function filtrarProductos() {
-            var q = document.getElementById('searchInput').value.toLowerCase();
-            var cards = document.querySelectorAll('#productGrid .card');
-            cards.forEach(card => {
-                var name = card.getAttribute('data-name');
-                var cat = card.getAttribute('data-category');
-                if(name.includes(q) || cat.includes(q)) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
+            cargarProductos();
+            
+            // Sincronización automática
+            window.addEventListener('storage', () => {
+                cargarProductos();
             });
         }
 
-        let carrito = [];
-        function agregarAlCarrito(prod) {
-            carrito.push(prod);
-            document.getElementById('carritoItems').innerText = "Productos: " + carrito.join(", ");
+        function toggleEye(id) {
+            let el = document.getElementById(id);
+            el.type = el.type === 'password' ? 'text' : 'password';
         }
 
-        function pagarSPEI() {
+        function abrirModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function cerrarModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        function cargarProductos() {
+            const grid = document.getElementById('productGrid');
+            const data = JSON.parse(localStorage.getItem('armm_productos') || '[]');
+            grid.innerHTML = '';
+
+            data.forEach((p) => {
+                let card = document.createElement('div');
+                card.className = 'glass-card';
+                card.setAttribute('data-name', p.nombre.toLowerCase());
+                card.setAttribute('data-category', p.categoria.toLowerCase());
+
+                let options = p.presentaciones.map((pr, idx) => `<option value="${idx}">${pr.nombre} - $${pr.precio} MXN</option>`).join('');
+
+                card.innerHTML = `
+                    <span class="tag-category">${p.categoria}</span>
+                    <h3 class="product-title">${p.nombre}</h3>
+                    <label class="select-label">Selecciona Presentación:</label>
+                    <select class="glass-select" id="pres_${p.id}">${options}</select>
+                    <button class="btn-add" onclick="agregarAlCarrito(${p.id})">🛒 Agregar al Carrito</button>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function filtrarProductos() {
+            let q = document.getElementById('searchInput').value.toLowerCase();
+            document.querySelectorAll('#productGrid .glass-card').forEach(card => {
+                let name = card.getAttribute('data-name');
+                let cat = card.getAttribute('data-category');
+                card.style.display = (name.includes(q) || cat.includes(q)) ? 'block' : 'none';
+            });
+        }
+
+        function agregarAlCarrito(prodId) {
+            let prods = JSON.parse(localStorage.getItem('armm_productos') || '[]');
+            let prod = prods.find(p => p.id === prodId);
+            let selIndex = document.getElementById(`pres_${prodId}`).value;
+            let pres = prod.presentaciones[selIndex];
+
+            carrito.push({
+                nombre: prod.nombre,
+                presentacion: pres.nombre,
+                precio: parseFloat(pres.precio)
+            });
+
+            document.getElementById('cartCount').innerText = carrito.length;
+            renderCarrito();
+        }
+
+        function renderCarrito() {
+            let container = document.getElementById('cartItemsContainer');
+            let subtotal = 0;
+            container.innerHTML = '';
+
+            carrito.forEach((item, i) => {
+                subtotal += item.precio;
+                container.innerHTML += `
+                    <div style="display:flex; justify-content:space-between; margin-bottom:8px; background:rgba(255,255,255,0.05); padding:8px; border-radius:6px;">
+                        <span>${item.nombre} (${item.presentacion})</span>
+                        <strong>$${item.precio}</strong>
+                    </div>`;
+            });
+
+            document.getElementById('cartSubtotal').innerText = subtotal;
+            let total = subtotal;
+            if(cuponAplicado) total = Math.max(0, subtotal - cuponAplicado.descuento);
+            document.getElementById('cartTotal').innerText = total;
+        }
+
+        function toggleCuponesSec() {
+            let sec = document.getElementById('cuponesSec');
+            sec.style.display = sec.style.display === 'none' ? 'block' : 'none';
+            if(sec.style.display === 'block') cargarCupones();
+        }
+
+        function cargarCupones() {
+            let cupones = JSON.parse(localStorage.getItem('armm_cupones') || '[]');
+            let list = document.getElementById('cuponesLista');
+            list.innerHTML = '';
+            let hoy = new Date().toISOString().split('T')[0];
+
+            let activos = cupones.filter(c => c.fecha >= hoy);
+            if(activos.length === 0) {
+                list.innerHTML = '<span style="font-size:0.8em; color:var(--text-muted)">No hay cupones disponibles en este momento.</span>';
+                return;
+            }
+
+            activos.forEach(c => {
+                list.innerHTML += `
+                    <div style="border-bottom:1px solid var(--card-border); padding:6px 0;">
+                        <strong>${c.codigo}</strong> (-$${c.descuento} MXN)<br>
+                        <small style="color:var(--text-muted)">${c.desc}</small><br>
+                        <button class="btn-add" style="padding:4px 8px; font-size:0.75em; margin-top:4px;" onclick="aplicarCupon('${c.codigo}', ${c.descuento}, ${c.minimo})">Aplicar</button>
+                    </div>`;
+            });
+        }
+
+        function aplicarCupon(codigo, descuento, minimo) {
+            let subtotal = parseFloat(document.getElementById('cartSubtotal').innerText);
+            let msg = document.getElementById('cuponMsg');
+
+            if(subtotal < minimo) {
+                msg.innerText = "Su compra no cumple con las condiciones del cupón, revise la descripción.";
+            } else {
+                cuponAplicado = {codigo, descuento};
+                msg.style.color = "var(--accent-green)";
+                msg.innerText = "¡Cupón aplicado exitosamente!";
+                renderCarrito();
+            }
+        }
+
+        function ejecutarRegistro() {
+            let nom = document.getElementById('regNombre').value;
+            let ape = document.getElementById('regApellido').value;
+            let tel = document.getElementById('regTel').value;
+            let dir = document.getElementById('regDir').value;
+            let correo = document.getElementById('regCorreo').value;
+            let pass = document.getElementById('regPass').value;
+            let passConf = document.getElementById('regPassConfirm').value;
+
+            if(!nom || !ape || !tel || !dir || !correo || !pass) return alert("Por favor, llena todos los campos.");
+            if(pass !== passConf) return alert("Las contraseñas no coinciden.");
+
+            let usuarios = JSON.parse(localStorage.getItem('armm_usuarios') || '[]');
+            let nuevo = {nom, ape, tel, dir, correo, pass};
+            usuarios.push(nuevo);
+            localStorage.setItem('armm_usuarios', JSON.stringify(usuarios));
+
+            usuarioActual = nuevo;
+            localStorage.setItem('armm_sesion_activa', JSON.stringify(nuevo));
+            actualizarHeaderUsuario();
+            cerrarModal('modalRegistro');
+            alert("¡Registro completado con éxito!");
+        }
+
+        function ejecutarLogin() {
+            let user = document.getElementById('loginUser').value;
+            let pass = document.getElementById('loginPass').value;
+            let usuarios = JSON.parse(localStorage.getItem('armm_usuarios') || '[]');
+
+            let enc = usuarios.find(u => (u.correo === user || u.tel === user) && u.pass === pass);
+            if(enc) {
+                usuarioActual = enc;
+                localStorage.setItem('armm_sesion_activa', JSON.stringify(enc));
+                actualizarHeaderUsuario();
+                cerrarModal('modalLogin');
+            } else {
+                alert("Datos incorrectos. Inténtalo de nuevo.");
+            }
+        }
+
+        function actualizarHeaderUsuario() {
+            document.getElementById('userHeaderActions').innerHTML = `
+                <button class="glass-btn" onclick="abrirModal('modalUserMenu')">👤 ${usuarioActual.nom}</button>
+            `;
+            document.getElementById('usrInfo').innerHTML = `
+                <strong>${usuarioActual.nom} ${usuarioActual.ape}</strong><br>
+                <small>${usuarioActual.correo} | Tel: ${usuarioActual.tel}</small><br>
+                <small>Dir: ${usuarioActual.dir}</small>
+            `;
+        }
+
+        function solicitarRecuperacion() {
+            let data = {
+                nom: document.getElementById('recNombre').value,
+                ape: document.getElementById('recApellido').value,
+                correo: document.getElementById('recCorreo').value,
+                tel: document.getElementById('recTel').value
+            };
+            let recs = JSON.parse(localStorage.getItem('armm_recuperaciones') || '[]');
+            recs.push(data);
+            localStorage.setItem('armm_recuperaciones', JSON.stringify(recs));
+            cerrarModal('modalRecuperar');
+            alert("Solicitud enviada al Centro de Atención.");
+        }
+
+        function cambiarPasswordAccion() {
+            let act = document.getElementById('usrActPass').value;
+            let nva = document.getElementById('usrNewPass').value;
+            let conf = document.getElementById('usrConfPass').value;
+
+            if(act !== usuarioActual.pass) return alert("La contraseña actual no es correcta.");
+            if(nva !== conf) return alert("La contraseña nueva y la confirmación no coinciden.");
+
+            let usuarios = JSON.parse(localStorage.getItem('armm_usuarios') || '[]');
+            let idx = usuarios.findIndex(u => u.correo === usuarioActual.correo);
+            if(idx !== -1) {
+                usuarios[idx].pass = nva;
+                usuarioActual.pass = nva;
+                localStorage.setItem('armm_usuarios', JSON.stringify(usuarios));
+                localStorage.setItem('armm_sesion_activa', JSON.stringify(usuarioActual));
+                alert("Contraseña actualizada.");
+                cerrarModal('modalUserMenu');
+            }
+        }
+
+        function cerrarSesion() {
+            localStorage.removeItem('armm_sesion_activa');
+            location.reload();
+        }
+
+        function procesarPago(metodo) {
             if(carrito.length === 0) return alert("El carrito está vacío.");
-            let numPedido = Math.floor(Math.random() * 90000) + 10000;
-            let msg = encodeURIComponent(`Hola, quiero pagar el pedido #${numPedido} vía SPEI. Productos: ${carrito.join(", ")}`);
-            window.open(`https://wa.me/525551234567?text=${msg}`, '_blank');
+            if(!usuarioActual) {
+                cerrarModal('modalCarrito');
+                alert("Regístrate para poder realizar tu pedido.");
+                abrirModal('modalRegistro');
+                return;
+            }
+
+            if(metodo === 'SPEI') {
+                let idPed = 'PED-' + Math.floor(Math.random() * 90000 + 10000);
+                guardarPedido(idPed, 'SPEI');
+                let msg = encodeURIComponent(`Hola, realizamos el pedido #${idPed} por SPEI. Adjunto comprobante. Total: $${document.getElementById('cartTotal').innerText}`);
+                window.open(`https://wa.me/525551234567?text=${msg}`);
+            } else {
+                cerrarModal('modalCarrito');
+                abrirModal('modalPagoRecibir');
+            }
         }
 
-        function pagarAlRecibir() {
-            if(carrito.length === 0) return alert("El carrito está vacío.");
-            alert("Pedido confirmado. Iniciaremos el envío y pagarás al recibir (Efectivo/Tarjeta).");
+        function confirmarPedidoRecibir() {
+            let tipo = document.querySelector('input[name="pagoTipo"]:checked').value;
+            let idPed = 'PED-' + Math.floor(Math.random() * 90000 + 10000);
+            guardarPedido(idPed, `Pago al Recibir (${tipo})`);
+            cerrarModal('modalPagoRecibir');
+            alert("Pedido registrado con éxito.");
         }
 
-        function abrirChat() { window.open('https://wa.me/525551234567', '_blank'); }
-        function abrirModalPass() { document.getElementById('passModal').style.display = 'flex'; }
-        function cerrarModalPass() { document.getElementById('passModal').style.display = 'none'; }
+        function guardarPedido(id, metodo) {
+            let pedidos = JSON.parse(localStorage.getItem('armm_pedidos') || '[]');
+            pedidos.push({
+                id,
+                usuario: usuarioActual,
+                items: carrito,
+                total: document.getElementById('cartTotal').innerText,
+                metodo,
+                estado: 'Pendiente',
+                fechaEst: 'Por confirmar'
+            });
+            localStorage.setItem('armm_pedidos', JSON.stringify(pedidos));
+            carrito = [];
+            cuponAplicado = null;
+            document.getElementById('cartCount').innerText = 0;
+            renderCarrito();
+        }
 
-        window.onload = cargarProductosWeb;
+        function verPedidos() {
+            let peds = JSON.parse(localStorage.getItem('armm_pedidos') || '[]');
+            let misPeds = peds.filter(p => p.usuario.correo === usuarioActual.correo);
+            if(misPeds.length === 0) return alert("No tienes pedidos registrados.");
+
+            let txt = misPeds.map(p => `• ID: ${p.id}\n  Total: $${p.total} MXN | Estado: ${p.estado}\n  Fecha entrega est: ${p.fechaEst}`).join('\n\n');
+            alert("HISTORIAL DE PEDIDOS:\n\n" + txt);
+        }
+
+        function verNotificaciones() {
+            let notifs = JSON.parse(localStorage.getItem('armm_notificaciones') || '[]');
+            let misNotifs = notifs.filter(n => n.destino === 'TODOS' || n.destino === usuarioActual.correo);
+            if(misNotifs.length === 0) return alert("Sin notificaciones nuevas.");
+            alert("NOTIFICACIONES:\n\n" + misNotifs.map(n => "📢 " + n.mensaje).join('\n'));
+        }
+
+        window.onload = init;
     </script>
 </body>
 </html>
-
