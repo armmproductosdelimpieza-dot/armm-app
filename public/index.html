@@ -3,533 +3,102 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ARMM - Productos de Limpieza & Químicos</title>
+  <title>ARMM LIMPIEZA - Catálogo Oficial</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body {
+      background-color: #0b131e;
+      color: #f8fafc;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      height: 6px;
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0b131e;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #00ff88;
+    }
+  </style>
 </head>
-<body class="bg-gray-100 text-gray-800 font-sans min-h-screen flex flex-col">
+<body class="min-h-screen flex flex-col">
 
-  <header class="bg-blue-900 text-white shadow-md sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-      <div class="flex items-center space-x-3 cursor-pointer" onclick="switchPage('public')">
-        <div class="bg-yellow-400 text-blue-900 font-extrabold text-2xl px-3 py-1 rounded-lg shadow">
-          ARMM
-        </div>
-        <div>
-          <h1 class="text-xl font-bold tracking-wide">ARMM</h1>
-          <p class="text-xs text-blue-200">Limpieza / Productos Químicos</p>
-        </div>
+  <header class="bg-[#070c14] border-b border-slate-800/80 sticky top-0 z-50 shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+      
+      <div class="flex items-center space-x-2">
+        <span class="text-2xl font-black tracking-tight text-white">ARMM</span>
+        <span class="text-2xl font-black tracking-tight text-[#00ff88]">LIMPIEZA</span>
       </div>
 
-      <div class="flex items-center space-x-4">
-        <button id="nav-public-btn" onclick="switchPage('public')" class="px-3 py-1.5 rounded-md text-sm font-semibold bg-blue-800 hover:bg-blue-700 transition">
-          🛒 Tienda Pública
-        </button>
-        <button id="nav-admin-btn" onclick="switchPage('admin')" class="px-3 py-1.5 rounded-md text-sm font-semibold text-blue-200 hover:bg-blue-800 transition">
-          ⚙️ Panel Admin
-        </button>
-
-        <div class="relative bg-yellow-400 text-blue-900 px-3 py-1.5 rounded-full font-bold flex items-center space-x-1 shadow cursor-pointer">
-          <i data-lucide="shopping-cart" class="w-5 h-5"></i>
-          <span>Carrito (<span id="cart-count">0</span>)</span>
-        </div>
-      </div>
+      <button class="bg-[#00ff88] hover:bg-[#00e676] text-slate-950 font-extrabold px-5 py-2 rounded-full text-sm flex items-center space-x-2 shadow-md shadow-[#00ff88]/10 transition transform active:scale-95">
+        <i data-lucide="shopping-cart" class="w-4 h-4"></i>
+        <span>Carrito</span>
+        <span id="cart-count" class="bg-slate-950 text-[#00ff88] text-xs px-2 py-0.5 rounded-full ml-1">0</span>
+      </button>
     </div>
   </header>
 
-  <main id="page-public" class="flex-grow">
-    
-    <section class="bg-gradient-to-r from-blue-900 via-blue-800 to-indigo-900 text-white py-12 px-4 shadow-inner">
-      <div class="max-w-4xl mx-auto text-center space-y-4">
-        <h2 class="text-3xl md:text-5xl font-extrabold tracking-tight text-yellow-400">
-          Venta de Productos Químicos de Limpieza
-        </h2>
-        <p class="text-lg text-blue-100">
-          Surtido a granel, por litros y precios especiales de mayoreo. ¡Calidad garantizada para el hogar y la industria!
-        </p>
+  <main class="flex-grow">
+    <section class="py-10 px-4 text-center max-w-4xl mx-auto space-y-4">
+      <h1 class="text-3xl md:text-4xl font-extrabold text-white tracking-tight">
+        Catálogo de Productos Químicos y Jarciería
+      </h1>
+      <p class="text-slate-400 text-sm max-w-2xl mx-auto">
+        Encuentra soluciones de limpieza industrial y hogar a los mejores precios por litro o mayoreo.
+      </p>
 
-        <div class="max-w-xl mx-auto relative pt-4">
-          <input 
-            type="text" 
-            id="search-input" 
-            placeholder="Buscar producto (ej. Cloro, Pinol, Trapeador, Jabón)..." 
-            class="w-full pl-12 pr-4 py-3 rounded-full text-gray-800 focus:outline-none focus:ring-4 focus:ring-yellow-400 shadow-lg"
-            oninput="renderCatalog()"
-          >
-          <i data-lucide="search" class="w-6 h-6 text-gray-400 absolute left-4 top-7"></i>
-        </div>
+      <div class="relative max-w-xl mx-auto pt-3">
+        <input 
+          type="text" 
+          id="search-input" 
+          placeholder="Buscar producto (ej. Cloro, Detergente)..." 
+          class="w-full bg-[#141e2d] border border-slate-700/60 rounded-xl px-11 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-[#00ff88] focus:ring-1 focus:ring-[#00ff88] transition"
+          oninput="renderProducts()"
+        >
+        <i data-lucide="search" class="w-5 h-5 text-slate-500 absolute left-3.5 top-6"></i>
       </div>
     </section>
 
-    <section class="max-w-7xl mx-auto px-4 py-6">
-      <div class="flex flex-wrap gap-2 justify-center" id="category-chips">
+    <section class="max-w-7xl mx-auto px-4 mb-8">
+      <div class="flex space-x-2 overflow-x-auto pb-3 pt-1 no-scrollbar justify-start md:justify-center" id="categories-container">
         </div>
     </section>
 
-    <section class="max-w-7xl mx-auto px-4 pb-12">
-      <div id="catalog-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <section class="max-w-7xl mx-auto px-4 pb-16">
+      <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
         </div>
     </section>
   </main>
 
-
-  <main id="page-admin" class="flex-grow hidden">
-    <div class="bg-blue-950 text-white py-4 px-6 border-b border-blue-800 flex justify-between items-center">
-      <h2 class="text-xl font-bold flex items-center gap-2">
-        <i data-lucide="shield-check"></i> Panel de Administración Centralizado
-      </h2>
-      <button onclick="switchPage('public')" class="text-sm bg-yellow-400 text-blue-900 font-semibold px-3 py-1 rounded hover:bg-yellow-300">
-        ← Volver a la Tienda
-      </button>
-    </div>
-
-    <div class="max-w-7xl mx-auto px-4 mt-6">
-      <div class="flex border-b border-gray-300 space-x-2">
-        <button onclick="switchTab('tab-products')" id="tab-btn-products" class="tab-btn py-2 px-4 font-bold border-b-2 border-blue-800 text-blue-800">
-          📦 Gestión de Productos
-        </button>
-        <button onclick="switchTab('tab-orders')" id="tab-btn-orders" class="tab-btn py-2 px-4 font-bold text-gray-500 border-b-2 border-transparent hover:text-blue-800">
-          🛒 Pedidos
-        </button>
-        <button onclick="switchTab('tab-clients')" id="tab-btn-clients" class="tab-btn py-2 px-4 font-bold text-gray-500 border-b-2 border-transparent hover:text-blue-800">
-          👥 Clientes
-        </button>
-        <button onclick="switchTab('tab-support')" id="tab-btn-support" class="tab-btn py-2 px-4 font-bold text-gray-500 border-b-2 border-transparent hover:text-blue-800">
-          💬 Soporte y Ayuda
-        </button>
-      </div>
-    </div>
-
-    <div id="tab-products" class="admin-tab-content max-w-7xl mx-auto px-4 py-6">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        
-        <div class="lg:col-span-5 bg-white p-6 rounded-xl shadow-md border border-gray-200">
-          <h3 class="text-lg font-bold text-blue-900 mb-4 flex items-center gap-2">
-            <i data-lucide="plus-circle"></i> Registrar / Editar Producto
-          </h3>
-          <form id="product-form" onsubmit="saveProduct(event)" class="space-y-4">
-            <input type="hidden" id="form-product-id">
-            
-            <div>
-              <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nombre del Producto</label>
-              <input type="text" id="form-name" required class="w-full border rounded p-2 text-sm focus:ring-2 focus:ring-blue-800">
-            </div>
-
-            <div>
-              <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Categoría</label>
-              <select id="form-category" class="w-full border rounded p-2 text-sm focus:ring-2 focus:ring-blue-800">
-                <option value="CLOROS">CLOROS</option>
-                <option value="PINOL">PINOL</option>
-                <option value="BASES">BASES</option>
-                <option value="DETERGENTES">DETERGENTES</option>
-                <option value="SUAVIZANTES">SUAVIZANTES</option>
-                <option value="CARROS">CARROS</option>
-                <option value="LIMPIEZA PROFUNDA">LIMPIEZA PROFUNDA</option>
-                <option value="JARCERÍA">JARCERÍA</option>
-                <option value="ENVASES">ENVASES</option>
-              </select>
-            </div>
-
-            <div>
-              <label class="block text-xs font-bold text-gray-700 uppercase mb-1">URL de Imagen</label>
-              <input type="text" id="form-image" placeholder="https://..." class="w-full border rounded p-2 text-sm focus:ring-2 focus:ring-blue-800">
-            </div>
-
-            <div>
-              <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Modo de Venta</label>
-              <select id="form-sale-mode" onchange="toggleFormFields()" class="w-full border rounded p-2 text-sm font-semibold bg-yellow-50 focus:ring-2 focus:ring-blue-800">
-                <option value="litros">Por Litros (1L, 5L, 20L)</option>
-                <option value="mayoreo">Mayoreo y Menudeo (Piezas)</option>
-              </select>
-            </div>
-
-            <div id="fields-litros" class="grid grid-cols-3 gap-2 p-3 bg-blue-50 rounded border border-blue-200">
-              <div>
-                <label class="block text-xs font-bold text-gray-600">Precio 1L ($)</label>
-                <input type="number" step="0.01" id="form-p1l" class="w-full border rounded p-1.5 text-sm">
-              </div>
-              <div>
-                <label class="block text-xs font-bold text-gray-600">Precio 5L ($)</label>
-                <input type="number" step="0.01" id="form-p5l" class="w-full border rounded p-1.5 text-sm">
-              </div>
-              <div>
-                <label class="block text-xs font-bold text-gray-600">Precio 20L ($)</label>
-                <input type="number" step="0.01" id="form-p20l" class="w-full border rounded p-1.5 text-sm">
-              </div>
-            </div>
-
-            <div id="fields-mayoreo" class="grid grid-cols-2 gap-2 p-3 bg-yellow-50 rounded border border-yellow-200 hidden">
-              <div>
-                <label class="block text-xs font-bold text-gray-600">Menudeo ($)</label>
-                <input type="number" step="0.01" id="form-pmenudeo" class="w-full border rounded p-1.5 text-sm">
-              </div>
-              <div>
-                <label class="block text-xs font-bold text-gray-600">Mayoreo ($)</label>
-                <input type="number" step="0.01" id="form-pmayoreo" class="w-full border rounded p-1.5 text-sm">
-              </div>
-            </div>
-
-            <div class="flex space-x-2 pt-2">
-              <button type="submit" class="flex-1 bg-blue-900 text-white font-bold py-2 rounded hover:bg-blue-800 transition">
-                Guardar
-              </button>
-              <button type="button" onclick="clearForm()" class="bg-gray-300 text-gray-700 font-bold px-4 py-2 rounded hover:bg-gray-400 transition">
-                Limpiar
-              </button>
-            </div>
-          </form>
-        </div>
-
-        <div class="lg:col-span-7 bg-white p-6 rounded-xl shadow-md border border-gray-200">
-          <h3 class="text-lg font-bold text-blue-900 mb-4 flex items-center gap-2">
-            <i data-lucide="list"></i> Inventario de Productos (<span id="admin-product-count">0</span>)
-          </h3>
-          <div class="overflow-y-auto max-h-[600px] divide-y divide-gray-200" id="admin-product-list">
-            </div>
-        </div>
-
-      </div>
-    </div>
-
-    <div id="tab-orders" class="admin-tab-content max-w-7xl mx-auto px-4 py-6 hidden">
-      <div class="bg-white p-6 rounded-xl shadow-md border">
-        <h3 class="text-lg font-bold text-blue-900 mb-4">Tabla de Control de Pedidos</h3>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse">
-            <thead>
-              <tr class="bg-gray-100 border-b text-xs uppercase text-gray-600">
-                <th class="p-3">ID Pedido</th>
-                <th class="p-3">Cliente</th>
-                <th class="p-3">Fecha</th>
-                <th class="p-3">Total</th>
-                <th class="p-3">Estatus</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y text-sm">
-              <tr>
-                <td class="p-3 font-mono font-bold text-blue-800">#ORD-1092</td>
-                <td class="p-3">María González</td>
-                <td class="p-3">15/08/2026</td>
-                <td class="p-3 font-bold">$450.00</td>
-                <td class="p-3"><span class="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full font-bold">Pendiente</span></td>
-              </tr>
-              <tr>
-                <td class="p-3 font-mono font-bold text-blue-800">#ORD-1091</td>
-                <td class="p-3">Limpiezas del Valle S.A.</td>
-                <td class="p-3">14/08/2026</td>
-                <td class="p-3 font-bold">$2,840.00</td>
-                <td class="p-3"><span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full font-bold">Completado</span></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <div id="tab-clients" class="admin-tab-content max-w-7xl mx-auto px-4 py-6 hidden">
-      <div class="bg-white p-6 rounded-xl shadow-md border">
-        <h3 class="text-lg font-bold text-blue-900 mb-4">Directorio de Usuarios</h3>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse">
-            <thead>
-              <tr class="bg-gray-100 border-b text-xs uppercase text-gray-600">
-                <th class="p-3">Cliente</th>
-                <th class="p-3">Contacto</th>
-                <th class="p-3">Historial de Compras</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y text-sm">
-              <tr>
-                <td class="p-3 font-bold">María González</td>
-                <td class="p-3">maria.gonzalez@email.com / 33-1234-5678</td>
-                <td class="p-3">3 Pedidos ($1,250.00 total)</td>
-              </tr>
-              <tr>
-                <td class="p-3 font-bold">Limpiezas del Valle S.A.</td>
-                <td class="p-3">contacto@limpiezasvalle.com / 33-9876-5432</td>
-                <td class="p-3">12 Pedidos ($34,100.00 total)</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <div id="tab-support" class="admin-tab-content max-w-7xl mx-auto px-4 py-6 hidden">
-      <div class="bg-white p-6 rounded-xl shadow-md border">
-        <h3 class="text-lg font-bold text-blue-900 mb-4">Centro de Mensajes de Clientes</h3>
-        <div class="space-y-4">
-          <div class="p-4 bg-gray-50 rounded border border-gray-200">
-            <div class="flex justify-between items-center mb-1">
-              <span class="font-bold text-sm">Juan Pérez (Consulta sobre Mayoreo)</span>
-              <span class="text-xs text-gray-500">Hace 2 horas</span>
-            </div>
-            <p class="text-sm text-gray-700">"Hola, me interesa comprar 50 bidones de 20L de Cloro Uso Industrial. ¿Tienen entrega en Tonala?"</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </main>
-
+  <footer class="bg-[#070c14] border-t border-slate-800/80 py-6 text-center text-xs text-slate-500">
+    © 2026 ARMM LIMPIEZA - Catálogo Oficial de Productos Químicos.
+  </footer>
 
   <script>
-    // BASE DE DATOS INICIAL CON TODOS LOS PRODUCTOS DEL EXCEL
-    let products = [
-      // CLOROS Y PINOL
-      { id: 1, name: "CLORO", category: "CLOROS", saleMode: "litros", p1l: 14, p5l: 70, p20l: 220, image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=300" },
-      { id: 2, name: "CLORO USO INDUSTRIAL", category: "CLOROS", saleMode: "litros", p1l: 18, p5l: 90, p20l: 255, image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=300" },
-      { id: 3, name: "PASTILLAS DE CLORO (1KG)", category: "CLOROS", saleMode: "mayoreo", pmenudeo: 120, pmayoreo: 100, image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=300" },
-      { id: 4, name: "PINO (VERDE)", category: "PINOL", saleMode: "litros", p1l: 14, p5l: 75, p20l: 190, image: "https://images.unsplash.com/photo-1610557892470-55d9e80c0bce?w=300" },
-      { id: 5, name: "PINOL C/EXCEDENTE", category: "PINOL", saleMode: "litros", p1l: 22, p5l: 110, p20l: 290, image: "https://images.unsplash.com/photo-1610557892470-55d9e80c0bce?w=300" },
-      { id: 6, name: "PINO EXTRA", category: "PINOL", saleMode: "litros", p1l: 26, p5l: 115, p20l: 370, image: "https://images.unsplash.com/photo-1610557892470-55d9e80c0bce?w=300" },
+    // BASE DE DATOS EXTRAÍDA COMPLETA DEL CSV
+    const rawProducts = [
+      // CLOROS
+      { id: 1, name: "CLORO", category: "CLOROS", p20: 220, p5: 70, p1: 14, img: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400" },
+      { id: 2, name: "CLORO USO INDUSTRIAL", category: "CLOROS", p20: 255, p5: 90, p1: 18, img: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400" },
+      { id: 3, name: "PASTILLAS DE CLORO (1KG)", category: "CLOROS", special: "Sueltas: 4X10 | 1KG: $120", p20: 120, p5: 10, p1: 10, img: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400" },
       
-      // DETERGENTES & SUAVIZANTES
-      { id: 7, name: "DETERGENTE MAS COLOR", category: "DETERGENTES", saleMode: "litros", p1l: 28, p5l: 140, p20l: 295, image: "https://images.unsplash.com/photo-1517677208171-0bc6725a3e60?w=300" },
-      { id: 8, name: "ARIEL OXI", category: "DETERGENTES", saleMode: "litros", p1l: 28, p5l: 140, p20l: 360, image: "https://images.unsplash.com/photo-1517677208171-0bc6725a3e60?w=300" },
-      { id: 9, name: "SUAVIZANTE DE ROPA NORMAL", category: "SUAVIZANTES", saleMode: "litros", p1l: 24, p5l: 120, p20l: 295, image: "https://images.unsplash.com/photo-1517677208171-0bc6725a3e60?w=300" },
-      { id: 10, name: "SUAVIZANTE DOBLE AROMA", category: "SUAVIZANTES", saleMode: "litros", p1l: 22, p5l: 105, p20l: 360, image: "https://images.unsplash.com/photo-1517677208171-0bc6725a3e60?w=300" },
+      // PINOL
+      { id: 4, name: "PINO (VERDE)", category: "PINOL", p20: 190, p5: 75, p1: 14, img: "https://images.unsplash.com/photo-1610557892470-55d9e80c0bce?w=400" },
+      { id: 5, name: "PINOL C/EXCEDENTE", category: "PINOL", p20: 290, p5: 110, p1: 22, img: "https://images.unsplash.com/photo-1610557892470-55d9e80c0bce?w=400" },
+      { id: 6, name: "PINO EXTRA", category: "PINOL", p20: 370, p5: 115, p1: 26, img: "https://images.unsplash.com/photo-1610557892470-55d9e80c0bce?w=400" },
+      { id: 7, name: "PINOL AROMAS", category: "PINOL", p20: 160, p5: 65, p1: 16, img: "https://images.unsplash.com/photo-1610557892470-55d9e80c0bce?w=400" },
+      { id: 8, name: "PINOL AROMAS PLUS", category: "PINOL", p20: 310, p5: 95, p1: 22, img: "https://images.unsplash.com/photo-1610557892470-55d9e80c0bce?w=400" },
 
-      // LIMPIEZA PROFUNDA & CARROS
-      { id: 11, name: "DESENGRAZANTE", category: "LIMPIEZA PROFUNDA", saleMode: "litros", p1l: 25, p5l: 105, p20l: 380, image: "https://images.unsplash.com/photo-1585421514284-efb74c2b69ba?w=300" },
-      { id: 12, name: "SHAMPOO CARROS ALTA ESPUMA", category: "CARROS", saleMode: "litros", p1l: 28, p5l: 150, p20l: 350, image: "https://images.unsplash.com/photo-1520340356584-f9917d1eea6f?w=300" },
-      { id: 13, name: "ALMOROL GEL", category: "CARROS", saleMode: "litros", p1l: 75, p5l: 340, p20l: 750, image: "https://images.unsplash.com/photo-1520340356584-f9917d1eea6f?w=300" },
-
-      // JARCERÍA & ENVASES
-      { id: 14, name: "TRAPEADOR MICROFIBRA ESPAÑOLA", category: "JARCERÍA", saleMode: "mayoreo", pmenudeo: 115, pmayoreo: 98, image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=300" },
-      { id: 15, name: "ESCOBA ARANDAS 7 HILOS", category: "JARCERÍA", saleMode: "mayoreo", pmenudeo: 98, pmayoreo: 88.55, image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=300" },
-      { id: 16, name: "ENVASE POLIETILENO 5L", category: "ENVASES", saleMode: "mayoreo", pmenudeo: 20, pmayoreo: 15, image: "https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=300" },
-      { id: 17, name: "ENVASE 20L", category: "ENVASES", saleMode: "mayoreo", pmenudeo: 30, pmayoreo: 28, image: "https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=300" }
-    ];
-
-    let selectedCategory = "TODOS";
-    let cartCount = 0;
-
-    // INICIALIZACIÓN
-    window.onload = () => {
-      lucide.createIcons();
-      renderCategoryChips();
-      renderCatalog();
-      renderAdminProducts();
-    };
-
-    // NAVEGACIÓN ENTRE TIENDA Y ADMIN
-    function switchPage(page) {
-      document.getElementById("page-public").classList.toggle("hidden", page !== "public");
-      document.getElementById("page-admin").classList.toggle("hidden", page !== "admin");
-    }
-
-    // NAVEGACIÓN PESTAÑAS ADMIN
-    function switchTab(tabId) {
-      document.querySelectorAll(".admin-tab-content").forEach(el => el.classList.add("hidden"));
-      document.querySelectorAll(".tab-btn").forEach(el => {
-        el.classList.remove("border-blue-800", "text-blue-800");
-        el.classList.add("text-gray-500", "border-transparent");
-      });
-
-      document.getElementById(tabId).classList.remove("hidden");
-      const activeBtn = document.getElementById("tab-btn-" + tabId.replace("tab-", ""));
-      activeBtn.classList.add("border-blue-800", "text-blue-800");
-      activeBtn.classList.remove("text-gray-500", "border-transparent");
-    }
-
-    // RENDERIZAR CHIPS DE CATEGORÍA
-    function renderCategoryChips() {
-      const categories = ["TODOS", "CLOROS", "PINOL", "BASES", "DETERGENTES", "SUAVIZANTES", "CARROS", "LIMPIEZA PROFUNDA", "JARCERÍA", "ENVASES"];
-      const container = document.getElementById("category-chips");
-      
-      container.innerHTML = categories.map(cat => `
-        <button 
-          onclick="filterCategory('${cat}')" 
-          class="px-4 py-1.5 rounded-full text-sm font-bold shadow-sm transition ${
-            selectedCategory === cat 
-              ? 'bg-blue-900 text-yellow-400 font-extrabold ring-2 ring-yellow-400' 
-              : 'bg-white text-gray-700 hover:bg-gray-200'
-          }"
-        >
-          ${cat}
-        </button>
-      `).join('');
-    }
-
-    function filterCategory(cat) {
-      selectedCategory = cat;
-      renderCategoryChips();
-      renderCatalog();
-    }
-
-    // RENDERIZAR TIENDA PÚBLICA
-    function renderCatalog() {
-      const search = document.getElementById("search-input").value.toLowerCase();
-      const grid = document.getElementById("catalog-grid");
-
-      const filtered = products.filter(p => {
-        const matchesCategory = selectedCategory === "TODOS" || p.category === selectedCategory;
-        const matchesSearch = p.name.toLowerCase().includes(search);
-        return matchesCategory && matchesSearch;
-      });
-
-      if(filtered.length === 0) {
-        grid.innerHTML = `<p class="col-span-full text-center text-gray-500 py-8">No se encontraron productos.</p>`;
-        return;
-      }
-
-      grid.innerHTML = filtered.map(p => {
-        let optionsHTML = "";
-        let initialPrice = 0;
-
-        if (p.saleMode === "litros") {
-          initialPrice = p.p1l || 0;
-          optionsHTML = `
-            <option value="${p.p1l}">1 Litro - $${p.p1l}</option>
-            <option value="${p.p5l}">5 Litros - $${p.p5l}</option>
-            <option value="${p.p20l}">20 Litros - $${p.p20l}</option>
-          `;
-        } else {
-          initialPrice = p.pmenudeo || 0;
-          optionsHTML = `
-            <option value="${p.pmenudeo}">Menudeo - $${p.pmenudeo}</option>
-            <option value="${p.pmayoreo}">Mayoreo - $${p.pmayoreo}</option>
-          `;
-        }
-
-        return `
-          <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-200 flex flex-col justify-between hover:shadow-lg transition">
-            <div>
-              <img src="${p.image}" alt="${p.name}" class="h-44 w-full object-cover">
-              <div class="p-4">
-                <span class="text-xs font-bold text-blue-700 bg-blue-100 px-2 py-0.5 rounded-full uppercase">${p.category}</span>
-                <h3 class="font-bold text-gray-800 text-lg mt-1">${p.name}</h3>
-                
-                <div class="mt-3">
-                  <label class="text-xs font-semibold text-gray-500 block mb-1">Presentación / Tipo:</label>
-                  <select onchange="updateCardPrice(this)" class="w-full border rounded p-2 text-sm bg-gray-50 focus:ring-2 focus:ring-blue-800">
-                    ${optionsHTML}
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            <div class="p-4 bg-gray-50 border-t flex justify-between items-center">
-              <div>
-                <span class="text-xs text-gray-500 block">Precio:</span>
-                <span class="price-display font-extrabold text-2xl text-blue-900">$${initialPrice}</span>
-              </div>
-              <button onclick="addToCart()" class="bg-yellow-400 hover:bg-yellow-300 text-blue-900 font-bold px-3 py-2 rounded-lg flex items-center gap-1 shadow">
-                <i data-lucide="plus" class="w-4 h-4"></i> Agregar
-              </button>
-            </div>
-          </div>
-        `;
-      }).join('');
-      lucide.createIcons();
-    }
-
-    function updateCardPrice(selectEl) {
-      const priceDisplay = selectEl.closest('.flex-col').querySelector('.price-display');
-      priceDisplay.innerText = '$' + selectEl.value;
-    }
-
-    function addToCart() {
-      cartCount++;
-      document.getElementById("cart-count").innerText = cartCount;
-    }
-
-    // LOGICA PANEL ADMIN
-    function toggleFormFields() {
-      const mode = document.getElementById("form-sale-mode").value;
-      document.getElementById("fields-litros").classList.toggle("hidden", mode !== "litros");
-      document.getElementById("fields-mayoreo").classList.toggle("hidden", mode !== "mayoreo");
-    }
-
-    function renderAdminProducts() {
-      const container = document.getElementById("admin-product-list");
-      document.getElementById("admin-product-count").innerText = products.length;
-
-      container.innerHTML = products.map(p => `
-        <div class="py-3 flex justify-between items-center space-x-3">
-          <div class="flex items-center space-x-3">
-            <img src="${p.image}" class="w-12 h-12 rounded object-cover border">
-            <div>
-              <h4 class="font-bold text-sm text-gray-800">${p.name}</h4>
-              <p class="text-xs text-gray-500">${p.category} • ${p.saleMode === 'litros' ? 'Por Litros' : 'Mayoreo/Menudeo'}</p>
-            </div>
-          </div>
-          <div class="flex items-center space-x-2">
-            <button onclick="editProduct(${p.id})" class="text-blue-700 bg-blue-100 p-1.5 rounded hover:bg-blue-200">
-              <i data-lucide="edit-2" class="w-4 h-4"></i>
-            </button>
-            <button onclick="deleteProduct(${p.id})" class="text-red-700 bg-red-100 p-1.5 rounded hover:bg-red-200">
-              <i data-lucide="trash-2" class="w-4 h-4"></i>
-            </button>
-          </div>
-        </div>
-      `).join('');
-      lucide.createIcons();
-    }
-
-    function saveProduct(e) {
-      e.preventDefault();
-      const id = document.getElementById("form-product-id").value;
-      const mode = document.getElementById("form-sale-mode").value;
-
-      const newProd = {
-        id: id ? parseInt(id) : Date.now(),
-        name: document.getElementById("form-name").value,
-        category: document.getElementById("form-category").value,
-        image: document.getElementById("form-image").value || "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=300",
-        saleMode: mode,
-        p1l: parseFloat(document.getElementById("form-p1l").value) || 0,
-        p5l: parseFloat(document.getElementById("form-p5l").value) || 0,
-        p20l: parseFloat(document.getElementById("form-p20l").value) || 0,
-        pmenudeo: parseFloat(document.getElementById("form-pmenudeo").value) || 0,
-        pmayoreo: parseFloat(document.getElementById("form-pmayoreo").value) || 0,
-      };
-
-      if(id) {
-        const idx = products.findIndex(p => p.id === parseInt(id));
-        products[idx] = newProd;
-      } else {
-        products.unshift(newProd);
-      }
-
-      clearForm();
-      renderCatalog();
-      renderAdminProducts();
-    }
-
-    function editProduct(id) {
-      const p = products.find(prod => prod.id === id);
-      if(!p) return;
-
-      document.getElementById("form-product-id").value = p.id;
-      document.getElementById("form-name").value = p.name;
-      document.getElementById("form-category").value = p.category;
-      document.getElementById("form-image").value = p.image;
-      document.getElementById("form-sale-mode").value = p.saleMode;
-      
-      document.getElementById("form-p1l").value = p.p1l || "";
-      document.getElementById("form-p5l").value = p.p5l || "";
-      document.getElementById("form-p20l").value = p.p20l || "";
-      document.getElementById("form-pmenudeo").value = p.pmenudeo || "";
-      document.getElementById("form-pmayoreo").value = p.pmayoreo || "";
-
-      toggleFormFields();
-    }
-
-    function deleteProduct(id) {
-      if(confirm("¿Estás seguro de eliminar este producto del inventario?")) {
-        products = products.filter(p => p.id !== id);
-        renderCatalog();
-        renderAdminProducts();
-      }
-    }
-
-    function clearForm() {
-      document.getElementById("product-form").reset();
-      document.getElementById("form-product-id").value = "";
-      toggleFormFields();
-    }
-  </script>
-</body>
-</html>
+      // BASES
+      { id: 9, name: "CLORO USO INDUSTRIAL (BASE)", category: "BASES", p20: 195, p5: 0, p1: 0, img: "https://images.unsplash.com/photo-1585421514284-efb74c2b69ba?w=400" },
+      { id: 10, name: "CLORO (BASE)", category: "BASES", p20: 155, p5: 0, p1: 0, img: "https://images.unsplash.com/photo-1585421514284-efb74c2b69ba?w=400" },
+      { id: 11, name: "MULTIUSOS AROMA PERFUME", category: "BASES", p20: 180, p5: 0, p1: 0, img: "
