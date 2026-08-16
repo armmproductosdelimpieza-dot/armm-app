@@ -3,30 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Productos de Limpieza ARMM - Tienda Pública</title>
+  <title>ARMM LIMPIEZA - Tienda Pública</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
+  <!-- BARRA DE ENVÍO GRATIS -->
+  <div class="top-promo-bar">
+    <i class="fas fa-truck"></i> ¡ENVÍO GRATIS EN PEDIDOS MAYORES A $200 MXN!
+  </div>
+
+  <!-- NAVBAR PRINCIPAL (SIN BOTONES DE NAVEGACIÓN DE PANEL) -->
   <header class="navbar">
     <div class="logo">
-      <h2>ARMM</h2>
-    </div>
-
-    <div class="search-bar">
-      <input type="text" id="input-buscar" placeholder="Buscar productos..." onkeyup="filtrarProductos()">
+      <h2>ARMM <span>LIMPIEZA</span></h2>
+      <span class="badge-sub">PRODUCTOS QUÍMICOS</span>
     </div>
 
     <div class="header-right">
       <div id="auth-buttons">
-        <button id="btn-login" class="btn-nav" onclick="toggleMenuLogin()">Iniciar Sesión</button>
-        <button id="btn-register" class="btn-nav btn-accent" onclick="toggleMenuRegistro()">Registrarse</button>
+        <button id="btn-login" class="btn-nav" onclick="toggleMenuLogin()"><i class="fas fa-user"></i> Iniciar Sesión</button>
+        <button id="btn-register" class="btn-nav btn-accent" onclick="toggleMenuRegistro()"><i class="fas fa-user-plus"></i> Registrarse</button>
       </div>
 
       <div id="user-profile" style="display: none;">
         <button id="btn-user-menu" class="btn-user">
-          <i class="fas fa-user-alt"></i>
+          <i class="fas fa-user-circle"></i>
           <span id="user-display-name">Usuario</span>
         </button>
       </div>
@@ -38,6 +41,7 @@
     </div>
   </header>
 
+  <!-- MENÚ DESPLEGABLE: INICIAR SESIÓN -->
   <div id="menu-login" class="sliding-menu">
     <div class="menu-header">
       <h3>Iniciar Sesión</h3>
@@ -55,13 +59,11 @@
           <i class="fas fa-eye toggle-password" onclick="toggleVerPassword('login-pass', this)"></i>
         </div>
       </div>
-      <div class="form-options">
-        <a href="#" onclick="alert('Instrucciones enviadas.'); return false;">¿Olvidaste tu contraseña?</a>
-      </div>
       <button type="submit" class="btn-submit">Ingresar</button>
     </form>
   </div>
 
+  <!-- MENÚ DESPLEGABLE: REGISTRO -->
   <div id="menu-registro" class="sliding-menu">
     <div class="menu-header">
       <h3>Registro de Usuario</h3>
@@ -79,17 +81,11 @@
           <i class="fas fa-eye toggle-password" onclick="toggleVerPassword('reg-pass', this)"></i>
         </div>
       </div>
-      <div class="form-group password-field">
-        <label>Confirmar Contraseña</label>
-        <div class="input-with-icon">
-          <input type="password" id="reg-confirm-pass" required placeholder="Repite tu contraseña">
-          <i class="fas fa-eye toggle-password" onclick="toggleVerPassword('reg-confirm-pass', this)"></i>
-        </div>
-      </div>
       <button type="submit" class="btn-submit">Registrarse</button>
     </form>
   </div>
 
+  <!-- MENÚ DESPLEGABLE: CARRITO DE COMPRAS -->
   <div id="menu-carrito" class="sliding-menu">
     <div class="menu-header">
       <h3>Carrito de Compras</h3>
@@ -112,37 +108,42 @@
       <div class="summary-row"><span>Descuento:</span> -$<span id="descuento-precio">0.00</span></div>
       <div class="summary-row total-row"><span>Total:</span> $<span id="total-precio">0.00</span></div>
 
-      <div id="bloque-pedido-invitado" class="alerta-registro">
-        <p><strong>Regístrate para hacer un pedido</strong></p>
-        <button class="btn-submit" onclick="toggleMenuRegistro()">Registrarse Ahora</button>
-      </div>
-
-      <div id="bloque-pago-spei" style="display: none;" class="pago-spei-box">
+      <div id="bloque-pago-spei" class="pago-spei-box">
         <h4><i class="fas fa-university"></i> Pago vía SPEI</h4>
         <div class="datos-banco">
           <p><strong>Banco:</strong> BBVA</p>
           <p><strong>CLABE:</strong> 012180001234567890</p>
           <p><strong>Beneficiario:</strong> Productos ARMM</p>
         </div>
-        <div class="form-group">
-          <label>Subir Comprobante (Imagen/PDF):</label>
-          <input type="file" id="comprobante-file" accept="image/*,.pdf">
-        </div>
-        <button class="btn-submit" onclick="realizarPedidoSPEI()">Realizar Pedido y Enviar Comprobante</button>
+        <button class="btn-submit" onclick="realizarPedidoSPEI()">Realizar Pedido</button>
       </div>
     </div>
   </div>
 
-  <main class="main-container">
-    <h1 class="title">Catálogo de Productos ARMM</h1>
+  <!-- HERO BANNER -->
+  <section class="hero-section">
+    <h1>Químicos de Limpieza a Granel y Mayoreo</h1>
+    <p>Suministros de alta concentración para el hogar, autos e industria. Compra desde 1 Litro hasta Porrón de 20L al mejor precio.</p>
     
+    <div class="search-box-large">
+      <i class="fas fa-search"></i>
+      <input type="text" id="input-buscar" placeholder="Buscar producto (ej. Cloro, Pinol, Detergente, Escoba)..." onkeyup="filtrarProductos()">
+    </div>
+  </section>
+
+  <!-- CATÁLOGO PRINCIPAL -->
+  <main class="main-container">
     <div class="categories-filter">
       <button onclick="filtrarCategoria('TODOS')" class="btn-cat active">Todos</button>
       <button onclick="filtrarCategoria('CLOROS')" class="btn-cat">Cloros</button>
       <button onclick="filtrarCategoria('PINOL')" class="btn-cat">Pinol</button>
       <button onclick="filtrarCategoria('BASES')" class="btn-cat">Bases</button>
       <button onclick="filtrarCategoria('DETERGENTES')" class="btn-cat">Detergentes</button>
-      <button onclick="filtrarCategoria('AUTOMOTRIZ')" class="btn-cat">Automotriz</button>
+      <button onclick="filtrarCategoria('VANISH')" class="btn-cat">Vanish</button>
+      <button onclick="filtrarCategoria('SUAVIZANTES')" class="btn-cat">Suavizantes</button>
+      <button onclick="filtrarCategoria('LAVAMANOS')" class="btn-cat">Lavamanos</button>
+      <button onclick="filtrarCategoria('LAVATRASTES')" class="btn-cat">Lavatrastes</button>
+      <button onclick="filtrarCategoria('CARROS')" class="btn-cat">Carros</button>
       <button onclick="filtrarCategoria('LIMPIEZA PROFUNDA')" class="btn-cat">Limpieza Profunda</button>
       <button onclick="filtrarCategoria('JARCERÍA')" class="btn-cat">Jarcería</button>
     </div>
