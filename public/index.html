@@ -9,6 +9,16 @@
 </head>
 <body class="admin-body">
 
+  <div id="modal-pass-admin" class="admin-modal-overlay">
+    <div class="admin-modal-box">
+      <h3><i class="fas fa-lock"></i> Acceso Administrador</h3>
+      <p>Por favor ingresa la contraseña para acceder al panel:</p>
+      <input type="password" id="input-admin-pass" placeholder="Contraseña Admin">
+      <button class="btn-submit" onclick="validarClaveAdmin()">Ingresar</button>
+      <div id="admin-pass-error" class="error-msg"></div>
+    </div>
+  </div>
+
   <div id="admin-content" style="display: none;">
     
     <header class="navbar admin-navbar">
@@ -17,7 +27,7 @@
       </div>
 
       <div class="search-bar">
-        <input type="text" id="input-buscar-admin" placeholder="Buscar productos en panel..." onkeyup="filtrarProductosAdmin()">
+        <input type="text" id="input-buscar-admin" placeholder="Buscar productos..." onkeyup="filtrarProductosAdmin()">
       </div>
 
       <div class="header-right">
@@ -124,46 +134,43 @@
                 <th>Correo</th>
               </tr>
             </thead>
-            <tbody id="tabla-usuarios-body">
-              </tbody>
+            <tbody id="tabla-usuarios-body"></tbody>
           </table>
         </div>
       </section>
 
       <section class="admin-section">
-        <h2><i class="fas fa-ticket-alt"></i> Generador de Cupones de Descuento</h2>
+        <h2><i class="fas fa-ticket-alt"></i> Panel de Creación de Cupones</h2>
         <form id="form-crear-cupon" onsubmit="crearCupon(event)" class="inline-form">
           <div class="form-group">
             <label>Código del Cupón</label>
             <input type="text" id="cupon-codigo" placeholder="Ej. DESCUENTO10" style="text-transform:uppercase;" required>
           </div>
           <div class="form-group">
-            <label>Porcentaje de Descuento (%)</label>
-            <input type="number" id="cupon-porcentaje" min="1" max="100" placeholder="Ej. 10" required>
+            <label>Porcentaje (%)</label>
+            <input type="number" id="cupon-porcentaje" min="1" max="100" placeholder="10" required>
           </div>
           <button type="submit" class="btn-submit">Crear Cupón</button>
         </form>
 
-        <h3>Cupones Creados Activos</h3>
+        <h3>Cupones Activos</h3>
         <div class="table-responsive">
           <table>
             <thead>
               <tr>
                 <th>Código</th>
-                <th>Descuento (%)</th>
+                <th>Descuento</th>
                 <th>Acción</th>
               </tr>
             </thead>
-            <tbody id="tabla-cupones-body">
-              </tbody>
+            <tbody id="tabla-cupones-body"></tbody>
           </table>
         </div>
       </section>
 
       <section class="admin-section">
-        <h2><i class="fas fa-boxes"></i> Todos los Productos Registrados</h2>
-        <div id="grid-productos-admin" class="products-grid">
-          </div>
+        <h2><i class="fas fa-boxes"></i> Todos los Productos</h2>
+        <div id="grid-productos-admin" class="products-grid"></div>
       </section>
 
     </main>
@@ -171,11 +178,5 @@
   </div>
 
   <script src="script.js"></script>
-  <script>
-    // Inicializar validación de contraseña de administrador en admin.html
-    document.addEventListener("DOMContentLoaded", function() {
-      verificarAccesoAdmin();
-    });
-  </script>
 </body>
 </html>
