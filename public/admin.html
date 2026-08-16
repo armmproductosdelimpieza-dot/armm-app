@@ -1,344 +1,266 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ARMM - Dashboard de Administración</title>
-    <style>
-        :root {
-            --bg-dark: #060913;
-            --card-bg: rgba(15, 23, 42, 0.75);
-            --border-color: rgba(255, 255, 255, 0.12);
-            --accent-green: #00e676;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --danger-color: #ef4444;
-            --warning-color: #f59e0b;
-        }
-
-        body {
-            font-family: system-ui, -apple-system, sans-serif;
-            background: var(--bg-dark);
-            color: var(--text-main);
-            margin: 0; padding: 20px;
-        }
-
-        .header-admin {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 15px;
-            margin-bottom: 25px;
-        }
-
-        .nav-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .tab-btn {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        .tab-btn.active {
-            background: var(--accent-green);
-            color: #000;
-        }
-
-        .panel-section { display: none; }
-        .panel-section.active { display: block; }
-
-        .grid-2 { display: grid; grid-template-columns: 350px 1fr; gap: 20px; }
-
-        .card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            padding: 20px;
-            border-radius: 12px;
-        }
-
-        .form-control {
-            width: 100%;
-            background: rgba(0,0,0,0.4);
-            border: 1px solid var(--border-color);
-            color: white;
-            padding: 10px;
-            border-radius: 6px;
-            margin-bottom: 12px;
-            box-sizing: border-box;
-        }
-
-        .btn {
-            padding: 8px 14px;
-            border: none;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .btn-green { background: var(--accent-green); color: #000; }
-        .btn-warning { background: var(--warning-color); color: #000; }
-        .btn-danger { background: var(--danger-color); color: #fff; }
-
-        .prod-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .img-preview {
-            width: 45px;
-            height: 45px;
-            border-radius: 6px;
-            object-fit: cover;
-            margin-right: 12px;
-            background: rgba(255,255,255,0.05);
-        }
-
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { text-align: left; padding: 12px; border-bottom: 1px solid var(--border-color); }
-        th { color: var(--accent-green); }
-    </style>
-    <script src="/socket.io/socket.io.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ARMM LIMPIEZA - Panel de Administración</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body {
+      background-color: #0b131e;
+      color: #f8fafc;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+  </style>
 </head>
-<body>
+<body class="min-h-screen flex flex-col">
 
-    <div class="header-admin">
-        <h2 style="color:var(--accent-green); margin:0;">ARMM — Panel de Administración</h2>
-        <a href="/" style="color:var(--text-muted); text-decoration:none;">Ver Tienda Pública ↗</a>
+  <header class="bg-[#070c14] border-b border-slate-800 px-6 py-4 flex justify-between items-center">
+    <div class="flex items-center space-x-3">
+      <i data-lucide="shield-check" class="w-6 h-6 text-[#00ff88]"></i>
+      <div>
+        <h1 class="text-base font-bold text-white leading-tight">Panel de Administración Central</h1>
+        <p class="text-xs text-slate-400">ARMM LIMPIEZA • Control de Inventario</p>
+      </div>
+    </div>
+    <a href="index.html" class="bg-slate-800 hover:bg-slate-700 text-xs text-slate-200 font-bold px-3.5 py-2 rounded-lg transition border border-slate-700">
+      ← Ir a la Tienda Pública
+    </a>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 py-6 w-full flex-grow">
+    
+    <div class="flex border-b border-slate-800 space-x-2 mb-6">
+      <button onclick="switchTab('tab-products')" id="btn-tab-products" class="tab-btn px-4 py-2.5 font-bold text-xs rounded-t-lg bg-[#141e2d] text-[#00ff88] border-t-2 border-[#00ff88]">
+        📦 Gestión de Productos
+      </button>
+      <button onclick="switchTab('tab-orders')" id="btn-tab-orders" class="tab-btn px-4 py-2.5 font-bold text-xs text-slate-400 hover:text-white">
+        🛒 Pedidos
+      </button>
+      <button onclick="switchTab('tab-clients')" id="btn-tab-clients" class="tab-btn px-4 py-2.5 font-bold text-xs text-slate-400 hover:text-white">
+        👥 Clientes
+      </button>
+      <button onclick="switchTab('tab-support')" id="btn-tab-support" class="tab-btn px-4 py-2.5 font-bold text-xs text-slate-400 hover:text-white">
+        💬 Soporte
+      </button>
     </div>
 
-    <!-- NAVEGACIÓN ENTRE PANELES -->
-    <div class="nav-tabs">
-        <button class="tab-btn active" onclick="switchTab('productos')">📦 Productos</button>
-        <button class="tab-btn" onclick="switchTab('pedidos')">🛒 Pedidos</button>
-        <button class="tab-btn" onclick="switchTab('clientes')">👥 Clientes</button>
-        <button class="tab-btn" onclick="switchTab('ayuda')">💬 Soporte y Ayuda</button>
-    </div>
+    <div id="tab-products" class="tab-content grid grid-cols-1 lg:grid-cols-12 gap-8">
+      
+      <div class="lg:col-span-5 bg-[#141e2d] p-5 rounded-xl border border-slate-800 shadow-lg">
+        <h3 class="text-sm font-bold text-white mb-4 flex items-center gap-2">
+          <i data-lucide="plus-circle" class="w-4 h-4 text-[#00ff88]"></i> Registrar / Editar Producto
+        </h3>
 
-    <!-- PANEL 1: PRODUCTOS -->
-    <div id="tab-productos" class="panel-section active">
-        <div class="grid-2">
-            <div class="card">
-                <h3 id="formTitle">Agregar / Editar Producto</h3>
-                <input type="hidden" id="pId">
-                
-                <label>Nombre del Producto</label>
-                <input type="text" id="pName" class="form-control" placeholder="Ej. Cloro">
+        <form id="product-form" onsubmit="saveProduct(event)" class="space-y-4">
+          <input type="hidden" id="form-id">
 
-                <label>Categoría</label>
-                <input type="text" id="pCategory" class="form-control" placeholder="Ej. Cloros">
+          <div>
+            <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1">Nombre del Producto</label>
+            <input type="text" id="form-name" required class="w-full bg-[#0b131e] border border-slate-700 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-[#00ff88]">
+          </div>
 
-                <label>URL de Imagen</label>
-                <input type="text" id="pImg" class="form-control" placeholder="https://ejemplo.com/imagen.jpg">
+          <div>
+            <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1">Categoría</label>
+            <select id="form-category" class="w-full bg-[#0b131e] border border-slate-700 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-[#00ff88]">
+              <option value="CLOROS">CLOROS</option>
+              <option value="PINOL">PINOL</option>
+              <option value="BASES">BASES</option>
+              <option value="DETERGENTES">DETERGENTES</option>
+              <option value="VANISH">VANISH</option>
+              <option value="SUAVIZANTES">SUAVIZANTES</option>
+              <option value="LAVAMANOS">LAVAMANOS</option>
+              <option value="LAVATRASTES">LAVATRASTES</option>
+              <option value="CARROS">CARROS</option>
+              <option value="LIMPIEZA PROFUNDA">LIMPIEZA PROFUNDA</option>
+              <option value="REPELENTES Y CONTROL">REPELENTES Y CONTROL</option>
+              <option value="CUIDADO PERSONAL">CUIDADO PERSONAL</option>
+            </select>
+          </div>
 
-                <label>Modo de Venta</label>
-                <select id="pSaleMode" class="form-control" onchange="toggleFields()">
-                    <option value="litros">Por Litros (1L, 5L, 20L)</option>
-                    <option value="mayoreo_menudeo">Mayoreo y Menudeo</option>
-                </select>
+          <div>
+            <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1">Modo de Venta</label>
+            <select id="form-mode" onchange="toggleFormFields()" class="w-full bg-[#0b131e] border border-slate-700 rounded-lg p-2.5 text-xs text-[#00ff88] font-bold focus:outline-none">
+              <option value="litros">Por Litros (1L, 5L, 20L)</option>
+              <option value="mayoreo">Mayoreo / Menudeo (Piezas)</option>
+            </select>
+          </div>
 
-                <div id="fieldsLitros">
-                    <label>Precio 1L ($)</label>
-                    <input type="number" id="p1L" class="form-control" step="0.5">
-                    <label>Precio 5L ($)</label>
-                    <input type="number" id="p5L" class="form-control" step="0.5">
-                    <label>Precio 20L ($)</label>
-                    <input type="number" id="p20L" class="form-control" step="0.5">
-                </div>
-
-                <div id="fieldsMayoreo" style="display:none;">
-                    <label>Precio Menudeo ($)</label>
-                    <input type="number" id="pMenudeo" class="form-control" step="0.5">
-                    <label>Precio Mayoreo ($)</label>
-                    <input type="number" id="pMayoreo" class="form-control" step="0.5">
-                </div>
-
-                <button class="btn btn-green" style="width:100%; margin-top:10px;" onclick="saveProduct()">Guardar Producto</button>
-                <button class="btn btn-danger" style="width:100%; margin-top:5px;" onclick="resetForm()">Limpiar Formulario</button>
+          <div id="fields-litros" class="grid grid-cols-3 gap-2 p-3 bg-[#0b131e] rounded-lg border border-slate-800">
+            <div>
+              <label class="block text-[10px] text-slate-400">1 Litro ($)</label>
+              <input type="number" step="0.01" id="form-p1" class="w-full bg-[#141e2d] border border-slate-700 rounded p-1.5 text-xs text-white">
             </div>
-
-            <div class="card">
-                <h3>Catálogo en Vivo (<span id="totalCount">0</span> productos)</h3>
-                <div id="productsAdminList" style="max-height: 70vh; overflow-y: auto;"></div>
+            <div>
+              <label class="block text-[10px] text-slate-400">5 Litros ($)</label>
+              <input type="number" step="0.01" id="form-p5" class="w-full bg-[#141e2d] border border-slate-700 rounded p-1.5 text-xs text-white">
             </div>
-        </div>
+            <div>
+              <label class="block text-[10px] text-slate-400">20 Litros ($)</label>
+              <input type="number" step="0.01" id="form-p20" class="w-full bg-[#141e2d] border border-slate-700 rounded p-1.5 text-xs text-white">
+            </div>
+          </div>
+
+          <div id="fields-mayoreo" class="grid grid-cols-2 gap-2 p-3 bg-[#0b131e] rounded-lg border border-slate-800 hidden">
+            <div>
+              <label class="block text-[10px] text-slate-400">Menudeo ($)</label>
+              <input type="number" step="0.01" id="form-pmenudeo" class="w-full bg-[#141e2d] border border-slate-700 rounded p-1.5 text-xs text-white">
+            </div>
+            <div>
+              <label class="block text-[10px] text-slate-400">Mayoreo ($)</label>
+              <input type="number" step="0.01" id="form-pmayoreo" class="w-full bg-[#141e2d] border border-slate-700 rounded p-1.5 text-xs text-white">
+            </div>
+          </div>
+
+          <div class="flex space-x-2 pt-2">
+            <button type="submit" class="flex-1 bg-[#00ff88] hover:bg-[#00e676] text-slate-950 font-bold py-2.5 rounded-lg text-xs transition">
+              Guardar en Catálogo
+            </button>
+            <button type="button" onclick="clearForm()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold px-4 py-2.5 rounded-lg text-xs transition border border-slate-700">
+              Limpiar
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div class="lg:col-span-7 bg-[#141e2d] p-5 rounded-xl border border-slate-800 shadow-lg">
+        <h3 class="text-sm font-bold text-white mb-4 flex items-center gap-2">
+          <i data-lucide="list" class="w-4 h-4 text-[#00ff88]"></i> Inventario Registrado (<span id="count-display">0</span>)
+        </h3>
+        <div id="admin-product-list" class="divide-y divide-slate-800 max-h-[500px] overflow-y-auto pr-1">
+          </div>
+      </div>
     </div>
 
-    <!-- PANEL 2: PEDIDOS -->
-    <div id="tab-pedidos" class="panel-section">
-        <div class="card">
-            <h3>Gestión de Pedidos Registrados</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Cliente</th>
-                        <th>Fecha</th>
-                        <th>Total</th>
-                        <th>Estatus</th>
-                    </tr>
-                </thead>
-                <tbody id="pedidosTable">
-                    <tr><td colspan="5" style="color:var(--text-muted)">No hay pedidos registrados aún.</td></tr>
-                </tbody>
-            </table>
-        </div>
+    <div id="tab-orders" class="tab-content hidden">
+      <div class="bg-[#141e2d] p-6 rounded-xl border border-slate-800">
+        <h3 class="font-bold text-white mb-2 text-sm">Registro de Pedidos</h3>
+        <p class="text-xs text-slate-400">No hay pedidos pendientes en el sistema.</p>
+      </div>
     </div>
 
-    <!-- PANEL 3: CLIENTES -->
-    <div id="tab-clientes" class="panel-section">
-        <div class="card">
-            <h3>Directorio de Clientes</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Contacto</th>
-                        <th>Compras</th>
-                    </tr>
-                </thead>
-                <tbody id="clientesTable">
-                    <tr><td colspan="3" style="color:var(--text-muted)">No hay clientes registrados.</td></tr>
-                </tbody>
-            </table>
-        </div>
+    <div id="tab-clients" class="tab-content hidden">
+      <div class="bg-[#141e2d] p-6 rounded-xl border border-slate-800">
+        <h3 class="font-bold text-white mb-2 text-sm">Directorio de Clientes</h3>
+        <p class="text-xs text-slate-400">Historial de clientes registrado localmente.</p>
+      </div>
     </div>
 
-    <!-- PANEL 4: AYUDA -->
-    <div id="tab-ayuda" class="panel-section">
-        <div class="card">
-            <h3>Solicitudes de Soporte y Ayuda</h3>
-            <div id="ayudaList" style="color:var(--text-muted);">Sin consultas pendientes.</div>
-        </div>
+    <div id="tab-support" class="tab-content hidden">
+      <div class="bg-[#141e2d] p-6 rounded-xl border border-slate-800">
+        <h3 class="font-bold text-white mb-2 text-sm">Centro de Mensajes</h3>
+        <p class="text-xs text-slate-400">Consultas de clientes en tienda.</p>
+      </div>
     </div>
 
-    <script>
-        const socket = io();
-        let currentProducts = [];
+  </main>
 
-        function switchTab(tab) {
-            document.querySelectorAll('.panel-section').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-            document.getElementById('tab-' + tab).classList.add('active');
-            event.target.classList.add('active');
-        }
+  <script>
+    let adminProducts = [
+      { id: 1, name: "CLORO", category: "CLOROS", mode: "litros", p1: 14, p5: 70, p20: 220 },
+      { id: 2, name: "CLORO USO INDUSTRIAL", category: "CLOROS", mode: "litros", p1: 18, p5: 90, p20: 255 },
+      { id: 3, name: "PINO (VERDE)", category: "PINOL", mode: "litros", p1: 14, p5: 75, p20: 190 }
+    ];
 
-        socket.on('inventario_actualizado', (prods) => {
-            currentProducts = prods;
-            document.getElementById('totalCount').innerText = prods.length;
-            renderList(prods);
-        });
+    window.onload = () => {
+      lucide.createIcons();
+      renderAdminList();
+    };
 
-        function toggleFields() {
-            const mode = document.getElementById('pSaleMode').value;
-            document.getElementById('fieldsLitros').style.display = mode === 'litros' ? 'block' : 'none';
-            document.getElementById('fieldsMayoreo').style.display = mode === 'mayoreo_menudeo' ? 'block' : 'none';
-        }
+    function switchTab(tabId) {
+      document.querySelectorAll(".tab-content").forEach(el => el.classList.add("hidden"));
+      document.querySelectorAll(".tab-btn").forEach(el => {
+        el.className = "tab-btn px-4 py-2.5 font-bold text-xs text-slate-400 hover:text-white";
+      });
 
-        function saveProduct() {
-            const id = document.getElementById('pId').value;
-            const name = document.getElementById('pName').value;
-            const category = document.getElementById('pCategory').value;
-            const img = document.getElementById('pImg').value;
-            const mode = document.getElementById('pSaleMode').value;
+      document.getElementById(tabId).classList.remove("hidden");
+      const activeBtn = document.getElementById("btn-" + tabId);
+      activeBtn.className = "tab-btn px-4 py-2.5 font-bold text-xs rounded-t-lg bg-[#141e2d] text-[#00ff88] border-t-2 border-[#00ff88]";
+    }
 
-            if(!name) return alert("Ingresa el nombre del producto.");
+    function toggleFormFields() {
+      const mode = document.getElementById("form-mode").value;
+      document.getElementById("fields-litros").classList.toggle("hidden", mode !== "litros");
+      document.getElementById("fields-mayoreo").classList.toggle("hidden", mode !== "mayoreo");
+    }
 
-            let precios = {};
-            if(mode === 'litros') {
-                precios["1L"] = parseFloat(document.getElementById('p1L').value) || 0;
-                precios["5L"] = parseFloat(document.getElementById('p5L').value) || 0;
-                precios["20L"] = parseFloat(document.getElementById('p20L').value) || 0;
-            } else {
-                precios["Menudeo"] = parseFloat(document.getElementById('pMenudeo').value) || 0;
-                precios["Mayoreo"] = parseFloat(document.getElementById('pMayoreo').value) || 0;
-            }
+    function renderAdminList() {
+      const container = document.getElementById("admin-product-list");
+      document.getElementById("count-display").innerText = adminProducts.length;
 
-            socket.emit('agregar_o_editar_producto', {
-                id: id || null,
-                nombre: name,
-                categoria: category,
-                imagen: img,
-                saleMode: mode,
-                precios: precios
-            });
+      container.innerHTML = adminProducts.map(p => `
+        <div class="py-3 flex justify-between items-center">
+          <div>
+            <h4 class="font-bold text-xs text-white">${p.name}</h4>
+            <p class="text-[10px] text-slate-400">${p.category} • ${p.mode === 'litros' ? 'Por Litros' : 'Mayoreo'}</p>
+          </div>
+          <div class="flex space-x-2">
+            <button onclick="editProd(${p.id})" class="text-[#00ff88] bg-slate-900 p-2 rounded hover:bg-slate-800 transition">
+              <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
+            </button>
+            <button onclick="deleteProd(${p.id})" class="text-red-400 bg-slate-900 p-2 rounded hover:bg-slate-800 transition">
+              <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        </div>
+      `).join('');
+      lucide.createIcons();
+    }
 
-            resetForm();
-        }
+    function saveProduct(e) {
+      e.preventDefault();
+      const id = document.getElementById("form-id").value;
+      const mode = document.getElementById("form-mode").value;
 
-        function editProduct(id) {
-            const prod = currentProducts.find(p => p.id === id);
-            if(!prod) return;
+      const item = {
+        id: id ? parseInt(id) : Date.now(),
+        name: document.getElementById("form-name").value,
+        category: document.getElementById("form-category").value,
+        mode: mode,
+        p1: parseFloat(document.getElementById("form-p1").value) || 0,
+        p5: parseFloat(document.getElementById("form-p5").value) || 0,
+        p20: parseFloat(document.getElementById("form-p20").value) || 0,
+      };
 
-            document.getElementById('formTitle').innerText = 'Editar Producto #' + prod.id;
-            document.getElementById('pId').value = prod.id;
-            document.getElementById('pName').value = prod.nombre || prod.name || '';
-            document.getElementById('pCategory').value = prod.categoria || prod.category || '';
-            document.getElementById('pImg').value = prod.imagen || '';
-            document.getElementById('pSaleMode').value = prod.saleMode || 'litros';
+      if(id) {
+        const idx = adminProducts.findIndex(p => p.id === parseInt(id));
+        adminProducts[idx] = item;
+      } else {
+        adminProducts.unshift(item);
+      }
 
-            toggleFields();
+      clearForm();
+      renderAdminList();
+    }
 
-            if(prod.precios) {
-                document.getElementById('p1L').value = prod.precios["1L"] || '';
-                document.getElementById('p5L').value = prod.precios["5L"] || '';
-                document.getElementById('p20L').value = prod.precios["20L"] || '';
-                document.getElementById('pMenudeo').value = prod.precios["Menudeo"] || '';
-                document.getElementById('pMayoreo').value = prod.precios["Mayoreo"] || '';
-            }
-        }
+    function editProd(id) {
+      const p = adminProducts.find(item => item.id === id);
+      if(!p) return;
 
-        function deleteProduct(id) {
-            if(confirm("¿Deseas eliminar este producto del inventario?")) {
-                socket.emit('eliminar_producto', id);
-            }
-        }
+      document.getElementById("form-id").value = p.id;
+      document.getElementById("form-name").value = p.name;
+      document.getElementById("form-category").value = p.category;
+      document.getElementById("form-mode").value = p.mode || "litros";
+      document.getElementById("form-p1").value = p.p1 || "";
+      document.getElementById("form-p5").value = p.p5 || "";
+      document.getElementById("form-p20").value = p.p20 || "";
 
-        function renderList(prods) {
-            const list = document.getElementById('productsAdminList');
-            list.innerHTML = prods.map(p => {
-                const descPrecio = p.precios ? Object.entries(p.precios).map(([k,v]) => `${k}: $${v}`).join(' | ') : 'Sin precio';
-                const defaultImg = 'https://images.unsplash.com/photo-1585421514284-efb74c2b69ba?w=150&q=80';
-                return `
-                    <div class="prod-row">
-                        <div style="display:flex; align-items:center;">
-                            <img src="${p.imagen || defaultImg}" class="img-preview" alt="prod">
-                            <div>
-                                <strong>${p.nombre || p.name}</strong> <small style="color:var(--text-muted)">(${p.categoria || 'General'})</small>
-                                <div style="font-size:0.8rem; color:var(--accent-green); margin-top:2px;">${descPrecio}</div>
-                            </div>
-                        </div>
-                        <div>
-                            <button class="btn btn-warning" onclick="editProduct(${p.id})">Editar</button>
-                            <button class="btn btn-danger" onclick="deleteProduct(${p.id})">🗑️</button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
+      toggleFormFields();
+    }
 
-        function resetForm() {
-            document.getElementById('formTitle').innerText = 'Agregar / Editar Producto';
-            document.getElementById('pId').value = '';
-            document.getElementById('pName').value = '';
-            document.getElementById('pCategory').value = '';
-            document.getElementById('pImg').value = '';
-            document.getElementById('p1L').value = '';
-            document.getElementById('p5L').value = '';
-            document.getElementById('p20L').value = '';
-            document.getElementById('pMenudeo').value = '';
-            document.getElementById('pMayoreo').value = '';
-        }
-    </script>
+    function deleteProd(id) {
+      if(confirm("¿Eliminar producto?")) {
+        adminProducts = adminProducts.filter(p => p.id !== id);
+        renderAdminList();
+      }
+    }
+
+    function clearForm() {
+      document.getElementById("product-form").reset();
+      document.getElementById("form-id").value = "";
+      toggleFormFields();
+    }
+  </script>
 </body>
 </html>
