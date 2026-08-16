@@ -3,160 +3,150 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Panel Administrativo ARMM</title>
+  <title>Panel Administrativo - ARMM LIMPIEZA</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body class="admin-body">
 
+  <!-- MODAL SOLICITUD DE CONTRASEÑA ADMIN (ARMM123) -->
   <div id="modal-pass-admin" class="admin-modal-overlay">
     <div class="admin-modal-box">
-      <h3><i class="fas fa-lock"></i> Acceso Administrador</h3>
-      <p>Ingresa la contraseña para desbloquear el panel:</p>
-      <input type="password" id="input-admin-pass" placeholder="Contraseña Admin">
-      <button class="btn-submit" onclick="validarClaveAdmin()">Ingresar</button>
+      <i class="fas fa-user-shield modal-icon-admin"></i>
+      <h3>Acceso Administrador</h3>
+      <p>Ingresa la contraseña del panel:</p>
+      <input type="password" id="input-admin-pass" placeholder="Contraseña Admin" onkeypress="if(event.key==='Enter') validarClaveAdmin()">
+      <button class="btn-submit" onclick="validarClaveAdmin()">Desbloquear Panel</button>
       <div id="admin-pass-error" class="error-msg"></div>
     </div>
   </div>
 
+  <!-- CONTENIDO PANEL ADMIN (SE MUESTRA SOLO AL VALIDAR ARMM123) -->
   <div id="admin-content" style="display: none;">
     
     <header class="navbar admin-navbar">
       <div class="logo">
-        <h2>ARMM - Panel Administrativo</h2>
+        <h2>ARMM <span>ADMIN</span></h2>
       </div>
 
       <div class="search-bar">
-        <input type="text" id="input-buscar-admin" placeholder="Buscar productos..." onkeyup="filtrarProductosAdmin()">
+        <input type="text" id="input-buscar-admin" placeholder="Buscar en inventario..." onkeyup="filtrarProductosAdmin()">
       </div>
 
       <div class="header-right">
-        <div id="auth-buttons">
-          <button id="btn-login" class="btn-nav" onclick="toggleMenuLogin()">Iniciar Sesión</button>
-          <button id="btn-register" class="btn-nav btn-accent" onclick="toggleMenuRegistro()">Registrarse</button>
-        </div>
-
-        <div id="user-profile" style="display: none;">
-          <button id="btn-user-menu" class="btn-user">
-            <i class="fas fa-user-shield"></i>
-            <span id="user-display-name">Admin</span>
-          </button>
-        </div>
-
-        <button class="btn-cart" onclick="toggleCarrito()">
-          <i class="fas fa-shopping-cart"></i>
-          <span id="cart-count">0</span>
-        </button>
+        <span class="user-badge-admin"><i class="fas fa-user-circle"></i> Admin: Fernando</span>
+        <a href="index.html" class="btn-nav"><i class="fas fa-store"></i> Ir a Tienda Pública</a>
       </div>
     </header>
 
     <main class="main-container">
-      
+
+      <!-- MÓDULO DEL PANEL DE ADMINISTRACIÓN COMPLETO -->
       <section class="admin-dashboard-panel">
-        <div class="panel-header" onclick="togglePanelAdmin()">
+        <div class="panel-header">
           <div class="panel-title">
-            <i class="fas fa-user-shield panel-icon"></i>
+            <i class="fas fa-sliders-h panel-icon"></i>
             <div>
-              <h2>Panel de Administración</h2>
-              <p>Control interno del sistema, gestión de usuarios, cupones e inventario.</p>
+              <h2>Panel de Administración Central</h2>
+              <p>Sistema Integral ARMM Limpieza - Control de Inventarios y Operaciones</p>
             </div>
           </div>
-          <button class="btn-toggle-panel" id="btn-panel-toggle">
-            <i class="fas fa-chevron-up"></i>
-          </button>
         </div>
 
-        <div class="panel-body" id="contenido-primer-panel">
+        <div class="panel-body">
           <div class="panel-stats-grid">
-            <div class="stat-card">
-              <i class="fas fa-users"></i>
-              <div>
-                <span class="stat-number" id="stat-usuarios-count">0</span>
-                <span class="stat-label">Usuarios Registrados</span>
-              </div>
-            </div>
-
-            <div class="stat-card">
-              <i class="fas fa-ticket-alt"></i>
-              <div>
-                <span class="stat-number" id="stat-cupones-count">0</span>
-                <span class="stat-label">Cupones Activos</span>
-              </div>
-            </div>
-
             <div class="stat-card">
               <i class="fas fa-boxes"></i>
               <div>
-                <span class="stat-number" id="stat-productos-count">54</span>
-                <span class="stat-label">Productos en Catálogo</span>
+                <span class="stat-number" id="stat-productos-count">6</span>
+                <span class="stat-label">Productos en Inventario</span>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <i class="fas fa-shopping-bag"></i>
+              <div>
+                <span class="stat-number">3</span>
+                <span class="stat-label">Nuevos Pedidos</span>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <i class="fas fa-headset"></i>
+              <div>
+                <span class="stat-number">2</span>
+                <span class="stat-label">Mensajes Soporte</span>
               </div>
             </div>
           </div>
-
-          <div class="panel-actions">
-            <button class="btn-action" onclick="scrollASeccion('sec-usuarios')">
-              <i class="fas fa-user-friends"></i> Ver Usuarios
-            </button>
-            <button class="btn-action" onclick="scrollASeccion('sec-cupones')">
-              <i class="fas fa-plus-circle"></i> Crear Cupón
-            </button>
-            <button class="btn-action btn-action-outline" onclick="scrollASeccion('sec-inventario')">
-              <i class="fas fa-clipboard-list"></i> Administrar Inventario
-            </button>
-          </div>
         </div>
       </section>
 
-      <section id="sec-usuarios" class="admin-section">
-        <h2><i class="fas fa-users"></i> Usuarios Registrados</h2>
-        <div class="table-responsive">
-          <table>
-            <thead>
-              <tr>
-                <th>Nombre</th>
-                <th>Apellido</th>
-                <th>Teléfono</th>
-                <th>Correo</th>
-              </tr>
-            </thead>
-            <tbody id="tabla-usuarios-body"></tbody>
-          </table>
-        </div>
-      </section>
+      <!-- REGISTRO Y EDICIÓN DE PRODUCTOS E INVENTARIO -->
+      <div class="admin-grid-layout">
+        
+        <!-- FORMULARIO DE REGISTRO/EDICIÓN DE PRODUCTO -->
+        <section class="admin-card-box">
+          <h3><i class="fas fa-plus-circle"></i> REGISTRAR / EDITAR PRODUCTO</h3>
+          <form id="form-producto-admin" onsubmit="guardarProductoAdmin(event)">
+            <div class="form-group">
+              <label>Nombre del Producto *</label>
+              <input type="text" id="admin-prod-nombre" required placeholder="Ej. Cloro Gel Ultra">
+            </div>
 
-      <section id="sec-cupones" class="admin-section">
-        <h2><i class="fas fa-ticket-alt"></i> Crear y Gestionar Cupones</h2>
-        <form id="form-crear-cupon" onsubmit="crearCupon(event)" class="inline-form">
-          <div class="form-group">
-            <label>Código del Cupón</label>
-            <input type="text" id="cupon-codigo" placeholder="Ej. PROMO2026" style="text-transform:uppercase;" required>
-          </div>
-          <div class="form-group">
-            <label>Porcentaje (%)</label>
-            <input type="number" id="cupon-porcentaje" min="1" max="100" placeholder="15" required>
-          </div>
-          <button type="submit" class="btn-submit">Crear Cupón</button>
-        </form>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Categoría *</label>
+                <select id="admin-prod-categoria" required>
+                  <option value="CLOROS">CLOROS</option>
+                  <option value="PINOL">PINOL</option>
+                  <option value="BASES">BASES</option>
+                  <option value="DETERGENTES">DETERGENTES</option>
+                  <option value="VANISH">VANISH</option>
+                  <option value="SUAVIZANTES">SUAVIZANTES</option>
+                  <option value="LAVAMANOS">LAVAMANOS</option>
+                  <option value="LAVATRASTES">LAVATRASTES</option>
+                  <option value="CARROS">CARROS</option>
+                  <option value="LIMPIEZA PROFUNDA">LIMPIEZA PROFUNDA</option>
+                  <option value="JARCERÍA">JARCERÍA</option>
+                </select>
+              </div>
 
-        <h3>Cupones Activos</h3>
-        <div class="table-responsive">
-          <table>
-            <thead>
-              <tr>
-                <th>Código</th>
-                <th>Descuento</th>
-                <th>Acción</th>
-              </tr>
-            </thead>
-            <tbody id="tabla-cupones-body"></tbody>
-          </table>
-        </div>
-      </section>
+              <div class="form-group">
+                <label>Modo de Venta *</label>
+                <select id="admin-prod-modo">
+                  <option value="litros">Por Litros (1L, 5L, 20L)</option>
+                  <option value="piezas">Por Pieza (Menudeo / Mayoreo)</option>
+                </select>
+              </div>
+            </div>
 
-      <section id="sec-inventario" class="admin-section">
-        <h2><i class="fas fa-boxes"></i> Inventario de Productos</h2>
-        <div id="grid-productos-admin" class="products-grid"></div>
-      </section>
+            <div class="form-row trio-inputs">
+              <div class="form-group">
+                <label>Precio 1L ($)</label>
+                <input type="number" id="admin-precio-1l" placeholder="14">
+              </div>
+              <div class="form-group">
+                <label>Precio 5L ($)</label>
+                <input type="number" id="admin-precio-5l" placeholder="70">
+              </div>
+              <div class="form-group">
+                <label>Precio 20L ($)</label>
+                <input type="number" id="admin-precio-20l" placeholder="220">
+              </div>
+            </div>
+
+            <button type="submit" class="btn-submit btn-accent-green">GUARDAR / ACTUALIZAR PRODUCTO</button>
+          </form>
+        </section>
+
+        <!-- INVENTARIO REGISTRADO -->
+        <section class="admin-card-box">
+          <h3><i class="fas fa-list-ul"></i> INVENTARIO REGISTRADO</h3>
+          <div id="lista-inventario-admin" class="inventory-list"></div>
+        </section>
+
+      </div>
 
     </main>
 
