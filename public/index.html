@@ -1,122 +1,119 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ARMM - Productos y Accesorios de Limpieza</title>
-  <!-- Google Fonts & Font Awesome Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
       --bg-dark: #0a111e;
       --card-bg: rgba(16, 27, 45, 0.75);
-      --card-border: rgba(0, 230, 118, 0.2);
+      --card-border: rgba(0, 230, 118, 0.25);
       --accent-green: #00e676;
       --accent-hover: #00c853;
       --text-main: #ffffff;
       --text-sub: #90a4ae;
-      --input-bg: rgba(255, 255, 255, 0.06);
-      --glass-blur: blur(12px);
+      --input-bg: rgba(255, 255, 255, 0.07);
+      --glass-blur: blur(16px);
+      --shadow-glow: 0 8px 32px 0 rgba(0, 230, 118, 0.15);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
     body { background-color: var(--bg-dark); color: var(--text-main); overflow-x: hidden; min-height: 100vh; }
 
-    /* Floating Banner Top */
+    /* EFECTOS LIQUID GLASS */
+    .glass-panel {
+      background: var(--card-bg);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--card-border);
+      box-shadow: var(--shadow-glow);
+      border-radius: 16px;
+    }
+
     .top-banner {
-      background: linear-gradient(90deg, #0d1b2a, #004d40);
-      color: #fff;
-      text-align: center;
-      padding: 8px 15px;
-      font-size: 0.85rem;
+      background: linear-gradient(90deg, #07111e, #004d40, #07111e);
+      color: #fff; text-align: center; padding: 10px 15px; font-size: 0.85rem;
       border-bottom: 1px solid var(--card-border);
     }
-    .top-banner a { color: var(--accent-green); font-weight: bold; text-decoration: underline; margin-left: 5px; }
+    .top-banner a { color: var(--accent-green); font-weight: 700; text-decoration: underline; margin-left: 5px; }
 
-    /* Header Navigation bar */
     header {
-      background: rgba(10, 17, 30, 0.85);
-      backdrop-filter: var(--glass-blur);
-      position: sticky; top: 0; z-index: 1000;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      padding: 12px 5%;
-      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
+      background: rgba(10, 17, 30, 0.85); backdrop-filter: var(--glass-blur);
+      position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding: 12px 5%; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;
     }
     .logo-container { display: flex; align-items: center; gap: 12px; cursor: pointer; }
     .logo-badge {
       background: var(--accent-green); color: #000; font-weight: 800;
-      width: 40px; height: 40px; border-radius: 50%; display: flex;
-      align-items: center; justify-content: center; font-size: 1.3rem;
-      box-shadow: 0 0 12px rgba(0,230,118,0.5);
+      width: 42px; height: 42px; border-radius: 50%; display: flex;
+      align-items: center; justify-content: center; font-size: 1.4rem;
+      box-shadow: 0 0 15px rgba(0,230,118,0.6);
     }
     .logo-text h1 { font-size: 1.3rem; font-weight: 700; letter-spacing: 1px; color: #fff; }
     .logo-text span { font-size: 0.65rem; color: var(--text-sub); letter-spacing: 0.5px; display: block; }
 
-    /* Top Right Buttons Group */
-    .nav-actions { display: flex; align-items: center; gap: 10px; }
+    .nav-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
     .btn {
       background: var(--input-bg); color: #fff; border: 1px solid var(--card-border);
       padding: 8px 16px; border-radius: 20px; font-weight: 500; font-size: 0.85rem;
       cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 6px;
     }
-    .btn:hover { background: rgba(0,230,118,0.15); border-color: var(--accent-green); }
+    .btn:hover { background: rgba(0,230,118,0.2); border-color: var(--accent-green); transform: translateY(-2px); }
     .btn-accent { background: var(--accent-green); color: #000; border: none; font-weight: 600; }
-    .btn-accent:hover { background: var(--accent-hover); box-shadow: 0 0 12px rgba(0,230,118,0.4); }
+    .btn-accent:hover { background: var(--accent-hover); box-shadow: 0 0 15px rgba(0,230,118,0.5); }
+    .btn-sm { padding: 5px 10px; font-size: 0.75rem; }
 
-    /* Main Container */
     .container { max-width: 1200px; margin: 20px auto; padding: 0 15px; }
 
-    /* Search & Filter Bar */
-    .search-box {
-      background: var(--card-bg); backdrop-filter: var(--glass-blur);
-      border: 1px solid var(--card-border); border-radius: 25px;
-      padding: 10px 20px; display: flex; align-items: center; gap: 10px;
-      margin-bottom: 25px; box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    .hero-banner {
+      padding: 25px; text-align: center; margin-bottom: 25px; position: relative; overflow: hidden;
     }
-    .search-box input {
-      background: transparent; border: none; outline: none; color: #fff;
-      width: 100%; font-size: 0.95rem;
-    }
+    .hero-banner h2 { font-size: 1.6rem; color: var(--accent-green); margin-bottom: 5px; }
+    .hero-banner p { font-size: 0.95rem; color: var(--text-sub); }
 
-    /* Products Grid */
-    .section-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 15px; color: #fff; }
-    .grid-products { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
-    .product-card {
-      background: var(--card-bg); backdrop-filter: var(--glass-blur);
-      border: 1px solid var(--card-border); border-radius: 14px; padding: 18px;
-      display: flex; flex-direction: column; justify-content: space-between;
-      transition: transform 0.3s, box-shadow 0.3s; position: relative; overflow: hidden;
+    .search-box {
+      border-radius: 30px; padding: 12px 22px; display: flex; align-items: center; gap: 10px;
+      margin-bottom: 25px;
     }
-    .product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,230,118,0.15); }
+    .search-box input { background: transparent; border: none; outline: none; color: #fff; width: 100%; font-size: 0.95rem; }
+
+    .section-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 15px; color: #fff; display: flex; align-items: center; justify-content: space-between; }
+    
+    .category-block { margin-bottom: 30px; }
+    .category-header { font-size: 1.2rem; font-weight: 600; color: var(--accent-green); margin-bottom: 15px; padding-bottom: 5px; border-bottom: 1px solid rgba(0,230,118,0.2); }
+    
+    .grid-products { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
+    .product-card {
+      padding: 18px; display: flex; flex-direction: column; justify-content: space-between;
+      transition: all 0.3s ease; position: relative;
+    }
+    .product-card:hover { transform: translateY(-5px); border-color: var(--accent-green); }
     .category-tag {
-      background: rgba(0, 230, 118, 0.1); color: var(--accent-green);
+      background: rgba(0, 230, 118, 0.12); color: var(--accent-green);
       font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
       padding: 3px 8px; border-radius: 6px; width: fit-content; margin-bottom: 8px;
     }
-    .product-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 12px; }
+    .product-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 12px; }
     .select-presentation {
       width: 100%; background: #070d17; color: #fff; border: 1px solid rgba(255,255,255,0.15);
       padding: 8px 10px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 15px; outline: none;
     }
 
-    /* Modals / Drawers */
     .modal-overlay {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(6px);
+      background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(8px);
       z-index: 2000; display: none; align-items: center; justify-content: center; padding: 15px;
     }
     .modal-card {
-      background: #0f1926; border: 1px solid var(--card-border);
-      border-radius: 16px; padding: 25px; width: 100%; max-width: 480px;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.6); position: relative; max-height: 90vh; overflow-y: auto;
+      width: 100%; max-width: 500px; padding: 25px; position: relative; max-height: 90vh; overflow-y: auto;
     }
     .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .modal-close { cursor: pointer; font-size: 1.2rem; color: var(--text-sub); }
+    .modal-close { cursor: pointer; font-size: 1.3rem; color: var(--text-sub); transition: 0.2s; }
     .modal-close:hover { color: #fff; }
 
-    /* Form Fields & Password Eye Toggle */
     .form-group { margin-bottom: 15px; position: relative; }
     .form-group label { display: block; font-size: 0.8rem; color: var(--text-sub); margin-bottom: 5px; }
     .input-field {
@@ -127,50 +124,44 @@
     .password-wrapper { position: relative; }
     .eye-icon { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: var(--text-sub); }
 
-    /* Slide Cart / Menu Options */
     .drawer {
-      position: fixed; top: 0; right: -420px; width: 100%; max-width: 400px; height: 100%;
+      position: fixed; top: 0; right: -450px; width: 100%; max-width: 420px; height: 100%;
       background: #0d1624; border-left: 1px solid var(--card-border); z-index: 2100;
-      transition: right 0.3s ease; padding: 20px; display: flex; flex-direction: column; justify-content: space-between;
+      transition: right 0.35s ease-in-out; padding: 20px; display: flex; flex-direction: column; justify-content: space-between;
+      box-shadow: -10px 0 30px rgba(0,0,0,0.5);
     }
     .drawer.active { right: 0; }
     .cart-items { flex: 1; overflow-y: auto; margin: 15px 0; }
     .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
 
-    /* Section About Us & Reviews */
-    .about-section {
-      background: var(--card-bg); border: 1px solid var(--card-border);
-      border-radius: 16px; padding: 25px; margin: 30px 0; backdrop-filter: var(--glass-blur);
-    }
+    .about-section { padding: 25px; margin: 30px 0; }
     .reviews-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-top: 15px; }
-    .review-card { background: rgba(255,255,255,0.03); padding: 12px; border-radius: 10px; font-size: 0.85rem; }
+    .review-card { background: rgba(255,255,255,0.03); padding: 12px; border-radius: 10px; font-size: 0.85rem; border: 1px solid rgba(255,255,255,0.05); }
 
-    /* Admin Panel Styling */
+    /* ADMIN PANEL */
     .admin-panel { display: none; background: #070c14; min-height: 100vh; padding: 20px; }
-    .admin-nav { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .admin-nav { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
     .admin-tab { padding: 8px 16px; background: rgba(255,255,255,0.05); border-radius: 8px; cursor: pointer; white-space: nowrap; font-size: 0.85rem; }
     .admin-tab.active { background: var(--accent-green); color: #000; font-weight: 600; }
-    .admin-card { background: #0f1926; border: 1px solid var(--card-border); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
-    
-    /* Utility & Responsive */
+    .admin-card { padding: 20px; margin-bottom: 20px; }
+
     @media (max-width: 600px) {
       header { padding: 10px 3%; }
-      .nav-actions .btn { padding: 6px 10px; font-size: 0.75rem; }
+      .nav-actions .btn { padding: 6px 10px; font-size: 0.72rem; }
       .drawer { width: 100%; max-width: 100%; }
       .grid-products { grid-template-columns: 1fr 1fr; gap: 10px; }
       .product-card { padding: 12px; }
+      .product-title { font-size: 0.9rem; }
     }
   </style>
 </head>
 <body>
 
-  <!-- BANNER PORTADA Y ESLOGAN -->
   <div class="top-banner">
     Regístrate para realizar un pedido o realízalo directamente a nuestro 
-    <a href="https://wa.me/523351097726" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp Directo</a>
+    <a href="https://wa.me/523351097726" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp Directo (3351097726)</a>
   </div>
 
-  <!-- NAVEGACIÓN PRINCIPAL CON BOTONES SUPERIORES -->
   <header>
     <div class="logo-container" onclick="showPublicWeb()">
       <div class="logo-badge">A</div>
@@ -179,81 +170,82 @@
         <span>PRODUCTOS Y ACCESORIOS DE LIMPIEZA</span>
       </div>
     </div>
-    <div class="nav-actions" id="nav-actions">
-      <!-- Los botones dinámicos de Registro / Login / Carrito o Menú de Usuario se renderizan aquí -->
-    </div>
+    <div class="nav-actions" id="nav-actions"></div>
   </header>
 
   <!-- WEB PÚBLICA -->
   <div id="public-web">
     <div class="container">
-      <!-- BARRA BUSCADORA DE PRODUCTOS Y CATEGORÍAS -->
-      <div class="search-box">
-        <i class="fas fa-search" style="color: var(--text-sub);"></i>
-        <input type="text" id="search-input" placeholder="Buscar aromatizante, cloro, jarquería o categoría..." oninput="filterProducts()">
-      </div>
-
-      <!-- ACOMODO Y CATALOGO DE PRODUCTOS -->
-      <div class="section-title">Nuestros Productos</div>
-      <div class="grid-products" id="products-container">
-        <!-- Generado dinámicamente -->
-      </div>
-
-      <!-- SECCIÓN MÁS SOBRE LA EMPRESA & RESEÑAS -->
-      <div class="about-section">
-        <h2 style="font-size: 1.2rem; color: var(--accent-green); margin-bottom: 10px;">Más sobre ARMM</h2>
-        <p style="font-size: 0.9rem; line-height: 1.5; color: var(--text-sub);">
-          <strong>Propósito:</strong> Ofrecerte todo para la limpieza hasta la puerta de tu hogar. Contamos con 
-          <span style="color: #fff; font-weight: 600;">más de 3 años trabajando para una limpieza mejor</span>.
+      
+      <div class="hero-banner glass-panel">
+        <h2>ARMM - Productos y Accesorios de Limpieza</h2>
+        <p style="margin-top: 5px;">¡Ofreciéndote todo para la limpieza hasta la puerta de tu hogar!</p>
+        <p style="font-size: 0.8rem; color: var(--accent-green); margin-top: 8px; font-weight: 600;">
+          <i class="fas fa-info-circle"></i> Regístrate para realizar un pedido o realízalo directamente a nuestro WhatsApp
         </p>
-        <div style="margin-top: 10px; font-size: 0.85rem;">
-          <p><i class="fab fa-whatsapp" style="color: var(--accent-green);"></i> WhatsApp: 3351097726</p>
-          <p><i class="fas fa-envelope" style="color: var(--accent-green);"></i> Correo: armmproductosdelimpieza@gamail.com</p>
+      </div>
+
+      <div class="search-box glass-panel">
+        <i class="fas fa-search" style="color: var(--text-sub);"></i>
+        <input type="text" id="search-input" placeholder="Buscar producto o categoría (ej. Cloro, Pino, Jarquería)..." oninput="filterProducts()">
+      </div>
+
+      <div class="section-title">Nuestros Productos</div>
+      <div id="products-container"></div>
+
+      <div class="about-section glass-panel">
+        <h2 style="font-size: 1.2rem; color: var(--accent-green); margin-bottom: 10px;"><i class="fas fa-building"></i> Más sobre ARMM</h2>
+        <p style="font-size: 0.9rem; line-height: 1.5; color: var(--text-sub);">
+          <strong>Propósito de la empresa:</strong> Ofrecerte todo para la limpieza y hasta la puerta de tu hogar. 
+          Contamos con <span style="color: #fff; font-weight: 600;">más de 3 años trabajando para una limpieza mejor</span> en cada hogar y negocio.
+        </p>
+        <div style="margin-top: 15px; font-size: 0.85rem; display: flex; gap: 20px; flex-wrap: wrap;">
+          <p><i class="fab fa-whatsapp" style="color: var(--accent-green);"></i> WhatsApp: <strong>3351097726</strong></p>
+          <p><i class="fas fa-envelope" style="color: var(--accent-green);"></i> Correo: <strong>armmproductosdelimpieza@gmail.com</strong></p>
         </div>
 
-        <h3 style="font-size: 1rem; margin-top: 20px; color: #fff;">Reseñas de nuestros clientes</h3>
+        <h3 style="font-size: 1rem; margin-top: 20px; color: #fff;"><i class="fas fa-star" style="color: #ffd700;"></i> Reseñas de nuestros clientes</h3>
         <div class="reviews-grid">
           <div class="review-card">
-            <div style="color: #ffd700; font-size: 0.75rem;"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+            <div style="color: #ffd700; font-size: 0.75rem; margin-bottom: 4px;"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
             <strong>María Gómez</strong>
-            <p>"Excelente calidad de cloro y limpiadores, llegan super rápido a domicilio."</p>
+            <p>"Excelente calidad de cloro y limpiadores, llegan super rápido a domicilio. ¡Muy recomendados!"</p>
           </div>
           <div class="review-card">
-            <div style="color: #ffd700; font-size: 0.75rem;"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+            <div style="color: #ffd700; font-size: 0.75rem; margin-bottom: 4px;"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
             <strong>Carlos R.</strong>
-            <p>"Los precios de mayoreo son los mejores de la zona. Muy recomendados."</p>
+            <p>"Los precios de mayoreo son los mejores de la zona y la atención por WhatsApp es súper ágil."</p>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- CARRITO FLOTANTE (SLIDE DRAWER) -->
+  <!-- CARRITO DE COMPRAS -->
   <div class="drawer" id="cart-drawer">
     <div>
       <div class="modal-header">
-        <h3><i class="fas fa-shopping-cart"></i> Tu Carrito</h3>
+        <h3><i class="fas fa-shopping-cart" style="color: var(--accent-green);"></i> Tu Carrito</h3>
         <span class="modal-close" onclick="toggleCart()">&times;</span>
       </div>
       <div class="cart-items" id="cart-items-list"></div>
       <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px; margin-top: 10px;">
-        <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 1.1rem;">
+        <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 1rem;">
           <span>Subtotal:</span>
-          <span id="cart-subtotal">$0 MXN</span>
+          <span id="cart-subtotal">$0.00 MXN</span>
         </div>
         
-        <!-- SECCIÓN CUPONES -->
         <button class="btn" style="width: 100%; margin-top: 10px; justify-content: center;" onclick="toggleCuponMenu()">
-          <i class="fas fa-tag"></i> Ver cupones disponibles
+          <i class="fas fa-tag" style="color: var(--accent-green);"></i> Ver cupones disponibles
         </button>
-        <div id="cupon-menu" style="display: none; margin-top: 10px; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px;">
+        <div id="cupon-menu" style="display: none; margin-top: 10px; background: rgba(0,0,0,0.4); padding: 10px; border-radius: 8px;">
           <div id="available-coupons-list"></div>
           <p id="coupon-message" style="color: #ff5252; font-size: 0.75rem; margin-top: 5px; display: none;"></p>
         </div>
 
         <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 1.2rem; color: var(--accent-green); margin-top: 10px;">
           <span>Total Final:</span>
-          <span id="cart-total">$0 MXN</span>
+          <span id="cart-total">$0.00 MXN</span>
         </div>
       </div>
     </div>
@@ -264,14 +256,33 @@
     </div>
   </div>
 
-  <!-- MODAL DE PAGO AL RECIBIR (EFECTIVO / TARJETA) -->
-  <div class="modal-overlay" id="cod-modal">
-    <div class="modal-card">
+  <!-- MODAL SPEI -->
+  <div class="modal-overlay" id="spei-modal">
+    <div class="modal-card glass-panel">
       <div class="modal-header">
-        <h3>Pago al Recibir</h3>
+        <h3>Pagar con SPEI</h3>
+        <span class="modal-close" onclick="closeModal('spei-modal')">&times;</span>
+      </div>
+      <p style="font-size: 0.85rem; color: var(--text-sub);">Realiza la transferencia al siguiente número de cuenta:</p>
+      <div style="background: rgba(0,0,0,0.4); padding: 12px; border-radius: 8px; margin: 12px 0; font-size: 0.9rem;">
+        <p><strong>Banco:</strong> STP / BBVA</p>
+        <p><strong>CLABE:</strong> 0123 4567 8901 2345 67</p>
+        <p><strong>Titular:</strong> ARMM Limpieza</p>
+      </div>
+      <button class="btn btn-accent" style="width: 100%; justify-content: center;" onclick="confirmSPEIOrder()">
+        <i class="fab fa-whatsapp"></i> Enviar comprobante por WhatsApp
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL PAGO AL RECIBIR -->
+  <div class="modal-overlay" id="cod-modal">
+    <div class="modal-card glass-panel">
+      <div class="modal-header">
+        <h3>Pago al Recibirlo</h3>
         <span class="modal-close" onclick="closeModal('cod-modal')">&times;</span>
       </div>
-      <p style="font-size: 0.85rem; color: var(--text-sub); margin-bottom: 15px;">Selecciona tu método de pago preferido para completar la orden:</p>
+      <p style="font-size: 0.85rem; color: var(--text-sub); margin-bottom: 15px;">Selecciona la opción con la que pagarás al repartidor:</p>
       <div class="form-group">
         <label><input type="radio" name="cod_method" value="Efectivo" checked> Efectivo al entregar</label><br><br>
         <label><input type="radio" name="cod_method" value="Pago con Tarjeta"> Pago con Tarjeta en terminal al entregar</label>
@@ -282,34 +293,34 @@
 
   <!-- MODAL REGISTRO -->
   <div class="modal-overlay" id="register-modal">
-    <div class="modal-card">
+    <div class="modal-card glass-panel">
       <div class="modal-header">
-        <h3>Crear Cuenta</h3>
+        <h3>Crear Cuenta Nueva</h3>
         <span class="modal-close" onclick="closeModal('register-modal')">&times;</span>
       </div>
-      <form onsubmit="handleRegister(event)">
+      <form id="form-register" onsubmit="handleRegister(event)">
         <div class="form-group">
-          <label>Nombre</label>
+          <label>Nombre *</label>
           <input type="text" id="reg-name" class="input-field" required>
         </div>
         <div class="form-group">
-          <label>Apellidos</label>
+          <label>Apellidos *</label>
           <input type="text" id="reg-lastname" class="input-field" required>
         </div>
         <div class="form-group">
-          <label>Teléfono</label>
+          <label>Teléfono *</label>
           <input type="tel" id="reg-phone" class="input-field" required>
         </div>
         <div class="form-group">
-          <label>Correo Electrónico</label>
+          <label>Correo Electrónico *</label>
           <input type="email" id="reg-email" class="input-field" required>
         </div>
         <div class="form-group">
-          <label>Dirección Completa de Entrega</label>
+          <label>Dirección Completa de Entrega *</label>
           <input type="text" id="reg-address" class="input-field" required>
         </div>
         <div class="form-group">
-          <label>Contraseña *</label>
+          <label>Generar Contraseña *</label>
           <div class="password-wrapper">
             <input type="password" id="reg-pass" class="input-field" required>
             <i class="fas fa-eye eye-icon" onclick="togglePass('reg-pass')"></i>
@@ -322,19 +333,19 @@
             <i class="fas fa-eye eye-icon" onclick="togglePass('reg-pass-confirm')"></i>
           </div>
         </div>
-        <button type="submit" class="btn btn-accent" id="reg-btn-submit" style="width: 100%; justify-content: center; margin-top: 10px;">Registrarse</button>
+        <button type="submit" id="reg-submit-btn" class="btn btn-accent" style="width: 100%; justify-content: center; margin-top: 10px;">Registrarse</button>
       </form>
     </div>
   </div>
 
   <!-- MODAL INICIAR SESIÓN -->
   <div class="modal-overlay" id="login-modal">
-    <div class="modal-card">
+    <div class="modal-card glass-panel">
       <div class="modal-header">
         <h3>Iniciar Sesión</h3>
         <span class="modal-close" onclick="closeModal('login-modal')">&times;</span>
       </div>
-      <form onsubmit="handleLogin(event)">
+      <form id="form-login" onsubmit="handleLogin(event)">
         <div class="form-group">
           <label>Correo o Teléfono</label>
           <input type="text" id="login-identifier" class="input-field" required>
@@ -346,15 +357,15 @@
             <i class="fas fa-eye eye-icon" onclick="togglePass('login-pass')"></i>
           </div>
         </div>
-        <a href="javascript:void(0)" onclick="openRecoverModal()" style="font-size: 0.75rem; color: var(--accent-green); text-decoration: underline; display: block; margin-bottom: 15px;">¿Olvidaste tu contraseña?</a>
+        <a href="javascript:void(0)" onclick="openRecoverModal()" style="font-size: 0.78rem; color: var(--accent-green); text-decoration: underline; display: block; margin-bottom: 15px;">¿Olvidaste tu contraseña?</a>
         <button type="submit" class="btn btn-accent" style="width: 100%; justify-content: center;">Acceder</button>
       </form>
     </div>
   </div>
 
-  <!-- MODAL RECUPERAR CONTRASEÑA (ENVÍA SOLICITUD AL CENTRO DE AYUDA / WHATSAPP) -->
+  <!-- MODAL RECUPERAR CONTRASEÑA -->
   <div class="modal-overlay" id="recover-modal">
-    <div class="modal-card">
+    <div class="modal-card glass-panel">
       <div class="modal-header">
         <h3>Recuperar Contraseña</h3>
         <span class="modal-close" onclick="closeModal('recover-modal')">&times;</span>
@@ -376,83 +387,77 @@
           <label>Teléfono Registrado</label>
           <input type="tel" id="rec-phone" class="input-field" required>
         </div>
-        <p style="font-size: 0.75rem; color: var(--text-sub); margin-bottom: 15px;">
-          Te estaremos informando la situación de tu cuenta por tu WhatsApp.
-        </p>
+        <p style="font-size: 0.75rem; color: var(--accent-green); margin-bottom: 10px;">Te estaremos informando la situación de tu cuenta por tu WhatsApp</p>
         <button type="submit" class="btn btn-accent" style="width: 100%; justify-content: center;">Enviar al Centro de Atención</button>
       </form>
     </div>
   </div>
 
-  <!-- MODAL MENÚ DE USUARIO ("MONITO") -->
+  <!-- MENÚ DEL USUARIO ("MONITO") -->
   <div class="modal-overlay" id="user-menu-modal">
-    <div class="modal-card" style="max-width: 550px;">
+    <div class="modal-card glass-panel" style="max-width: 550px;">
       <div class="modal-header">
-        <h3><i class="fas fa-user-circle"></i> Menú de Usuario</h3>
+        <h3><i class="fas fa-user-circle" style="color: var(--accent-green);"></i> Menú de Usuario</h3>
         <span class="modal-close" onclick="closeModal('user-menu-modal')">&times;</span>
       </div>
-      <div style="display: flex; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; overflow-x: auto;">
-        <button class="btn btn-sm" onclick="showUserSubTab('datos')">Datos</button>
+      <div style="display: flex; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; overflow-x: auto;">
+        <button class="btn btn-sm" onclick="showUserSubTab('datos')">Cuenta / Datos</button>
         <button class="btn btn-sm" onclick="showUserSubTab('pedidos')">Pedidos / Seguimiento</button>
         <button class="btn btn-sm" onclick="showUserSubTab('notif')">Notificaciones</button>
         <button class="btn btn-sm" onclick="showUserSubTab('favs')">Favoritos</button>
         <button class="btn btn-sm" onclick="showUserSubTab('chat')">Chat de Ayuda</button>
       </div>
 
-      <!-- Submenú Datos Personales -->
       <div id="usub-datos" class="usub-content" style="margin-top: 15px;">
         <p><strong>Nombre:</strong> <span id="u-info-name"></span></p>
         <p><strong>Correo:</strong> <span id="u-info-email"></span></p>
         <p><strong>Teléfono:</strong> <span id="u-info-phone"></span></p>
-        <hr style="margin: 10px 0; border-color: rgba(255,255,255,0.1);">
-        <button class="btn" onclick="toggleChangePassArea()"><i class="fas fa-key"></i> Cambiar Contraseña</button>
+        <p><strong>Dirección:</strong> <span id="u-info-address"></span></p>
         
-        <div id="change-pass-area" style="display: none; margin-top: 12px; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px;">
+        <button class="btn btn-accent btn-sm" style="margin-top: 15px;" onclick="toggleChangePassMenu()">Cambiar Contraseña</button>
+        
+        <div id="change-pass-menu" style="display: none; margin-top: 12px; background: rgba(0,0,0,0.3); padding: 12px; border-radius: 8px;">
           <div class="form-group">
             <label>Contraseña Actual</label>
             <div class="password-wrapper">
-              <input type="password" id="cp-curr" class="input-field">
-              <i class="fas fa-eye eye-icon" onclick="togglePass('cp-curr')"></i>
+              <input type="password" id="chg-curr-pass" class="input-field">
+              <i class="fas fa-eye eye-icon" onclick="togglePass('chg-curr-pass')"></i>
             </div>
-            <a href="javascript:void(0)" onclick="openRecoverModal()" style="font-size: 0.7rem; color: var(--accent-green);">¿Olvidaste tu contraseña?</a>
+          </div>
+          <a href="javascript:void(0)" onclick="openRecoverModal()" style="font-size: 0.75rem; color: var(--accent-green); text-decoration: underline; display: block; margin-bottom: 10px;">¿Olvidaste tu contraseña?</a>
+          <div class="form-group">
+            <label>Contraseña Nueva</label>
+            <div class="password-wrapper">
+              <input type="password" id="chg-new-pass" class="input-field">
+              <i class="fas fa-eye eye-icon" onclick="togglePass('chg-new-pass')"></i>
+            </div>
           </div>
           <div class="form-group">
-            <label>Nueva Contraseña</label>
+            <label>Confirmar Contraseña Nueva</label>
             <div class="password-wrapper">
-              <input type="password" id="cp-new" class="input-field">
-              <i class="fas fa-eye eye-icon" onclick="togglePass('cp-new')"></i>
+              <input type="password" id="chg-conf-pass" class="input-field">
+              <i class="fas fa-eye eye-icon" onclick="togglePass('chg-conf-pass')"></i>
             </div>
           </div>
-          <div class="form-group">
-            <label>Confirmar Nueva Contraseña</label>
-            <div class="password-wrapper">
-              <input type="password" id="cp-confirm" class="input-field">
-              <i class="fas fa-eye eye-icon" onclick="togglePass('cp-confirm')"></i>
-            </div>
-          </div>
-          <button class="btn btn-accent" onclick="saveNewPassword()">Guardar Nueva Contraseña</button>
+          <button class="btn btn-accent btn-sm" onclick="saveNewPassword()">Guardar Nueva Contraseña</button>
         </div>
       </div>
 
-      <!-- Submenú Pedidos & Seguimiento -->
       <div id="usub-pedidos" class="usub-content" style="display: none; margin-top: 15px;">
         <h4>Historial y Seguimiento de Pedidos</h4>
         <div id="user-orders-list" style="max-height: 250px; overflow-y: auto; margin-top: 10px;"></div>
       </div>
 
-      <!-- Submenú Notificaciones -->
       <div id="usub-notif" class="usub-content" style="display: none; margin-top: 15px;">
-        <h4>Notificaciones</h4>
+        <h4>Notificaciones Recibidas</h4>
         <div id="user-notifications-list" style="margin-top: 10px;"></div>
       </div>
 
-      <!-- Submenú Favoritos -->
       <div id="usub-favs" class="usub-content" style="display: none; margin-top: 15px;">
         <h4>Mis Favoritos</h4>
-        <p style="font-size: 0.85rem; color: var(--text-sub); margin-top: 5px;">Guarda aquí tus artículos recurrentes de limpieza.</p>
+        <p style="font-size: 0.85rem; color: var(--text-sub); margin-top: 5px;">Guarda tus productos más comprados aquí.</p>
       </div>
 
-      <!-- Submenú Chat de Ayuda -->
       <div id="usub-chat" class="usub-content" style="display: none; margin-top: 15px;">
         <h4>Chat de Ayuda Directa</h4>
         <div id="user-chat-box" style="height: 180px; background: rgba(0,0,0,0.3); border-radius: 8px; padding: 10px; overflow-y: auto; margin: 10px 0; font-size: 0.85rem;"></div>
@@ -466,7 +471,7 @@
     </div>
   </div>
 
-  <!-- WEB ADMIN PANEL -->
+  <!-- WEB ADMIN -->
   <div class="admin-panel" id="admin-web">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
       <h2 style="color: var(--accent-green);"><i class="fas fa-user-shield"></i> Panel de Administración ARMM</h2>
@@ -483,18 +488,19 @@
       <div class="admin-tab" onclick="switchAdminTab('notif-ti')">Notificaciones Para Ti</div>
     </div>
 
-    <!-- SECCIÓN 1: PEDIDOS -->
+    <!-- PESTAÑA 1: PEDIDOS -->
     <div id="atab-pedidos" class="atab-content">
-      <div class="admin-card">
-        <h3>Pedidos Recibidos de la Web Pública</h3>
+      <div class="admin-card glass-panel">
+        <h3>Pedidos Hechos Directamente de la Página Pública</h3>
         <div id="admin-orders-container" style="margin-top: 15px;"></div>
       </div>
     </div>
 
-    <!-- SECCIÓN 2 Y 3: PRODUCTOS, PRESENTACIONES Y ACOMODO -->
+    <!-- PESTAÑA 2 Y 3: PRODUCTOS Y ACOMODO -->
     <div id="atab-productos" class="atab-content" style="display: none;">
-      <div class="admin-card">
-        <h3>Agregar / Editar Producto</h3>
+      <div class="admin-card glass-panel">
+        <h3 id="adm-p-title">Agregar Nuevo Producto</h3>
+        <input type="hidden" id="adm-p-edit-id" value="">
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 10px;">
           <input type="text" id="adm-p-name" class="input-field" placeholder="Nombre del Producto">
           <input type="text" id="adm-p-cat" class="input-field" placeholder="Categoría">
@@ -505,101 +511,105 @@
           </select>
         </div>
 
-        <!-- Campos dinámicos según modo -->
         <div id="mode-fields-litro" style="margin-top: 10px; display: flex; gap: 10px;">
           <input type="number" id="p-price-1l" class="input-field" placeholder="Precio 1 Litro">
           <input type="number" id="p-price-5l" class="input-field" placeholder="Precio 5 Litros">
           <input type="number" id="p-price-20l" class="input-field" placeholder="Precio 20 Litros">
         </div>
-        <div id="mode-fields-mm" style="margin-top: 10px; display: none; gap: 10px;">
+
+        <div id="mode-fields-mayoreo" style="margin-top: 10px; display: none; gap: 10px;">
           <input type="number" id="p-price-menudeo" class="input-field" placeholder="Precio Menudeo">
           <input type="number" id="p-price-mayoreo" class="input-field" placeholder="Precio Mayoreo">
         </div>
-        <div id="mode-fields-pzs" style="margin-top: 10px; display: none;">
-          <input type="number" id="p-price-pieza" class="input-field" placeholder="Precio por Pieza">
+
+        <div id="mode-fields-piezas" style="margin-top: 10px; display: none;">
+          <input type="number" id="p-price-pieza" class="input-field" placeholder="Precio por Pieza / Unidad">
         </div>
 
         <button class="btn btn-accent" style="margin-top: 15px;" onclick="saveAdminProduct()">Guardar Producto</button>
+        <button class="btn" style="margin-top: 15px;" onclick="clearProductForm()">Cancelar / Limpiar</button>
       </div>
 
-      <div class="admin-card">
-        <h3>Acomodo y Gestión de Productos Registrados</h3>
-        <p style="font-size: 0.8rem; color: var(--text-sub); margin-bottom: 10px;">Usa los botones para subir/bajar la posición de bloques visuales en la web pública.</p>
-        <div id="admin-products-list"></div>
+      <div class="admin-card glass-panel">
+        <h3>Editar Acomodo de Categorías</h3>
+        <div id="admin-category-order-list" style="margin-top: 10px;"></div>
+      </div>
+
+      <div class="admin-card glass-panel">
+        <h3>Editar / Eliminar Productos Registrados</h3>
+        <div id="admin-products-list" style="margin-top: 15px;"></div>
       </div>
     </div>
 
-    <!-- SECCIÓN 4: USUARIOS REGISTRADOS -->
+    <!-- PESTAÑA 4: USUARIOS -->
     <div id="atab-usuarios" class="atab-content" style="display: none;">
-      <div class="admin-card">
-        <h3>Usuarios Registrados en Sistema</h3>
+      <div class="admin-card glass-panel">
+        <h3>Usuarios Registrados</h3>
         <div id="admin-users-list" style="margin-top: 15px;"></div>
       </div>
     </div>
 
-    <!-- SECCIÓN 5: CENTRO DE AYUDA -->
+    <!-- PESTAÑA 5: CENTRO DE AYUDA -->
     <div id="atab-ayuda" class="atab-content" style="display: none;">
-      <div class="admin-card">
-        <h3>Solicitudes de Acceso (Recuperar Contraseña)</h3>
-        <div id="admin-helpdesk-requests"></div>
+      <div class="admin-card glass-panel">
+        <h3>Centro de Ayuda - Solicitudes de Acceso</h3>
+        <div id="admin-helpdesk-requests" style="margin-top: 15px;"></div>
       </div>
     </div>
 
-    <!-- SECCIÓN 6: CUPONES -->
+    <!-- PESTAÑA 6: CUPONES -->
     <div id="atab-cupones" class="atab-content" style="display: none;">
-      <div class="admin-card">
+      <div class="admin-card glass-panel">
         <h3>Generar Nuevo Cupón</h3>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-top: 10px;">
-          <input type="text" id="coup-code" class="input-field" placeholder="Código (ej. LIMPIO10)">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 10px;">
+          <input type="text" id="coup-code" class="input-field" placeholder="Código del Cupón (ej. LIMPIEZA10)">
           <input type="number" id="coup-discount" class="input-field" placeholder="% Descuento">
-          <input type="date" id="coup-exp" class="input-field" title="Fecha límite">
-          <select id="coup-condition-type" class="input-field">
-            <option value="monto">Por Monto Alcanzado</option>
-            <option value="categoria">Por Categoría Especifica</option>
+          <input type="date" id="coup-expiry" class="input-field">
+          <select id="coup-app-mode" class="input-field" onchange="toggleCouponModeFields()">
+            <option value="monto">Por Monto Mínimo de Compra</option>
+            <option value="categoria">Por Categoría Específica</option>
           </select>
-          <input type="text" id="coup-condition-val" class="input-field" placeholder="Valor (Monto min ó Nombre Categoría)">
+          <input type="number" id="coup-min-amount" class="input-field" placeholder="Monto Mínimo ($ MXN)">
+          <input type="text" id="coup-cat-target" class="input-field" placeholder="Categoría objetivo" style="display:none;">
         </div>
-        <textarea id="coup-desc" class="input-field" style="margin-top: 10px; height: 60px;" placeholder="Descripción corta del cupón para el cliente..."></textarea>
+        <textarea id="coup-desc" class="input-field" style="margin-top:10px;" placeholder="Descripción corta del cupón para el cliente..."></textarea>
         <button class="btn btn-accent" style="margin-top: 10px;" onclick="createCoupon()">Crear Cupón</button>
       </div>
 
-      <div class="admin-card">
+      <div class="admin-card glass-panel">
         <h3>Cupones Activos</h3>
-        <div id="admin-coupons-list"></div>
+        <div id="admin-coupons-list" style="margin-top: 15px;"></div>
       </div>
     </div>
 
-    <!-- SECCIÓN 7: CHATS DE AYUDA -->
+    <!-- PESTAÑA 7: CHATS DE AYUDA -->
     <div id="atab-chats" class="atab-content" style="display: none;">
-      <div class="admin-card">
-        <h3>Chats Activos por Cliente</h3>
-        <div id="admin-chats-list"></div>
+      <div class="admin-card glass-panel">
+        <h3>Chats de Ayuda Organizados por Cliente</h3>
+        <div id="admin-chats-list" style="margin-top: 15px;"></div>
       </div>
     </div>
 
-    <!-- SECCIÓN NOTIFICACIONES PARA TI -->
+    <!-- PESTAÑA: NOTIFICACIONES PARA TI -->
     <div id="atab-notif-ti" class="atab-content" style="display: none;">
-      <div class="admin-card">
-        <h3>Notificaciones Para Ti (Panel de Alertas Admin)</h3>
-        <div id="admin-self-notifications" style="max-height: 250px; overflow-y: auto; margin-bottom: 20px;"></div>
+      <div class="admin-card glass-panel">
+        <h3><i class="fas fa-bell" style="color:var(--accent-green);"></i> Notificaciones Para Ti (Panel de Alertas Admin)</h3>
+        <div id="admin-self-notifications" style="margin-top: 15px;"></div>
       </div>
 
-      <div class="admin-card">
-        <h3>Enviar Notificación a Clientes</h3>
-        <div style="margin-bottom: 10px;">
-          <label>Buscar Usuario:</label>
-          <input type="text" id="notif-user-search" class="input-field" placeholder="Buscar por nombre o 'TODOS'..." oninput="filterNotifUsers()">
-        </div>
+      <div class="admin-card glass-panel">
+        <h3>Generar Notificación para Clientes</h3>
+        <input type="text" id="search-notif-user" class="input-field" placeholder="Filtrar cliente por nombre..." oninput="filterNotifUsers()" style="margin-bottom: 10px;">
         <select id="notif-target-user" class="input-field" style="margin-bottom: 10px;"></select>
-        <textarea id="notif-text-msg" class="input-field" style="height: 60px;" placeholder="Mensaje de notificación..."></textarea>
+        <textarea id="notif-text-msg" class="input-field" placeholder="Escribe el mensaje de la notificación..."></textarea>
         <button class="btn btn-accent" style="margin-top: 10px;" onclick="sendCustomerNotification()">Enviar Notificación</button>
       </div>
     </div>
   </div>
 
-  <!-- MODAL LOGIN ADMIN (ARMM123) -->
+  <!-- MODAL LOGIN ADMIN -->
   <div class="modal-overlay" id="admin-login-modal">
-    <div class="modal-card" style="max-width: 360px;">
+    <div class="modal-card glass-panel" style="max-width: 360px;">
       <div class="modal-header">
         <h3>Acceso Web Admin</h3>
         <span class="modal-close" onclick="closeModal('admin-login-modal')">&times;</span>
@@ -617,15 +627,16 @@
     </div>
   </div>
 
-  <!-- JAVASCRIPT LOGIC & LOCALSTORAGE ENGINE -->
   <script>
-    // --- ESTADO INICIAL / BASE DE DATOS LOCAL ---
+    // BASE DE DATOS Y ESTADO GLOBAL DE APLICACIÓN
     let db = {
+      categoriesOrder: JSON.parse(localStorage.getItem('armm_categories_order')) || ['CLOROS', 'PINOL', 'LIMPIADORES', 'JARQUERÍA'],
       products: JSON.parse(localStorage.getItem('armm_products')) || [
-        { id: 1, name: 'CLORO', category: 'CLOROS', mode: 'litro', prices: { '1L': 18, '5L': 80, '20L': 280 } },
+        { id: 1, name: 'CLORO CONCENTRADO', category: 'CLOROS', mode: 'litro', prices: { '1L': 18, '5L': 80, '20L': 280 } },
         { id: 2, name: 'CLORO USO INDUSTRIAL', category: 'CLOROS', mode: 'litro', prices: { '1L': 25, '5L': 110, '20L': 400 } },
-        { id: 3, name: 'PINO (VERDE)', category: 'PINOL', mode: 'litro', prices: { '1L': 22, '5L': 95, '20L': 340 } },
-        { id: 4, name: 'MULTIUSOS AROMA PERFUME', category: 'BASES', mode: 'mayoreo_menudeo', prices: { 'Menudeo': 30, 'Mayoreo': 22 } }
+        { id: 3, name: 'PINO VERDE', category: 'PINOL', mode: 'litro', prices: { '1L': 22, '5L': 95, '20L': 340 } },
+        { id: 4, name: 'MULTIUSOS LAVANDA', category: 'LIMPIADORES', mode: 'mayoreo_menudeo', prices: { 'Menudeo': 20, 'Mayoreo': 15 } },
+        { id: 5, name: 'ESCOBA CEPRILLO TRAPO', category: 'JARQUERÍA', mode: 'piezas', prices: { 'Pieza': 45 } }
       ],
       users: JSON.parse(localStorage.getItem('armm_users')) || [],
       orders: JSON.parse(localStorage.getItem('armm_orders')) || [],
@@ -639,18 +650,50 @@
     let currentUser = JSON.parse(localStorage.getItem('armm_current_user')) || null;
     let cart = [];
     let selectedCoupon = null;
-    let editingProductId = null;
+    let isPendingOrderAfterRegister = false;
 
-    // --- INICIALIZACIÓN ---
     window.onload = function() {
       saveDB();
       renderNavButtons();
       renderProducts();
-      renderCouponsList();
-      checkAdminPermissionPrompt();
+      
+      // SINCRONIZACIÓN PERSISTENTE EN TIEMPO REAL
+      window.addEventListener('storage', () => {
+        reloadFromLocalStorage();
+      });
+
+      setInterval(() => {
+        reloadFromLocalStorage();
+      }, 2500);
     };
 
+    function reloadFromLocalStorage() {
+      db.users = JSON.parse(localStorage.getItem('armm_users')) || [];
+      db.orders = JSON.parse(localStorage.getItem('armm_orders')) || [];
+      db.chats = JSON.parse(localStorage.getItem('armm_chats')) || {};
+      db.helpDesk = JSON.parse(localStorage.getItem('armm_helpdesk')) || [];
+      db.notifications = JSON.parse(localStorage.getItem('armm_notifications')) || [];
+      db.adminNotifications = JSON.parse(localStorage.getItem('armm_admin_notifications')) || [];
+      db.coupons = JSON.parse(localStorage.getItem('armm_coupons')) || [];
+
+      if (document.getElementById('admin-web').style.display === 'block') {
+        renderAdminOrders();
+        renderAdminUsers();
+        renderAdminHelpDesk();
+        renderAdminChats();
+        renderAdminNotifications();
+        renderAdminCoupons();
+      }
+
+      if (currentUser && document.getElementById('user-menu-modal').style.display === 'flex') {
+        renderUserChat();
+        renderUserOrders();
+        renderUserNotifications();
+      }
+    }
+
     function saveDB() {
+      localStorage.setItem('armm_categories_order', JSON.stringify(db.categoriesOrder));
       localStorage.setItem('armm_products', JSON.stringify(db.products));
       localStorage.setItem('armm_users', JSON.stringify(db.users));
       localStorage.setItem('armm_orders', JSON.stringify(db.orders));
@@ -661,47 +704,43 @@
       localStorage.setItem('armm_chats', JSON.stringify(db.chats));
     }
 
-    // --- NOTIFICACIÓN WEB ADMIN ---
-    function checkAdminPermissionPrompt() {
-      if (sessionStorage.getItem('admin_logged') === 'true') {
-        if (Notification && Notification.permission !== 'granted' && Notification.permission !== 'denied') {
-          if (confirm("¿Quieres recibir notificaciones push en tiempo real de la Web Admin para nuevos pedidos y usuarios?")) {
-            Notification.requestPermission();
-          }
-        }
-      }
-    }
-
-    function addAdminSelfNotification(msg) {
-      db.adminNotifications.unshift({ id: Date.now(), msg, time: new Date().toLocaleTimeString() });
+    function addAdminAlert(title, message) {
+      const alertObj = { id: Date.now(), title, message, date: new Date().toLocaleString() };
+      db.adminNotifications.unshift(alertObj);
       saveDB();
+
       if (Notification && Notification.permission === 'granted') {
-        new Notification("ARMM ADMIN ALERTA", { body: msg });
+        new Notification(`ARMM Admin: ${title}`, { body: message });
       }
-      renderAdminNotifications();
     }
 
-    // --- NAVEGACIÓN Y MENÚS ---
+    function requestAdminNotificationPermission() {
+      if ("Notification" in window) {
+        Notification.requestPermission().then(permission => {
+          if (permission === "granted") {
+            alert("Notificaciones del panel Admin activadas exitosamente.");
+          }
+        });
+      }
+    }
+
     function renderNavButtons() {
       const container = document.getElementById('nav-actions');
-      let html = '';
       if (currentUser) {
-        html = `
-          <button class="btn" onclick="openUserMenuModal()"><i class="fas fa-user"></i> ${currentUser.name}</button>
-          <button class="btn btn-accent" onclick="toggleCart()"><i class="fas fa-shopping-cart"></i> Carrito ( ${cart.length} )</button>
+        container.innerHTML = `
+          <button class="btn" onclick="openUserMenuModal()"><i class="fas fa-user-circle" style="color:var(--accent-green);"></i> ${currentUser.name}</button>
+          <button class="btn btn-accent" onclick="toggleCart()"><i class="fas fa-shopping-cart"></i> Carrito (${cart.length})</button>
         `;
       } else {
-        html = `
-          <button class="btn" onclick="openModal('register-modal')">Registrarse</button>
+        container.innerHTML = `
+          <button class="btn" onclick="openRegisterModal(false)">Registrarse</button>
           <button class="btn" onclick="openModal('login-modal')">Iniciar Sesión</button>
-          <button class="btn btn-accent" onclick="toggleCart()"><i class="fas fa-shopping-cart"></i> Carrito ( ${cart.length} )</button>
-          <button class="btn" style="background: rgba(255,255,255,0.05);" onclick="openAdminLoginModal()"><i class="fas fa-lock"></i></button>
+          <button class="btn btn-accent" onclick="toggleCart()"><i class="fas fa-shopping-cart"></i> Carrito (${cart.length})</button>
+          <button class="btn" onclick="openAdminLoginModal()"><i class="fas fa-lock"></i></button>
         `;
       }
-      container.innerHTML = html;
     }
 
-    // --- CONMUTACIÓN DE WEBS (PÚBLICA / ADMIN) ---
     function showPublicWeb() {
       document.getElementById('public-web').style.display = 'block';
       document.getElementById('admin-web').style.display = 'none';
@@ -721,8 +760,8 @@
       if (pass === 'ARMM123') {
         sessionStorage.setItem('admin_logged', 'true');
         closeModal('admin-login-modal');
-        checkAdminPermissionPrompt();
         showAdminWeb();
+        requestAdminNotificationPermission();
       } else {
         alert("Contraseña de administrador incorrecta.");
       }
@@ -731,20 +770,37 @@
     function showAdminWeb() {
       document.getElementById('public-web').style.display = 'none';
       document.getElementById('admin-web').style.display = 'block';
-      renderAdminAll();
+      renderAdminOrders();
+      renderAdminUsers();
+      renderAdminHelpDesk();
+      renderAdminChats();
+      renderAdminNotifications();
+      renderAdminCoupons();
+      renderCategoryOrderList();
+      renderAdminProductsList();
+      populateNotifUsersDropdown();
     }
 
-    // --- TOGGLE OJITO CONTRASEÑA ---
     function togglePass(id) {
       const field = document.getElementById(id);
       field.type = field.type === 'password' ? 'text' : 'password';
     }
 
-    // --- MODALES GENERALES ---
     function openModal(id) { document.getElementById(id).style.display = 'flex'; }
     function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
-    // --- RENDERIZADO PÚBLICO DE PRODUCTOS ---
+    function openRegisterModal(isFromCheckout = false) {
+      isPendingOrderAfterRegister = isFromCheckout;
+      const btn = document.getElementById('reg-submit-btn');
+      if (isFromCheckout) {
+        btn.innerText = "Continuar con el Pedido";
+      } else {
+        btn.innerText = "Registrarse";
+      }
+      openModal('register-modal');
+    }
+
+    // RENDERIZADO Y BÚSQUEDA DE PRODUCTOS EN TIEMPO REAL
     function renderProducts(filterText = '') {
       const container = document.getElementById('products-container');
       container.innerHTML = '';
@@ -754,50 +810,51 @@
         p.category.toLowerCase().includes(filterText.toLowerCase())
       );
 
-      filtered.forEach(p => {
-        let optionsHtml = '';
-        for (let key in p.prices) {
-          optionsHtml += `<option value="${key}">${key} - $${p.prices[key]} MXN</option>`;
-        }
+      db.categoriesOrder.forEach(cat => {
+        const catProds = filtered.filter(p => p.category.toUpperCase() === cat.toUpperCase());
+        if (catProds.length > 0) {
+          const block = document.createElement('div');
+          block.className = 'category-block';
+          
+          let cardsHtml = '';
+          catProds.forEach(p => {
+            let optionsHtml = '';
+            for (let key in p.prices) {
+              optionsHtml += `<option value="${key}">${key} - $${p.prices[key]} MXN</option>`;
+            }
+            cardsHtml += `
+              <div class="product-card glass-panel">
+                <div>
+                  <div class="category-tag">${p.category}</div>
+                  <div class="product-title">${p.name}</div>
+                </div>
+                <div>
+                  <select class="select-presentation" id="pres-${p.id}">${optionsHtml}</select>
+                  <button class="btn btn-accent" style="width:100%; justify-content:center;" onclick="addToCart(${p.id})">
+                    <i class="fas fa-cart-plus"></i> Agregar al Carrito
+                  </button>
+                </div>
+              </div>`;
+          });
 
-        const card = document.createElement('div');
-        card.className = 'product-card';
-        card.innerHTML = `
-          <div>
-            <div class="category-tag">${p.category}</div>
-            <div class="product-title">${p.name}</div>
-          </div>
-          <div>
-            <label style="font-size:0.75rem; color:var(--text-sub);">Selecciona Presentación:</label>
-            <select class="select-presentation" id="pres-${p.id}">
-              ${optionsHtml}
-            </select>
-            <button class="btn btn-accent" style="width:100%; justify-content:center;" onclick="addToCart(${p.id})">
-              <i class="fas fa-cart-plus"></i> Agregar al Carrito
-            </button>
-          </div>
-        `;
-        container.appendChild(card);
+          block.innerHTML = `<div class="category-header">${cat}</div><div class="grid-products">${cardsHtml}</div>`;
+          container.appendChild(block);
+        }
       });
     }
 
     function filterProducts() {
-      const val = document.getElementById('search-input').value;
-      renderProducts(val);
+      renderProducts(document.getElementById('search-input').value);
     }
 
-    // --- LÓGICA DEL CARRITO & CUPONES ---
     function toggleCart() {
-      const drawer = document.getElementById('cart-drawer');
-      drawer.classList.toggle('active');
+      document.getElementById('cart-drawer').classList.toggle('active');
     }
 
     function addToCart(pId) {
       const p = db.products.find(prod => prod.id === pId);
       const selKey = document.getElementById(`pres-${pId}`).value;
-      const price = p.prices[selKey];
-
-      cart.push({ id: p.id, name: p.name, category: p.category, presentation: selKey, price: parseFloat(price) });
+      cart.push({ id: p.id, name: p.name, category: p.category, presentation: selKey, price: parseFloat(p.prices[selKey]) });
       renderNavButtons();
       renderCart();
       toggleCart();
@@ -807,28 +864,23 @@
       const container = document.getElementById('cart-items-list');
       container.innerHTML = '';
       let subtotal = 0;
-
       cart.forEach((item, index) => {
         subtotal += item.price;
-        const row = document.createElement('div');
-        row.className = 'cart-item';
-        row.innerHTML = `
-          <div>
-            <strong>${item.name}</strong><br>
-            <small style="color:var(--text-sub);">${item.presentation} - $${item.price} MXN</small>
-          </div>
-          <i class="fas fa-trash" style="color:#ff5252; cursor:pointer;" onclick="removeFromCart(${index})"></i>
-        `;
-        container.appendChild(row);
+        container.innerHTML += `
+          <div class="cart-item">
+            <div><strong>${item.name}</strong><br><small style="color:var(--text-sub);">${item.presentation} - $${item.price} MXN</small></div>
+            <i class="fas fa-trash" style="color:#ff5252; cursor:pointer;" onclick="removeFromCart(${index})"></i>
+          </div>`;
       });
 
       document.getElementById('cart-subtotal').innerText = `$${subtotal.toFixed(2)} MXN`;
-      
-      let total = subtotal;
+      let finalTotal = subtotal;
+
       if (selectedCoupon) {
-        total = subtotal - (subtotal * (selectedCoupon.discount / 100));
+        finalTotal = subtotal - (subtotal * (selectedCoupon.discount / 100));
       }
-      document.getElementById('cart-total').innerText = `$${total.toFixed(2)} MXN`;
+
+      document.getElementById('cart-total').innerText = `$${finalTotal.toFixed(2)} MXN`;
     }
 
     function removeFromCart(index) {
@@ -837,59 +889,135 @@
       renderCart();
     }
 
+    // GESTIÓN DE CUPONES
     function toggleCuponMenu() {
       const menu = document.getElementById('cupon-menu');
       menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
-      renderAvailableCoupons();
+      if (menu.style.display === 'block') renderAvailableCoupons();
     }
 
     function renderAvailableCoupons() {
       const container = document.getElementById('available-coupons-list');
-      container.innerHTML = '';
       const today = new Date().toISOString().split('T')[0];
+      const validCoupons = db.coupons.filter(c => !c.expiry || c.expiry >= today);
 
-      const active = db.coupons.filter(c => !c.exp || c.exp >= today);
-
-      if (active.length === 0) {
-        container.innerHTML = '<p style="font-size:0.75rem; color:var(--text-sub);">No hay cupones vigentes.</p>';
+      if (validCoupons.length === 0) {
+        container.innerHTML = '<p style="font-size:0.8rem; color:var(--text-sub);">No hay cupones activos actualmente.</p>';
         return;
       }
 
-      active.forEach(c => {
-        const item = document.createElement('div');
-        item.style.cssText = 'padding:6px; border-bottom:1px solid rgba(255,255,255,0.1); cursor:pointer; font-size:0.8rem;';
-        item.innerHTML = `<strong>${c.code}</strong> (${c.discount}% OFF)<br><small>${c.desc}</small>`;
-        item.onclick = () => applyCoupon(c);
-        container.appendChild(item);
-      });
+      container.innerHTML = validCoupons.map(c => `
+        <div style="background:rgba(255,255,255,0.05); padding:8px; border-radius:6px; margin-bottom:6px; font-size:0.8rem;">
+          <strong>${c.code}</strong> - ${c.discount}% de descuento<br>
+          <small>${c.desc}</small><br>
+          <button class="btn btn-accent btn-sm" style="margin-top:5px;" onclick="applyCoupon('${c.code}')">Aplicar Cupón</button>
+        </div>
+      `).join('');
     }
 
-    function applyCoupon(coupon) {
-      const subtotal = cart.reduce((acc, i) => acc + i.price, 0);
-      const msgElem = document.getElementById('coupon-message');
-      msgElem.style.display = 'none';
+    function applyCoupon(code) {
+      const coupon = db.coupons.find(c => c.code === code);
+      const msg = document.getElementById('coupon-message');
+      msg.style.display = 'none';
 
-      if (coupon.condType === 'monto') {
-        if (subtotal < parseFloat(coupon.condVal)) {
-          msgElem.innerText = `Su compra no cumple con las condiciones del cupón. Requiere monto mínimo de $${coupon.condVal} MXN.`;
-          msgElem.style.display = 'block';
-          return;
-        }
-      } else if (coupon.condType === 'categoria') {
-        const hasCat = cart.some(i => i.category.toLowerCase() === coupon.condVal.toLowerCase());
-        if (!hasCat) {
-          msgElem.innerText = `Su compra no cumple con las condiciones del cupón. Requiere productos de la categoría '${coupon.condVal}'.`;
-          msgElem.style.display = 'block';
+      let subtotal = cart.reduce((a, b) => a + b.price, 0);
+
+      if (coupon.appMode === 'monto' && subtotal < coupon.minAmount) {
+        msg.innerText = `Su compra no cumple con las condiciones del cupón, requiere mínimo $${coupon.minAmount} MXN.`;
+        msg.style.display = 'block';
+        selectedCoupon = null;
+        renderCart();
+        return;
+      }
+
+      if (coupon.appMode === 'categoria') {
+        const hasCategory = cart.some(item => item.category.toLowerCase() === coupon.targetCategory.toLowerCase());
+        if (!hasCategory) {
+          msg.innerText = `Su compra no cumple con las condiciones del cupón, requiere llevar productos de la categoría: ${coupon.targetCategory}.`;
+          msg.style.display = 'block';
+          selectedCoupon = null;
+          renderCart();
           return;
         }
       }
 
       selectedCoupon = coupon;
-      renderCart();
       alert(`¡Cupón ${coupon.code} aplicado correctamente!`);
+      renderCart();
     }
 
-    // --- REGISTRO Y LOGIN DE USUARIO ---
+    // CHECKOUT Y MÉTODOS DE PAGO
+    function checkUserForCheckout() {
+      if (!currentUser) {
+        alert("Regístrate para poder realizar tu pedido.");
+        openRegisterModal(true);
+        return false;
+      }
+      if (cart.length === 0) {
+        alert("Tu carrito está vacío.");
+        return false;
+      }
+      return true;
+    }
+
+    function checkoutSPEI() {
+      if (!checkUserForCheckout()) return;
+      openModal('spei-modal');
+    }
+
+    function openCODMenu() {
+      if (!checkUserForCheckout()) return;
+      openModal('cod-modal');
+    }
+
+    function confirmSPEIOrder() {
+      closeModal('spei-modal');
+      processFinalOrder('SPEI / Transferencia');
+    }
+
+    function confirmCODOrder() {
+      const method = document.querySelector('input[name="cod_method"]:checked').value;
+      closeModal('cod-modal');
+      processFinalOrder(`Pago al recibir (${method})`);
+    }
+
+    function processFinalOrder(paymentMethod) {
+      let subtotal = cart.reduce((a, b) => a + b.price, 0);
+      let total = subtotal;
+      if (selectedCoupon) total = subtotal - (subtotal * (selectedCoupon.discount / 100));
+
+      const newOrder = {
+        id: 'PED-' + Math.floor(1000 + Math.random() * 9000),
+        user: currentUser,
+        items: [...cart],
+        total: total,
+        paymentMethod: paymentMethod,
+        status: 'Pendiente de entrega',
+        estimatedDate: 'Por confirmar',
+        date: new Date().toLocaleString()
+      };
+
+      db.orders.push(newOrder);
+      addAdminAlert("Nuevo Pedido Recibido", `Orden #${newOrder.id} por $${total.toFixed(2)} de ${currentUser.name}`);
+      saveDB();
+
+      cart = [];
+      selectedCoupon = null;
+      renderNavButtons();
+      renderCart();
+      toggleCart();
+
+      if (paymentMethod.includes('SPEI')) {
+        const text = `Hola ARMM, realizé mi pedido #${newOrder.id} con pago SPEI por un total de $${total.toFixed(2)} MXN. Adjunto mi comprobante.`;
+        window.open(`https://wa.me/523351097726?text=${encodeURIComponent(text)}`, '_blank');
+      }
+
+      alert("¡Pedido realizado con éxito! Puedes ver el seguimiento en tu cuenta.");
+      openUserMenuModal();
+      showUserSubTab('pedidos');
+    }
+
+    // MANEJO DE REGISTRO E INICIO DE SESIÓN
     function handleRegister(e) {
       e.preventDefault();
       const pass = document.getElementById('reg-pass').value;
@@ -902,34 +1030,35 @@
 
       const newUser = {
         id: Date.now(),
-        name: document.getElementById('reg-name').value,
-        lastname: document.getElementById('reg-lastname').value,
-        phone: document.getElementById('reg-phone').value,
-        email: document.getElementById('reg-email').value,
-        address: document.getElementById('reg-address').value,
+        name: document.getElementById('reg-name').value.trim(),
+        lastname: document.getElementById('reg-lastname').value.trim(),
+        phone: document.getElementById('reg-phone').value.trim(),
+        email: document.getElementById('reg-email').value.trim(),
+        address: document.getElementById('reg-address').value.trim(),
         password: pass
       };
 
       db.users.push(newUser);
+      addAdminAlert("Nuevo Usuario Registrado", `${newUser.name} ${newUser.lastname} (${newUser.email})`);
       saveDB();
-      addAdminSelfNotification(`Nuevo usuario registrado: ${newUser.name} ${newUser.lastname}`);
 
       currentUser = newUser;
       localStorage.setItem('armm_current_user', JSON.stringify(currentUser));
       closeModal('register-modal');
       renderNavButtons();
-      alert("¡Registro exitoso! Bienvenido a ARMM.");
 
-      if (sessionStorage.getItem('pending_checkout')) {
-        sessionStorage.removeItem('pending_checkout');
+      if (isPendingOrderAfterRegister) {
+        isPendingOrderAfterRegister = false;
         toggleCart();
+      } else {
+        alert("¡Registro completado exitosamente!");
       }
     }
 
     function handleLogin(e) {
       e.preventDefault();
-      const id = document.getElementById('login-identifier').value;
-      const pass = document.getElementById('login-pass').value;
+      const id = document.getElementById('login-identifier').value.trim();
+      const pass = document.getElementById('login-pass').value.trim();
 
       const user = db.users.find(u => (u.email === id || u.phone === id) && u.password === pass);
 
@@ -940,7 +1069,7 @@
         renderNavButtons();
         alert(`¡Bienvenido de nuevo, ${user.name}!`);
       } else {
-        alert("Credenciales incorrectas. Verifique e intente de nuevo.");
+        alert("Correo, teléfono o contraseña incorrectos.");
       }
     }
 
@@ -951,100 +1080,37 @@
       renderNavButtons();
     }
 
-    // --- CHECKOUT & PAGOS ---
-    function verifyUserLoggedInForOrder() {
-      if (!currentUser) {
-        sessionStorage.setItem('pending_checkout', 'true');
-        toggleCart();
-        alert("Regístrate para poder realizar tu pedido.");
-        openModal('register-modal');
-        return false;
-      }
-      if (cart.length === 0) {
-        alert("Tu carrito está vacío.");
-        return false;
-      }
-      return true;
+    function openRecoverModal() {
+      closeModal('login-modal');
+      closeModal('user-menu-modal');
+      openModal('recover-modal');
     }
 
-    function checkoutSPEI() {
-      if (!verifyUserLoggedInForOrder()) return;
-
-      const orderId = 'ORD-' + Math.floor(100000 + Math.random() * 900000);
-      const subtotal = cart.reduce((acc, i) => acc + i.price, 0);
-      let total = subtotal;
-      if (selectedCoupon) total = subtotal - (subtotal * (selectedCoupon.discount / 100));
-
-      const newOrder = {
-        id: orderId,
-        user: currentUser,
-        items: [...cart],
-        total: total,
-        method: 'SPEI',
-        status: 'Pendiente Comprobante SPEI',
+    function handleRecoverPassword(e) {
+      e.preventDefault();
+      const reqData = {
+        id: Date.now(),
+        name: document.getElementById('rec-name').value.trim(),
+        lastname: document.getElementById('rec-lastname').value.trim(),
+        email: document.getElementById('rec-email').value.trim(),
+        phone: document.getElementById('rec-phone').value.trim(),
         date: new Date().toLocaleString()
       };
 
-      db.orders.push(newOrder);
+      db.helpDesk.push(reqData);
+      addAdminAlert("Solicitud de Centro de Ayuda", `Recuperación solicitada por ${reqData.name} ${reqData.lastname}`);
       saveDB();
-      addAdminSelfNotification(`Nuevo pedido SPEI ${orderId} por $${total} MXN`);
 
-      const text = encodeURIComponent(`Hola ARMM, adjunto mi comprobante SPEI para el Pedido #${orderId}. Total: $${total} MXN.`);
-      window.open(`https://wa.me/523351097726?text=${text}`, '_blank');
-
-      cart = [];
-      selectedCoupon = null;
-      renderCart();
-      renderNavButtons();
-      toggleCart();
-      openUserMenuModal();
-      showUserSubTab('pedidos');
+      closeModal('recover-modal');
+      alert("Te estaremos informando la situación de tu cuenta por tu WhatsApp.");
     }
 
-    function openCODMenu() {
-      if (!verifyUserLoggedInForOrder()) return;
-      openModal('cod-modal');
-    }
-
-    function confirmCODOrder() {
-      const method = document.querySelector('input[name="cod_method"]:checked').value;
-      const orderId = 'ORD-' + Math.floor(100000 + Math.random() * 900000);
-      const subtotal = cart.reduce((acc, i) => acc + i.price, 0);
-      let total = subtotal;
-      if (selectedCoupon) total = subtotal - (subtotal * (selectedCoupon.discount / 100));
-
-      const newOrder = {
-        id: orderId,
-        user: currentUser,
-        items: [...cart],
-        total: total,
-        method: `Pago al Recibir (${method})`,
-        status: 'Pedido Recibido / En proceso',
-        date: new Date().toLocaleString()
-      };
-
-      db.orders.push(newOrder);
-      saveDB();
-      addAdminSelfNotification(`Nuevo pedido COD ${orderId} (${method})`);
-
-      closeModal('cod-modal');
-      cart = [];
-      selectedCoupon = null;
-      renderCart();
-      renderNavButtons();
-      toggleCart();
-
-      alert(`¡Pedido #${orderId} realizado con éxito! Redirigiendo a seguimiento.`);
-      openUserMenuModal();
-      showUserSubTab('pedidos');
-    }
-
-    // --- MENÚ DE USUARIO ("MONITO") Y CAMBIO DE CONTRASEÑA ---
     function openUserMenuModal() {
       if (!currentUser) return;
       document.getElementById('u-info-name').innerText = `${currentUser.name} ${currentUser.lastname}`;
       document.getElementById('u-info-email').innerText = currentUser.email;
       document.getElementById('u-info-phone').innerText = currentUser.phone;
+      document.getElementById('u-info-address').innerText = currentUser.address;
       openModal('user-menu-modal');
       showUserSubTab('datos');
     }
@@ -1052,21 +1118,20 @@
     function showUserSubTab(tab) {
       document.querySelectorAll('.usub-content').forEach(c => c.style.display = 'none');
       document.getElementById(`usub-${tab}`).style.display = 'block';
-
+      if (tab === 'chat') renderUserChat();
       if (tab === 'pedidos') renderUserOrders();
       if (tab === 'notif') renderUserNotifications();
-      if (tab === 'chat') renderUserChat();
     }
 
-    function toggleChangePassArea() {
-      const area = document.getElementById('change-pass-area');
-      area.style.display = area.style.display === 'none' ? 'block' : 'none';
+    function toggleChangePassMenu() {
+      const menu = document.getElementById('change-pass-menu');
+      menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
     }
 
     function saveNewPassword() {
-      const curr = document.getElementById('cp-curr').value;
-      const newP = document.getElementById('cp-new').value;
-      const confP = document.getElementById('cp-confirm').value;
+      const curr = document.getElementById('chg-curr-pass').value;
+      const newP = document.getElementById('chg-new-pass').value;
+      const confP = document.getElementById('chg-conf-pass').value;
 
       if (curr !== currentUser.password) {
         alert("La contraseña actual es incorrecta.");
@@ -1080,115 +1145,66 @@
       currentUser.password = newP;
       const idx = db.users.findIndex(u => u.id === currentUser.id);
       if (idx !== -1) db.users[idx].password = newP;
+
+      localStorage.setItem('armm_current_user', JSON.stringify(currentUser));
       saveDB();
-
-      alert("Contraseña actualizada con éxito.");
-      toggleChangePassArea();
+      alert("¡Contraseña actualizada con éxito!");
+      toggleChangePassMenu();
     }
 
-    function openRecoverModal() {
-      closeModal('login-modal');
-      closeModal('user-menu-modal');
-      openModal('recover-modal');
-    }
-
-    function handleRecoverPassword(e) {
-      e.preventDefault();
-      const req = {
-        id: Date.now(),
-        name: document.getElementById('rec-name').value,
-        lastname: document.getElementById('rec-lastname').value,
-        email: document.getElementById('rec-email').value,
-        phone: document.getElementById('rec-phone').value,
-        status: 'Pendiente'
-      };
-
-      db.helpDesk.push(req);
-      saveDB();
-      addAdminSelfNotification(`Solicitud de acceso de ${req.name} (${req.phone})`);
-
-      closeModal('recover-modal');
-      alert("Solicitud enviada. Te estaremos informando la situación de tu cuenta por tu WhatsApp.");
-    }
-
-    function renderUserOrders() {
-      const container = document.getElementById('user-orders-list');
-      container.innerHTML = '';
-      const myOrders = db.orders.filter(o => o.user.id === currentUser.id);
-
-      if (myOrders.length === 0) {
-        container.innerHTML = '<p style="font-size:0.8rem; color:var(--text-sub);">No tienes pedidos registrados.</p>';
-        return;
-      }
-
-      myOrders.forEach(o => {
-        const div = document.createElement('div');
-        div.style.cssText = 'background:rgba(255,255,255,0.05); padding:10px; border-radius:8px; margin-bottom:10px; font-size:0.85rem;';
-        div.innerHTML = `
-          <strong>Pedido: ${o.id}</strong> - <span style="color:var(--accent-green);">${o.status}</span><br>
-          <small>Fecha estimada: ${o.estimatedDate || 'Por confirmar'}</small><br>
-          <small>Método: ${o.method} | Total: $${o.total.toFixed(2)} MXN</small>
-        `;
-        container.appendChild(div);
-      });
-    }
-
-    function renderUserNotifications() {
-      const container = document.getElementById('user-notifications-list');
-      container.innerHTML = '';
-      const myNotifs = db.notifications.filter(n => n.userId === 'TODOS' || n.userId === currentUser.id);
-
-      if (myNotifs.length === 0) {
-        container.innerHTML = '<p style="font-size:0.8rem; color:var(--text-sub);">No tienes notificaciones.</p>';
-        return;
-      }
-
-      myNotifs.forEach(n => {
-        const div = document.createElement('div');
-        div.style.cssText = 'background:rgba(0,230,118,0.1); border-left:3px solid var(--accent-green); padding:8px; margin-bottom:8px; font-size:0.8rem;';
-        div.innerHTML = `${n.msg} <br><small style="color:var(--text-sub);">${n.date}</small>`;
-        container.appendChild(div);
-      });
-    }
-
-    function renderUserChat() {
-      const container = document.getElementById('user-chat-box');
-      container.innerHTML = '';
-      const chatKey = currentUser.id;
-      const msgs = db.chats[chatKey] || [];
-
-      msgs.forEach(m => {
-        const align = m.sender === 'user' ? 'right' : 'left';
-        const bg = m.sender === 'user' ? 'rgba(0,230,118,0.2)' : 'rgba(255,255,255,0.1)';
-        container.innerHTML += `<div style="text-align:${align}; margin-bottom:6px;"><span style="background:${bg}; padding:5px 10px; border-radius:8px; display:inline-block;">${m.text}</span></div>`;
-      });
-    }
-
+    // CHAT DEL CLIENTE
     function sendUserChatMessage() {
       const input = document.getElementById('user-chat-input');
-      const val = input.value.trim();
-      if (!val) return;
+      const text = input.value.trim();
+      if (!text || !currentUser) return;
 
       const chatKey = currentUser.id;
       if (!db.chats[chatKey]) db.chats[chatKey] = [];
-      db.chats[chatKey].push({ sender: 'user', text: val, date: new Date().toLocaleTimeString() });
+      
+      db.chats[chatKey].push({ sender: 'user', text: text, time: new Date().toLocaleTimeString() });
+      addAdminAlert("Nuevo mensaje de chat", `Mensaje de ${currentUser.name}: ${text}`);
       saveDB();
       input.value = '';
       renderUserChat();
     }
 
-    // --- RENDER Y LÓGICA DE LA WEB ADMIN ---
-    function renderAdminAll() {
-      renderAdminOrders();
-      renderAdminProductsList();
-      renderAdminUsers();
-      renderAdminHelpDesk();
-      renderAdminCoupons();
-      renderAdminChats();
-      renderAdminNotifications();
-      populateNotifUsersDropdown();
+    function renderUserChat() {
+      if (!currentUser) return;
+      const container = document.getElementById('user-chat-box');
+      const msgs = db.chats[currentUser.id] || [];
+
+      container.innerHTML = msgs.map(m => `
+        <div style="text-align: ${m.sender === 'user' ? 'right' : 'left'}; margin-bottom: 6px;">
+          <span style="background: ${m.sender === 'user' ? 'rgba(0,230,118,0.2)' : 'rgba(255,255,255,0.1)'}; padding: 5px 10px; border-radius: 8px; display: inline-block;">
+            ${m.text}
+          </span>
+        </div>
+      `).join('');
+      container.scrollTop = container.scrollHeight;
     }
 
+    function renderUserOrders() {
+      const container = document.getElementById('user-orders-list');
+      const myOrders = db.orders.filter(o => o.user.id === currentUser.id);
+      container.innerHTML = myOrders.length ? myOrders.map(o => `
+        <div style="background:rgba(255,255,255,0.05); padding:10px; border-radius:8px; margin-bottom:8px; font-size:0.85rem;">
+          <strong>Pedido #${o.id}</strong> - <span style="color:var(--accent-green);">${o.status}</span><br>
+          <small>Método de Pago: ${o.paymentMethod}</small><br>
+          <small>Fecha estimada: ${o.estimatedDate}</small><br>
+          <strong>Total: $${o.total.toFixed(2)} MXN</strong>
+        </div>`).join('') : '<p style="font-size:0.8rem; color:var(--text-sub);">Sin pedidos en historial.</p>';
+    }
+
+    function renderUserNotifications() {
+      const container = document.getElementById('user-notifications-list');
+      const myNotifs = db.notifications.filter(n => n.userId === 'TODOS' || n.userId == currentUser.id);
+      container.innerHTML = myNotifs.length ? myNotifs.map(n => `
+        <div style="background:rgba(0,230,118,0.1); padding:8px; margin-bottom:6px; font-size:0.8rem; border-radius:6px;">
+          ${n.msg}<br><small style="color:var(--text-sub);">${n.date}</small>
+        </div>`).join('') : '<p style="font-size:0.8rem; color:var(--text-sub);">No tienes notificaciones.</p>';
+    }
+
+    // FUNCIONES DEL PANEL ADMIN
     function switchAdminTab(tab) {
       document.querySelectorAll('.atab-content').forEach(c => c.style.display = 'none');
       document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
@@ -1196,343 +1212,359 @@
       event.target.classList.add('active');
     }
 
-    // Admin Sección 1: Pedidos
     function renderAdminOrders() {
       const container = document.getElementById('admin-orders-container');
-      container.innerHTML = '';
-
-      if (db.orders.length === 0) {
-        container.innerHTML = '<p style="color:var(--text-sub);">No hay pedidos en sistema.</p>';
-        return;
-      }
-
-      db.orders.forEach((o, index) => {
-        const div = document.createElement('div');
-        div.style.cssText = 'background:rgba(255,255,255,0.03); padding:15px; border-radius:10px; margin-bottom:12px; border:1px solid rgba(255,255,255,0.1);';
-        
-        let itemsStr = o.items.map(i => `${i.name} (${i.presentation})`).join(', ');
-
-        div.innerHTML = `
-          <strong>Pedido ID: ${o.id}</strong> | Cliente: ${o.user.name} ${o.user.lastname} (${o.user.phone})<br>
-          <strong>Dirección de Entrega:</strong> ${o.user.address}<br>
-          <strong>Método de Pago:</strong> ${o.method} | <strong>Total:</strong> $${o.total.toFixed(2)} MXN<br>
-          <strong>Artículos:</strong> ${itemsStr}<br>
-          <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap;">
-            <input type="text" class="input-field" style="width:200px;" id="status-in-${index}" value="${o.status}" placeholder="Estado del pedido">
-            <input type="text" class="input-field" style="width:180px;" id="date-in-${index}" value="${o.estimatedDate || ''}" placeholder="Fecha estimada de entrega">
-            <button class="btn btn-accent" onclick="updateOrderStatus(${index})">Actualizar Estado</button>
+      container.innerHTML = db.orders.length ? db.orders.map(o => `
+        <div style="background:rgba(255,255,255,0.03); padding:12px; border-radius:8px; margin-bottom:10px; font-size:0.85rem;">
+          <strong>Pedido #${o.id}</strong> | Cliente: ${o.user.name} ${o.user.lastname} (${o.user.phone})<br>
+          <strong>Dirección:</strong> ${o.user.address}<br>
+          <strong>Método de pago:</strong> ${o.paymentMethod} | <strong>Total:</strong> $${o.total.toFixed(2)} MXN<br>
+          <div style="margin-top:8px; display:flex; gap:10px; align-items:center;">
+            <label>Estado:</label>
+            <input type="text" class="input-field" style="width:180px;" id="ord-status-${o.id}" value="${o.status}">
+            <label>Fecha Estimada:</label>
+            <input type="text" class="input-field" style="width:180px;" id="ord-date-${o.id}" value="${o.estimatedDate}">
+            <button class="btn btn-accent btn-sm" onclick="updateOrderStatus('${o.id}')">Actualizar</button>
           </div>
-        `;
-        container.appendChild(div);
-      });
+        </div>`).join('') : '<p style="color:var(--text-sub);">No hay pedidos en la plataforma.</p>';
     }
 
-    function updateOrderStatus(idx) {
-      const newStatus = document.getElementById(`status-in-${idx}`).value;
-      const newDate = document.getElementById(`date-in-${idx}`).value;
+    function updateOrderStatus(orderId) {
+      const status = document.getElementById(`ord-status-${orderId}`).value;
+      const estDate = document.getElementById(`ord-date-${orderId}`).value;
 
-      db.orders[idx].status = newStatus;
-      db.orders[idx].estimatedDate = newDate;
-      saveDB();
-      alert("Pedido actualizado correctamente.");
+      const order = db.orders.find(o => o.id === orderId);
+      if (order) {
+        order.status = status;
+        order.estimatedDate = estDate;
+        saveDB();
+        alert(`Pedido #${orderId} actualizado con éxito.`);
+      }
     }
 
-    // Admin Sección 2 y 3: Productos y Modos
     function toggleModeFields() {
       const mode = document.getElementById('adm-p-mode').value;
       document.getElementById('mode-fields-litro').style.display = mode === 'litro' ? 'flex' : 'none';
-      document.getElementById('mode-fields-mm').style.display = mode === 'mayoreo_menudeo' ? 'flex' : 'none';
-      document.getElementById('mode-fields-pzs').style.display = mode === 'piezas' ? 'block' : 'none';
+      document.getElementById('mode-fields-mayoreo').style.display = mode === 'mayoreo_menudeo' ? 'flex' : 'none';
+      document.getElementById('mode-fields-piezas').style.display = mode === 'piezas' ? 'block' : 'none';
     }
 
     function saveAdminProduct() {
-      const name = document.getElementById('adm-p-name').value;
-      const cat = document.getElementById('adm-p-cat').value;
+      const editId = document.getElementById('adm-p-edit-id').value;
+      const name = document.getElementById('adm-p-name').value.trim();
+      const category = document.getElementById('adm-p-cat').value.trim().toUpperCase();
       const mode = document.getElementById('adm-p-mode').value;
 
-      if (!name || !cat) { alert("Llena el nombre y categoría."); return; }
+      if (!name || !category) {
+        alert("Ingresa el nombre y la categoría del producto.");
+        return;
+      }
 
       let prices = {};
       if (mode === 'litro') {
         prices = {
-          '1 Litro': document.getElementById('p-price-1l').value || 0,
-          '5 Litros': document.getElementById('p-price-5l').value || 0,
-          '20 Litros': document.getElementById('p-price-20l').value || 0
+          '1L': parseFloat(document.getElementById('p-price-1l').value || 0),
+          '5L': parseFloat(document.getElementById('p-price-5l').value || 0),
+          '20L': parseFloat(document.getElementById('p-price-20l').value || 0)
         };
       } else if (mode === 'mayoreo_menudeo') {
         prices = {
-          'Menudeo': document.getElementById('p-price-menudeo').value || 0,
-          'Mayoreo': document.getElementById('p-price-mayoreo').value || 0
+          'Menudeo': parseFloat(document.getElementById('p-price-menudeo').value || 0),
+          'Mayoreo': parseFloat(document.getElementById('p-price-mayoreo').value || 0)
         };
       } else {
         prices = {
-          'Pieza': document.getElementById('p-price-pieza').value || 0
+          'Pieza': parseFloat(document.getElementById('p-price-pieza').value || 0)
         };
       }
 
-      if (editingProductId) {
-        const idx = db.products.findIndex(p => p.id === editingProductId);
-        if (idx !== -1) {
-          db.products[idx] = { id: editingProductId, name, category: cat, mode, prices };
+      if (editId) {
+        const prod = db.products.find(p => p.id == editId);
+        if (prod) {
+          prod.name = name;
+          prod.category = category;
+          prod.mode = mode;
+          prod.prices = prices;
         }
-        editingProductId = null;
       } else {
-        db.products.push({ id: Date.now(), name, category: cat, mode, prices });
+        const newProd = { id: Date.now(), name, category, mode, prices };
+        db.products.push(newProd);
+      }
+
+      if (!db.categoriesOrder.includes(category)) {
+        db.categoriesOrder.push(category);
       }
 
       saveDB();
+      clearProductForm();
       renderProducts();
+      renderCategoryOrderList();
       renderAdminProductsList();
       alert("Producto guardado correctamente.");
     }
 
-    function renderAdminProductsList() {
-      const container = document.getElementById('admin-products-list');
-      container.innerHTML = '';
-
-      db.products.forEach((p, idx) => {
-        const div = document.createElement('div');
-        div.style.cssText = 'display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.03); padding:10px; margin-bottom:8px; border-radius:8px; font-size:0.85rem;';
-        div.innerHTML = `
-          <div>
-            <strong>${p.name}</strong> (${p.category}) - Modo: ${p.mode}
-          </div>
-          <div style="display:flex; gap:6px;">
-            <button class="btn" onclick="moveProductUp(${idx})"><i class="fas fa-arrow-up"></i></button>
-            <button class="btn" onclick="moveProductDown(${idx})"><i class="fas fa-arrow-down"></i></button>
-            <button class="btn" onclick="editProduct(${p.id})"><i class="fas fa-edit"></i></button>
-            <button class="btn" style="color:#ff5252;" onclick="deleteProduct(${p.id})"><i class="fas fa-trash"></i></button>
-          </div>
-        `;
-        container.appendChild(div);
-      });
+    function clearProductForm() {
+      document.getElementById('adm-p-edit-id').value = '';
+      document.getElementById('adm-p-name').value = '';
+      document.getElementById('adm-p-cat').value = '';
+      document.getElementById('adm-p-title').innerText = "Agregar Nuevo Producto";
     }
 
-    function moveProductUp(idx) {
-      if (idx <= 0) return;
-      const temp = db.products[idx];
-      db.products[idx] = db.products[idx - 1];
-      db.products[idx - 1] = temp;
-      saveDB(); renderProducts(); renderAdminProductsList();
-    }
-
-    function moveProductDown(idx) {
-      if (idx >= db.products.length - 1) return;
-      const temp = db.products[idx];
-      db.products[idx] = db.products[idx + 1];
-      db.products[idx + 1] = temp;
-      saveDB(); renderProducts(); renderAdminProductsList();
-    }
-
-    function editProduct(id) {
-      const p = db.products.find(item => item.id === id);
+    function editProduct(pId) {
+      const p = db.products.find(prod => prod.id == pId);
       if (!p) return;
-      editingProductId = p.id;
+
+      document.getElementById('adm-p-edit-id').value = p.id;
       document.getElementById('adm-p-name').value = p.name;
       document.getElementById('adm-p-cat').value = p.category;
       document.getElementById('adm-p-mode').value = p.mode;
-      toggleModeFields();
-      window.scrollTo(0, 0);
-    }
+      document.getElementById('adm-p-title').innerText = "Editar Producto: " + p.name;
 
-    function deleteProduct(id) {
-      if (confirm("¿Seguro que deseas eliminar este producto?")) {
-        db.products = db.products.filter(p => p.id !== id);
-        saveDB(); renderProducts(); renderAdminProductsList();
+      toggleModeFields();
+
+      if (p.mode === 'litro') {
+        document.getElementById('p-price-1l').value = p.prices['1L'] || '';
+        document.getElementById('p-price-5l').value = p.prices['5L'] || '';
+        document.getElementById('p-price-20l').value = p.prices['20L'] || '';
+      } else if (p.mode === 'mayoreo_menudeo') {
+        document.getElementById('p-price-menudeo').value = p.prices['Menudeo'] || '';
+        document.getElementById('p-price-mayoreo').value = p.prices['Mayoreo'] || '';
+      } else {
+        document.getElementById('p-price-pieza').value = p.prices['Pieza'] || '';
       }
     }
 
-    // Admin Sección 4: Usuarios
+    function deleteProduct(pId) {
+      if (confirm("¿Seguro que deseas eliminar este producto?")) {
+        db.products = db.products.filter(p => p.id != pId);
+        saveDB();
+        renderProducts();
+        renderAdminProductsList();
+      }
+    }
+
+    function renderCategoryOrderList() {
+      const container = document.getElementById('admin-category-order-list');
+      container.innerHTML = db.categoriesOrder.map((cat, idx) => `
+        <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.03); padding:8px; margin-bottom:5px; border-radius:6px;">
+          <span><strong>${idx + 1}.</strong> ${cat}</span>
+          <div>
+            <button class="btn btn-sm" onclick="moveCategory(${idx}, -1)"><i class="fas fa-arrow-up"></i></button>
+            <button class="btn btn-sm" onclick="moveCategory(${idx}, 1)"><i class="fas fa-arrow-down"></i></button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function moveCategory(idx, dir) {
+      const target = idx + dir;
+      if (target < 0 || target >= db.categoriesOrder.length) return;
+      const temp = db.categoriesOrder[idx];
+      db.categoriesOrder[idx] = db.categoriesOrder[target];
+      db.categoriesOrder[target] = temp;
+      saveDB();
+      renderCategoryOrderList();
+      renderProducts();
+    }
+
+    function renderAdminProductsList() {
+      const container = document.getElementById('admin-products-list');
+      container.innerHTML = db.products.map(p => `
+        <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.03); padding:10px; margin-bottom:8px; border-radius:6px; font-size:0.85rem;">
+          <div>
+            <strong>${p.name}</strong> [${p.category}] - Modo: ${p.mode}
+          </div>
+          <div>
+            <button class="btn btn-sm" onclick="editProduct(${p.id})"><i class="fas fa-edit"></i> Editar</button>
+            <button class="btn btn-sm" style="background:rgba(255,82,82,0.2); color:#ff5252;" onclick="deleteProduct(${p.id})"><i class="fas fa-trash"></i></button>
+          </div>
+        </div>
+      `).join('');
+    }
+
     function renderAdminUsers() {
       const container = document.getElementById('admin-users-list');
-      container.innerHTML = '';
-
-      db.users.forEach(u => {
-        const div = document.createElement('div');
-        div.style.cssText = 'background:rgba(255,255,255,0.03); padding:10px; margin-bottom:8px; border-radius:8px; font-size:0.85rem;';
-        div.innerHTML = `
-          <strong>${u.name} ${u.lastname}</strong> | Email: ${u.email} | Tel: ${u.phone}<br>
-          <small>Dirección: ${u.address} | Contraseña: ${u.password}</small>
-        `;
-        container.appendChild(div);
-      });
+      container.innerHTML = db.users.length ? db.users.map(u => `
+        <div style="background:rgba(255,255,255,0.03); padding:10px; margin-bottom:8px; border-radius:6px; font-size:0.85rem;">
+          <strong>${u.name} ${u.lastname}</strong> | Correo: ${u.email} | Tel: ${u.phone}<br>
+          <small>Dirección: ${u.address}</small> | <small>Contraseña: ${u.password}</small>
+        </div>`).join('') : '<p style="color:var(--text-sub);">Sin usuarios registrados.</p>';
     }
 
-    // Admin Sección 5: Centro de Ayuda
     function renderAdminHelpDesk() {
       const container = document.getElementById('admin-helpdesk-requests');
-      container.innerHTML = '';
-
-      db.helpDesk.forEach((req, idx) => {
-        const div = document.createElement('div');
-        div.style.cssText = 'background:rgba(255,255,255,0.03); padding:12px; margin-bottom:10px; border-radius:8px; font-size:0.85rem;';
-        div.innerHTML = `
-          <strong>Solicitud de:</strong> ${req.name} ${req.lastname}<br>
-          Correo: ${req.email} | Teléfono: ${req.phone}<br>
-          Status: ${req.status}<br>
-          <div style="margin-top:8px; display:flex; gap:10px;">
-            <button class="btn btn-accent" onclick="grantAccessHelpDesk(${idx})">Dar Acceso</button>
-            <button class="btn" style="background:rgba(255,82,82,0.2); color:#ff5252;" onclick="denyAccessHelpDesk(${idx})">Denegar Acceso</button>
+      container.innerHTML = db.helpDesk.length ? db.helpDesk.map(h => `
+        <div style="background:rgba(255,255,255,0.03); padding:12px; border-radius:8px; margin-bottom:10px; font-size:0.85rem;">
+          <strong>Solicitud de:</strong> ${h.name} ${h.lastname}<br>
+          Correo: ${h.email} | Teléfono: ${h.phone}<br>
+          <div style="margin-top:10px; display:flex; gap:10px;">
+            <button class="btn btn-accent btn-sm" onclick="openGrantAccessMenu(${h.id})">Dar Acceso</button>
+            <button class="btn btn-sm" style="background:rgba(255,82,82,0.2); color:#ff5252;" onclick="denyAccess('${h.phone}')">Denegar Acceso</button>
           </div>
-        `;
-        container.appendChild(div);
-      });
+          <div id="grant-menu-${h.id}" style="display:none; margin-top:10px; background:rgba(0,0,0,0.3); padding:10px; border-radius:6px;">
+            <input type="text" id="g-pass-${h.id}" class="input-field" placeholder="Generar contraseña de acceso..." style="margin-bottom:8px;">
+            <button class="btn btn-accent btn-sm" onclick="grantAccessAndRegister(${h.id})">Registrar Usuario y Enviar Datos por WhatsApp</button>
+          </div>
+        </div>`).join('') : '<p style="color:var(--text-sub);">No hay solicitudes pendientes.</p>';
     }
 
-    function grantAccessHelpDesk(idx) {
-      const req = db.helpDesk[idx];
-      const newPass = prompt(`Ingresa la nueva contraseña para registrar/restablecer a ${req.name}:`, "123456");
+    function openGrantAccessMenu(hId) {
+      document.getElementById(`grant-menu-${hId}`).style.display = 'block';
+    }
 
-      if (newPass) {
-        let user = db.users.find(u => u.phone === req.phone || u.email === req.email);
-        if (!user) {
-          user = { id: Date.now(), name: req.name, lastname: req.lastname, phone: req.phone, email: req.email, address: 'Por actualizar', password: newPass };
-          db.users.push(user);
-        } else {
-          user.password = newPass;
-        }
+    function grantAccessAndRegister(hId) {
+      const h = db.helpDesk.find(req => req.id === hId);
+      const pass = document.getElementById(`g-pass-${hId}`).value.trim();
 
-        db.helpDesk[idx].status = 'Aprobado';
-        saveDB();
-
-        const msg = encodeURIComponent(`Hola ${req.name}, tus credenciales de acceso a ARMM son:\nUsuario: ${req.email}\nContraseña: ${newPass}`);
-        window.open(`https://wa.me/52${req.phone}?text=${msg}`, '_blank');
-        renderAdminHelpDesk();
-        renderAdminUsers();
+      if (!pass) {
+        alert("Escribe una contraseña.");
+        return;
       }
-    }
 
-    function denyAccessHelpDesk(idx) {
-      const req = db.helpDesk[idx];
-      db.helpDesk[idx].status = 'Denegado';
+      const newUser = {
+        id: Date.now(),
+        name: h.name,
+        lastname: h.lastname,
+        phone: h.phone,
+        email: h.email,
+        address: 'Registrado desde Centro de Ayuda',
+        password: pass
+      };
+
+      db.users.push(newUser);
+      db.helpDesk = db.helpDesk.filter(req => req.id !== hId);
       saveDB();
 
-      const msg = encodeURIComponent("Los datos de tu cuenta no coinciden con los registrados, crea una cuenta nueva o comunícate con nosotros al tel: 3351097726.");
-      window.open(`https://wa.me/52${req.phone}?text=${msg}`, '_blank');
+      renderAdminUsers();
       renderAdminHelpDesk();
+
+      const text = `Hola ${h.name}, tus credenciales de acceso para ARMM son: Correo/Tel: ${h.email} o ${h.phone} y Contraseña: ${pass}`;
+      window.open(`https://wa.me/523351097726?text=${encodeURIComponent(text)}`, '_blank');
     }
 
-    // Admin Sección 6: Cupones
+    function denyAccess(phone) {
+      const msg = `Los datos de tu cuenta no coinciden con los registrados, crea una cuenta nueva o comunícate con nosotros al número de tel: 3351097726`;
+      window.open(`https://wa.me/52${phone}?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+
+    function toggleCouponModeFields() {
+      const mode = document.getElementById('coup-app-mode').value;
+      document.getElementById('coup-min-amount').style.display = mode === 'monto' ? 'block' : 'none';
+      document.getElementById('coup-cat-target').style.display = mode === 'categoria' ? 'block' : 'none';
+    }
+
     function createCoupon() {
-      const code = document.getElementById('coup-code').value.toUpperCase();
-      const discount = document.getElementById('coup-discount').value;
-      const exp = document.getElementById('coup-exp').value;
-      const condType = document.getElementById('coup-condition-type').value;
-      const condVal = document.getElementById('coup-condition-val').value;
-      const desc = document.getElementById('coup-desc').value;
+      const code = document.getElementById('coup-code').value.trim().toUpperCase();
+      const discount = parseFloat(document.getElementById('coup-discount').value);
+      const expiry = document.getElementById('coup-expiry').value;
+      const appMode = document.getElementById('coup-app-mode').value;
+      const minAmount = parseFloat(document.getElementById('coup-min-amount').value || 0);
+      const targetCategory = document.getElementById('coup-cat-target').value.trim();
+      const desc = document.getElementById('coup-desc').value.trim();
 
-      if (!code || !discount) { alert("Ingresa código y descuento."); return; }
+      if (!code || isNaN(discount)) {
+        alert("Escribe el código y el descuento del cupón.");
+        return;
+      }
 
-      db.coupons.push({ id: Date.now(), code, discount: parseFloat(discount), exp, condType, condVal, desc });
+      db.coupons.push({ id: Date.now(), code, discount, expiry, appMode, minAmount, targetCategory, desc });
       saveDB();
       renderAdminCoupons();
-      renderAvailableCoupons();
-      alert("Cupón creado.");
+      alert("Cupón generado con éxito.");
     }
 
     function renderAdminCoupons() {
       const container = document.getElementById('admin-coupons-list');
-      container.innerHTML = '';
-
-      db.coupons.forEach((c, idx) => {
-        const div = document.createElement('div');
-        div.style.cssText = 'display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.03); padding:10px; margin-bottom:8px; border-radius:8px; font-size:0.85rem;';
-        div.innerHTML = `
+      container.innerHTML = db.coupons.map(c => `
+        <div style="background:rgba(255,255,255,0.03); padding:10px; margin-bottom:8px; border-radius:6px; font-size:0.85rem; display:flex; justify-content:space-between; align-items:center;">
           <div>
-            <strong>${c.code}</strong> (${c.discount}% OFF) - Vence: ${c.exp || 'Sin limite'}<br>
-            <small>Condición: ${c.condType} = ${c.condVal} | ${c.desc}</small>
+            <strong>${c.code}</strong> (${c.discount}%) | Vence: ${c.expiry || 'Sin límite'}<br>
+            <small>${c.desc}</small>
           </div>
-          <button class="btn" style="color:#ff5252;" onclick="deleteCoupon(${idx})"><i class="fas fa-trash"></i></button>
+          <button class="btn btn-sm" style="background:rgba(255,82,82,0.2); color:#ff5252;" onclick="deleteCoupon(${c.id})"><i class="fas fa-trash"></i></button>
+        </div>
+      `).join('');
+    }
+
+    function deleteCoupon(cId) {
+      db.coupons = db.coupons.filter(c => c.id !== cId);
+      saveDB();
+      renderAdminCoupons();
+    }
+
+    function renderAdminChats() {
+      const container = document.getElementById('admin-chats-list');
+      const keys = Object.keys(db.chats);
+
+      if (keys.length === 0) {
+        container.innerHTML = '<p style="color:var(--text-sub);">No hay chats activos de clientes.</p>';
+        return;
+      }
+
+      container.innerHTML = '';
+      keys.forEach(uKey => {
+        const u = db.users.find(usr => usr.id == uKey);
+        const name = u ? `${u.name} ${u.lastname} (${u.phone})` : `Usuario ID: ${uKey}`;
+        const msgs = db.chats[uKey] || [];
+
+        const div = document.createElement('div');
+        div.style.cssText = 'background:rgba(255,255,255,0.03); padding:10px; margin-bottom:10px; border-radius:8px;';
+        div.innerHTML = `
+          <strong>Chat con: ${name}</strong>
+          <div style="height:120px; overflow-y:auto; background:rgba(0,0,0,0.3); padding:8px; border-radius:6px; margin:8px 0; font-size:0.85rem;">
+            ${msgs.map(m => `<div><b>${m.sender === 'user' ? 'Cliente' : 'Admin'}:</b> ${m.text}</div>`).join('')}
+          </div>
+          <div style="display:flex; gap:6px;">
+            <input type="text" class="input-field" id="adm-reply-${uKey}" placeholder="Escribe tu respuesta...">
+            <button class="btn btn-accent" onclick="replyAdminChat('${uKey}')">Responder</button>
+          </div>
         `;
         container.appendChild(div);
       });
     }
 
-    function deleteCoupon(idx) {
-      db.coupons.splice(idx, 1);
-      saveDB(); renderAdminCoupons();
-    }
-
-    // Admin Sección 7: Chats
-    function renderAdminChats() {
-      const container = document.getElementById('admin-chats-list');
-      container.innerHTML = '';
-
-      for (let uKey in db.chats) {
-        const u = db.users.find(usr => usr.id == uKey);
-        const name = u ? `${u.name} ${u.lastname}` : `Usuario ${uKey}`;
-        const div = document.createElement('div');
-        div.style.cssText = 'background:rgba(255,255,255,0.03); padding:10px; margin-bottom:10px; border-radius:8px;';
-        div.innerHTML = `
-          <strong>Chat con: ${name}</strong>
-          <div style="height:100px; overflow-y:auto; background:rgba(0,0,0,0.2); padding:6px; border-radius:6px; margin:6px 0; font-size:0.8rem;">
-            ${db.chats[uKey].map(m => `<div><b>${m.sender}:</b> ${m.text}</div>`).join('')}
-          </div>
-          <div style="display:flex; gap:6px;">
-            <input type="text" class="input-field" id="adm-chat-in-${uKey}" placeholder="Responder...">
-            <button class="btn btn-accent" onclick="replyAdminChat('${uKey}')">Enviar</button>
-          </div>
-        `;
-        container.appendChild(div);
-      }
-    }
-
     function replyAdminChat(uKey) {
-      const input = document.getElementById(`adm-chat-in-${uKey}`);
-      const val = input.value.trim();
-      if (!val) return;
+      const input = document.getElementById(`adm-reply-${uKey}`);
+      const text = input.value.trim();
+      if (!text) return;
 
-      db.chats[uKey].push({ sender: 'admin', text: val, date: new Date().toLocaleTimeString() });
+      if (!db.chats[uKey]) db.chats[uKey] = [];
+      db.chats[uKey].push({ sender: 'admin', text: text, time: new Date().toLocaleTimeString() });
       saveDB();
       input.value = '';
       renderAdminChats();
     }
 
-    // Admin Sección Notifications
     function renderAdminNotifications() {
       const container = document.getElementById('admin-self-notifications');
-      container.innerHTML = '';
-
-      db.adminNotifications.forEach(n => {
-        const div = document.createElement('div');
-        div.style.cssText = 'background:rgba(0,230,118,0.08); border-left:3px solid var(--accent-green); padding:8px; margin-bottom:6px; font-size:0.8rem;';
-        div.innerHTML = `<strong>[${n.time}]</strong> ${n.msg}`;
-        container.appendChild(div);
-      });
+      container.innerHTML = db.adminNotifications.length ? db.adminNotifications.map(a => `
+        <div style="background:rgba(0,230,118,0.08); padding:8px; margin-bottom:6px; border-radius:6px; font-size:0.8rem;">
+          <strong>${a.title}</strong>: ${a.message}<br>
+          <small style="color:var(--text-sub);">${a.date}</small>
+        </div>
+      `).join('') : '<p style="color:var(--text-sub);">No hay alertas registradas.</p>';
     }
 
-    function populateNotifUsersDropdown() {
+    function populateNotifUsersDropdown(filter = '') {
       const select = document.getElementById('notif-target-user');
-      select.innerHTML = '<option value="TODOS">TODOS LOS USUARIOS</option>';
-      db.users.forEach(u => {
-        select.innerHTML += `<option value="${u.id}">${u.name} ${u.lastname} (${u.email})</option>`;
-      });
+      select.innerHTML = '<option value="TODOS">TODOS LOS USUARIOS REGISTRADOS</option>';
+      const filtered = db.users.filter(u => u.name.toLowerCase().includes(filter.toLowerCase()));
+      filtered.forEach(u => select.innerHTML += `<option value="${u.id}">${u.name} ${u.lastname} (${u.email})</option>`);
     }
 
     function filterNotifUsers() {
-      const search = document.getElementById('notif-user-search').value.toLowerCase();
-      const select = document.getElementById('notif-target-user');
-      select.innerHTML = '<option value="TODOS">TODOS LOS USUARIOS</option>';
-      db.users.filter(u => `${u.name} ${u.lastname} ${u.email}`.toLowerCase().includes(search)).forEach(u => {
-        select.innerHTML += `<option value="${u.id}">${u.name} ${u.lastname} (${u.email})</option>`;
-      });
+      populateNotifUsersDropdown(document.getElementById('search-notif-user').value);
     }
 
     function sendCustomerNotification() {
       const target = document.getElementById('notif-target-user').value;
-      const msg = document.getElementById('notif-text-msg').value;
-
+      const msg = document.getElementById('notif-text-msg').value.trim();
       if (!msg) return;
 
-      db.notifications.push({
-        id: Date.now(),
-        userId: target,
-        msg: msg,
-        date: new Date().toLocaleString()
-      });
+      db.notifications.push({ id: Date.now(), userId: target, msg: msg, date: new Date().toLocaleString() });
       saveDB();
-      alert("Notificación enviada a los clientes.");
       document.getElementById('notif-text-msg').value = '';
+      alert("Notificación enviada al cliente.");
     }
   </script>
 </body>
