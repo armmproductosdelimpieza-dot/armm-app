@@ -127,7 +127,7 @@ body {
   color: #718096;
 }
 
-/* FORMULARIOS Y EYE ICON */
+/* FORMULARIOS Y ELEMENTOS */
 .form-group {
   margin-bottom: 15px;
   display: flex;
@@ -194,7 +194,7 @@ body {
   background: #2c7a7b;
 }
 
-/* ALERTAS Y PAGO SPEI EN CARRITO */
+/* ALERTAS Y PAGO SPEI */
 .alerta-registro {
   background: #fff5f5;
   border: 1px solid #feb2b2;
@@ -279,7 +279,7 @@ body {
   margin-bottom: 15px;
 }
 
-/* GRID DE PRODUCTOS */
+/* GRID Y CONTENIDO */
 .main-container {
   padding: 30px;
   max-width: 1200px;
@@ -365,7 +365,16 @@ body {
   cursor: pointer;
 }
 
-/* MODAL DE CLAVE EN ADMIN */
+/* ADMIN STYLES Y TARJETA DEL PANEL */
+.admin-dashboard-card {
+  background: #ebf8ff;
+  border: 1px solid #bee3f8;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 25px;
+  color: #2c5282;
+}
+
 .admin-modal-overlay {
   position: fixed;
   top: 0;
@@ -406,6 +415,7 @@ body {
   padding: 20px;
   border-radius: 8px;
   margin-bottom: 30px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
 .inline-form {
