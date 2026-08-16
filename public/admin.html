@@ -50,6 +50,11 @@
             padding: 10px 18px; font-weight: bold; border-radius: 8px; cursor: pointer;
         }
 
+        .btn-red {
+            background: #ff6b6b; color: #fff; border: none;
+            padding: 4px 8px; border-radius: 4px; font-size: 0.8em; cursor: pointer;
+        }
+
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
         th, td { padding: 12px; border-bottom: 1px solid var(--card-border); text-align: left; font-size: 0.88em; }
         th { color: var(--accent-green); }
@@ -59,7 +64,7 @@
 </head>
 <body>
 
-    <!-- Modal Login Admin con Contraseña ARMM123 -->
+    <!-- Modal Login Admin -->
     <div id="adminLoginModal" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#080e18; display:flex; justify-content:center; align-items:center; z-index:9999;">
         <div style="background:rgba(16,26,48,0.95); padding:35px; border-radius:20px; width:340px; text-align:center; border:1px solid var(--accent-green);">
             <h2 style="color:var(--accent-green); margin-top:0;">Acceso Web Admin</h2>
@@ -75,13 +80,13 @@
     <div class="sidebar">
         <h2>🛡️ ARMM Admin</h2>
         <ul>
-            <li onclick="verSeccion('sPedidos')" class="active">1. Pedidos Realizados</li>
-            <li onclick="verSeccion('sProductos')">2. Gestión de Productos</li>
-            <li onclick="verSeccion('sAcomodo')">3. Editar Acomodo</li>
-            <li onclick="verSeccion('sUsuarios')">4. Usuarios Registrados</li>
-            <li onclick="verSeccion('sAyuda')">5. Centro de Ayuda</li>
-            <li onclick="verSeccion('sCupones')">6. Cupones</li>
-            <li onclick="verSeccion('sNotifs')">7. Notificaciones</li>
+            <li onclick="verSeccion('sPedidos', this)" class="active">1. Pedidos Realizados</li>
+            <li onclick="verSeccion('sProductos', this)">2. Gestión de Productos</li>
+            <li onclick="verSeccion('sAcomodo', this)">3. Editar Acomodo</li>
+            <li onclick="verSeccion('sUsuarios', this)">4. Usuarios Registrados</li>
+            <li onclick="verSeccion('sAyuda', this)">5. Centro de Ayuda</li>
+            <li onclick="verSeccion('sCupones', this)">6. Cupones</li>
+            <li onclick="verSeccion('sNotifs', this)">7. Notificaciones</li>
         </ul>
     </div>
 
@@ -98,8 +103,8 @@
 
         <!-- 2. Gestión de Productos -->
         <div id="sProductos" class="glass-box" style="display:none;">
-            <h2 style="color:var(--accent-green);" id="formProdTitle">Agregar / Editar Producto</h2>
-            <form onsubmit="guardarProducto(event)">
+            <h2 style="color:var(--accent-green);" id="formProdTitle">Agregar Producto</h2>
+            <form id="formProducto" onsubmit="guardarProducto(event)">
                 <input type="hidden" id="pEditId">
                 <label>Nombre del Producto</label>
                 <input type="text" id="pNombre" required>
@@ -115,15 +120,15 @@
 
                 <!-- Campos dinámicos para Litro -->
                 <div id="secCamposLitro">
-                    <label>Precio 1 Litro ($)</label><input type="number" id="p1">
-                    <label>Precio 5 Litros ($)</label><input type="number" id="p5">
-                    <label>Precio 20 Litros ($)</label><input type="number" id="p20">
+                    <label>Precio 1 Litro ($)</label><input type="number" step="0.01" id="p1">
+                    <label>Precio 5 Litros ($)</label><input type="number" step="0.01" id="p5">
+                    <label>Precio 20 Litros ($)</label><input type="number" step="0.01" id="p20">
                 </div>
 
                 <!-- Campos dinámicos para Pieza -->
                 <div id="secCamposPieza" style="display:none;">
-                    <label>Precio Menudeo ($)</label><input type="number" id="pMenudeo">
-                    <label>Precio Mayoreo ($)</label><input type="number" id="pMayoreo">
+                    <label>Precio Menudeo ($)</label><input type="number" step="0.01" id="pMenudeo">
+                    <label>Precio Mayoreo ($)</label><input type="number" step="0.01" id="pMayoreo">
                 </div>
 
                 <button type="submit" class="btn-green" style="width:100%; margin-top:10px;">Guardar Producto</button>
@@ -165,16 +170,16 @@
         <!-- 6. Cupones -->
         <div id="sCupones" class="glass-box" style="display:none;">
             <h2 style="color:var(--accent-green);">6. Gestión de Cupones</h2>
-            <form onsubmit="guardarCupon(event)">
+            <form id="formCupon" onsubmit="guardarCupon(event)">
                 <input type="text" id="cCodigo" placeholder="Código del Cupón" required>
-                <input type="number" id="cDescuento" placeholder="Monto a Descontar ($)" required>
+                <input type="number" step="0.01" id="cDescuento" placeholder="Monto a Descontar ($)" required>
                 <label>Modo de Aplicación:</label>
                 <select id="cAplicacion" onchange="toggleModoCupon()">
                     <option value="monto">Monto Mínimo Requerido</option>
                     <option value="categoria">Categorías Seleccionadas</option>
                 </select>
                 <div id="secCuponMonto">
-                    <input type="number" id="cMontoMin" placeholder="Monto Mínimo de Compra Requerido ($)">
+                    <input type="number" step="0.01" id="cMontoMin" placeholder="Monto Mínimo de Compra Requerido ($)">
                 </div>
                 <div id="secCuponCat" style="display:none;">
                     <input type="text" id="cCatTarget" placeholder="Categoría requerida (ej. CLOROS)">
@@ -208,6 +213,13 @@
     </div>
 
     <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (sessionStorage.getItem('adminAutenticado') === 'true') {
+                document.getElementById('adminLoginModal').style.display = 'none';
+                cargarTodo();
+            }
+        });
+
         function togglePass(id) {
             let el = document.getElementById(id);
             el.type = el.type === 'password' ? 'text' : 'password';
@@ -215,14 +227,19 @@
 
         function validarAdmin() {
             if(document.getElementById('adminPass').value === 'ARMM123') {
+                sessionStorage.setItem('adminAutenticado', 'true');
                 document.getElementById('adminLoginModal').style.display = 'none';
                 cargarTodo();
-            } else { alert('Contraseña incorrecta.'); }
+            } else { 
+                alert('Contraseña incorrecta.'); 
+            }
         }
 
-        function verSeccion(id) {
+        function verSeccion(id, el) {
             document.querySelectorAll('.content > div').forEach(div => div.style.display = 'none');
             document.getElementById(id).style.display = 'block';
+            document.querySelectorAll('.sidebar li').forEach(li => li.classList.remove('active'));
+            if(el) el.classList.add('active');
         }
 
         function cambiarModoCampos() {
@@ -246,14 +263,15 @@
             let tbody = document.getElementById('tblPedidos');
             tbody.innerHTML = '';
             peds.forEach((p, i) => {
+                let usr = p.usuario || {};
                 tbody.innerHTML += `<tr>
-                    <td>${p.id}</td>
-                    <td>${p.usuario.nom} ${p.usuario.ape}</td>
-                    <td>${p.usuario.dir}</td>
-                    <td>${p.metodo}</td>
-                    <td>$${p.total} MXN</td>
-                    <td>${p.estado}</td>
-                    <td>${p.fechaEst}</td>
+                    <td>${p.id || i+1}</td>
+                    <td>${usr.nom || ''} ${usr.ape || ''}</td>
+                    <td>${usr.dir || 'Sin dirección'}</td>
+                    <td>${p.metodo || 'N/A'}</td>
+                    <td>$${p.total || 0} MXN</td>
+                    <td>${p.estado || 'Pendiente'}</td>
+                    <td>${p.fechaEst || 'Pendiente'}</td>
                     <td><button class="btn-green" style="padding:4px 8px; font-size:0.8em;" onclick="actPedido(${i})">Actualizar</button></td>
                 </tr>`;
             });
@@ -263,8 +281,8 @@
             let peds = JSON.parse(localStorage.getItem('armm_pedidos') || '[]');
             let est = prompt("Nuevo estado del pedido:", peds[i].estado);
             let fec = prompt("Fecha estimada de entrega:", peds[i].fechaEst);
-            if(est) peds[i].estado = est;
-            if(fec) peds[i].fechaEst = fec;
+            if(est !== null) peds[i].estado = est;
+            if(fec !== null) peds[i].fechaEst = fec;
             localStorage.setItem('armm_pedidos', JSON.stringify(peds));
             cargarPedidosAdmin();
         }
@@ -274,7 +292,9 @@
             let tbody = document.getElementById('tblProductos');
             tbody.innerHTML = '';
             prods.forEach((p, i) => {
-                let px = p.modo === 'Litro' ? `1L:$${p.p1} | 5L:$${p.p5} | 20L:$${p.p20}` : `Menud:$${p.menudeo} | May:$${p.mayoreo}`;
+                let px = p.modo === 'Litro' 
+                    ? `1L:$${p.p1 || 0} | 5L:$${p.p5 || 0} | 20L:$${p.p20 || 0}` 
+                    : `Menud:$${p.menudeo || 0} | May:$${p.mayoreo || 0}`;
                 tbody.innerHTML += `<tr>
                     <td>${p.nombre}</td>
                     <td>${p.categoria}</td>
@@ -282,7 +302,7 @@
                     <td>${px}</td>
                     <td>
                         <button class="btn-green" style="padding:4px 8px; font-size:0.8em;" onclick="prepararEditProd(${i})">Editar</button>
-                        <button style="background:#ff6b6b; color:#fff; border:none; padding:4px 8px; border-radius:4px; font-size:0.8em; cursor:pointer;" onclick="borrarProd(${i})">Borrar</button>
+                        <button class="btn-red" onclick="borrarProd(${i})">Borrar</button>
                     </td>
                 </tr>`;
             });
@@ -299,11 +319,11 @@
                 nombre: document.getElementById('pNombre').value,
                 categoria: document.getElementById('pCat').value,
                 modo,
-                p1: parseFloat(document.getElementById('p1').value) || 0,
-                p5: parseFloat(document.getElementById('p5').value) || 0,
-                p20: parseFloat(document.getElementById('p20').value) || 0,
-                menudeo: parseFloat(document.getElementById('pMenudeo').value) || 0,
-                mayoreo: parseFloat(document.getElementById('pMayoreo').value) || 0
+                p1: modo === 'Litro' ? (parseFloat(document.getElementById('p1').value) || 0) : 0,
+                p5: modo === 'Litro' ? (parseFloat(document.getElementById('p5').value) || 0) : 0,
+                p20: modo === 'Litro' ? (parseFloat(document.getElementById('p20').value) || 0) : 0,
+                menudeo: modo === 'Pieza' ? (parseFloat(document.getElementById('pMenudeo').value) || 0) : 0,
+                mayoreo: modo === 'Pieza' ? (parseFloat(document.getElementById('pMayoreo').value) || 0) : 0
             };
 
             if(editId) {
@@ -314,31 +334,38 @@
             }
 
             localStorage.setItem('armm_productos', JSON.stringify(prods));
+            document.getElementById('formProducto').reset();
             document.getElementById('pEditId').value = '';
+            document.getElementById('formProdTitle').innerText = 'Agregar Producto';
+            cambiarModoCampos();
             cargarProductosAdmin();
-            alert('Producto actualizado.');
+            cargarAcomodoAdmin();
+            alert('Producto guardado correctamente.');
         }
 
         function prepararEditProd(i) {
             let prods = JSON.parse(localStorage.getItem('armm_productos') || '[]');
             let p = prods[i];
+            document.getElementById('formProdTitle').innerText = 'Editar Producto';
             document.getElementById('pEditId').value = p.id;
             document.getElementById('pNombre').value = p.nombre;
             document.getElementById('pCat').value = p.categoria;
             document.getElementById('pModo').value = p.modo;
             cambiarModoCampos();
-            document.getElementById('p1').value = p.p1;
-            document.getElementById('p5').value = p.p5;
-            document.getElementById('p20').value = p.p20;
-            document.getElementById('pMenudeo').value = p.menudeo;
-            document.getElementById('pMayoreo').value = p.mayoreo;
+            document.getElementById('p1').value = p.p1 || '';
+            document.getElementById('p5').value = p.p5 || '';
+            document.getElementById('p20').value = p.p20 || '';
+            document.getElementById('pMenudeo').value = p.menudeo || '';
+            document.getElementById('pMayoreo').value = p.mayoreo || '';
         }
 
         function borrarProd(i) {
+            if(!confirm('¿Estás seguro de borrar este producto?')) return;
             let prods = JSON.parse(localStorage.getItem('armm_productos') || '[]');
             prods.splice(i, 1);
             localStorage.setItem('armm_productos', JSON.stringify(prods));
             cargarProductosAdmin();
+            cargarAcomodoAdmin();
         }
 
         function cargarAcomodoAdmin() {
@@ -387,7 +414,7 @@
                     <td>${r.nom} ${r.ape}</td><td>${r.correo}</td><td>${r.tel}</td>
                     <td>
                         <button class="btn-green" onclick="darAcceso(${i})">Dar Acceso</button>
-                        <button style="background:#ff6b6b; color:#fff; border:none; padding:6px; border-radius:4px; cursor:pointer;" onclick="denegarAcceso(${i})">Denegar</button>
+                        <button class="btn-red" style="padding:6px;" onclick="denegarAcceso(${i})">Denegar</button>
                     </td>
                 </tr>`;
             });
@@ -414,7 +441,7 @@
         function denegarAcceso(i) {
             let recs = JSON.parse(localStorage.getItem('armm_recuperaciones') || '[]');
             let r = recs[i];
-            let msg = encodeURIComponent(`Los datos de tu cuenta no coinciden con los registrados, crea una cuenta nueva o comunícate con nosotros al tel: 555-1234`);
+            let msg = encodeURIComponent(`Los datos de tu cuenta no coinciden con los registrados. Crea una cuenta nueva o comunícate con nosotros.`);
             window.open(`https://wa.me/52${r.tel}?text=${msg}`);
             recs.splice(i, 1);
             localStorage.setItem('armm_recuperaciones', JSON.stringify(recs));
@@ -430,16 +457,19 @@
         function guardarCupon(e) {
             e.preventDefault();
             let cups = JSON.parse(localStorage.getItem('armm_cupones') || '[]');
+            let modo = document.getElementById('cAplicacion').value;
             cups.push({
-                codigo: document.getElementById('cCodigo').value,
-                descuento: parseFloat(document.getElementById('cDescuento').value),
-                aplicacion: document.getElementById('cAplicacion').value,
-                montoMinimo: parseFloat(document.getElementById('cMontoMin').value) || 0,
-                catTarget: document.getElementById('cCatTarget').value,
+                codigo: document.getElementById('cCodigo').value.toUpperCase(),
+                descuento: parseFloat(document.getElementById('cDescuento').value) || 0,
+                aplicacion: modo,
+                montoMinimo: modo === 'monto' ? (parseFloat(document.getElementById('cMontoMin').value) || 0) : 0,
+                catTarget: modo === 'categoria' ? document.getElementById('cCatTarget').value : '',
                 fecha: document.getElementById('cFecha').value,
                 desc: document.getElementById('cDesc').value
             });
             localStorage.setItem('armm_cupones', JSON.stringify(cups));
+            document.getElementById('formCupon').reset();
+            toggleModoCupon();
             cargarCuponesAdmin();
             alert('Cupón generado con éxito.');
         }
@@ -452,12 +482,13 @@
                 let cond = c.aplicacion === 'monto' ? `Mínimo: $${c.montoMinimo}` : `Categoría: ${c.catTarget}`;
                 tbody.innerHTML += `<tr>
                     <td>${c.codigo}</td><td>$${c.descuento}</td><td>${cond}</td><td>${c.fecha}</td>
-                    <td><button style="background:#ff6b6b; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;" onclick="borrarCupon(${i})">Borrar</button></td>
+                    <td><button class="btn-red" onclick="borrarCupon(${i})">Borrar</button></td>
                 </tr>`;
             });
         }
 
         function borrarCupon(i) {
+            if(!confirm('¿Estás seguro de borrar este cupón?')) return;
             let cups = JSON.parse(localStorage.getItem('armm_cupones') || '[]');
             cups.splice(i, 1);
             localStorage.setItem('armm_cupones', JSON.stringify(cups));
@@ -467,29 +498,35 @@
         function cargarUserNotifs() {
             let usrs = JSON.parse(localStorage.getItem('armm_usuarios') || '[]');
             let sel = document.getElementById('selectUserNotif');
-            sel.innerHTML = usrs.map(u => `<option value="${u.correo}">${u.nom} ${u.ape} (${u.correo})</option>`).join('');
+            sel.innerHTML = usrs.length > 0 
+                ? usrs.map(u => `<option value="${u.correo}">${u.nom} ${u.ape} (${u.correo})</option>`).join('')
+                : '<option value="">No hay usuarios</option>';
         }
 
         function filtrarUsersNotif() {
             let q = document.getElementById('buscUserNotif').value.toLowerCase();
             let usrs = JSON.parse(localStorage.getItem('armm_usuarios') || '[]');
             let sel = document.getElementById('selectUserNotif');
-            sel.innerHTML = usrs.filter(u => u.correo.toLowerCase().includes(q) || u.nom.toLowerCase().includes(q))
-                                .map(u => `<option value="${u.correo}">${u.nom} ${u.ape} (${u.correo})</option>`).join('');
+            let filtrados = usrs.filter(u => u.correo.toLowerCase().includes(q) || u.nom.toLowerCase().includes(q));
+            sel.innerHTML = filtrados.length > 0 
+                ? filtrados.map(u => `<option value="${u.correo}">${u.nom} ${u.ape} (${u.correo})</option>`).join('')
+                : '<option value="">Sin coincidencias</option>';
         }
 
         function enviarNotif(tipo) {
             let list = JSON.parse(localStorage.getItem('armm_notificaciones') || '[]');
             if(tipo === 'todos') {
-                let txt = document.getElementById('notifTodos').value;
-                if(!txt) return;
-                list.push({ target: 'todos', mensaje: txt });
+                let input = document.getElementById('notifTodos');
+                if(!input.value.trim()) return alert('Escribe un mensaje.');
+                list.push({ target: 'todos', mensaje: input.value.trim(), fecha: new Date().toISOString() });
+                input.value = '';
                 alert('Notificación general enviada.');
             } else {
-                let txt = document.getElementById('notifInd').value;
+                let input = document.getElementById('notifInd');
                 let target = document.getElementById('selectUserNotif').value;
-                if(!txt || !target) return;
-                list.push({ target, mensaje: txt });
+                if(!input.value.trim() || !target) return alert('Selecciona un usuario y escribe un mensaje.');
+                list.push({ target, mensaje: input.value.trim(), fecha: new Date().toISOString() });
+                input.value = '';
                 alert('Notificación individual enviada.');
             }
             localStorage.setItem('armm_notificaciones', JSON.stringify(list));
