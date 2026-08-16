@@ -3,391 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ARMM - Productos de Limpieza</title>
+    <title>ARMM - Productos y Accesorios de Limpieza</title>
     <style>
         :root {
-            --dark-bg: #060913;
-            --glass-bg: rgba(15, 23, 42, 0.65);
-            --glass-border: rgba(255, 255, 255, 0.12);
-            --glass-blur: blur(16px) saturate(180%);
+            --bg-dark: #060913;
+            --card-bg: rgba(15, 23, 42, 0.65);
+            --border-color: rgba(255, 255, 255, 0.12);
             --accent-green: #00e676;
-            --accent-hover: #00c853;
-            --text-light: #f8fafc;
-            --text-muted: #94a3b8;
-            --danger-color: #ef4444;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            touch-action: manipulation;
-            -webkit-tap-highlight-color: transparent;
+            --text-main: #f8fafc;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: radial-gradient(circle at top, #0f172a 0%, #060913 100%);
-            color: var(--text-light);
-            min-height: 100vh;
-            padding-bottom: 60px;
+            font-family: system-ui, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-main);
+            margin: 0; padding: 20px;
         }
 
-        /* HEADER GLASSMORPHIC */
         header {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            background: rgba(6, 9, 19, 0.75);
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-            border-bottom: 1px solid var(--glass-border);
-            padding: 14px 24px;
             display: flex;
-            align-items: center;
             justify-content: space-between;
-        }
-
-        .brand-container {
-            display: flex;
             align-items: center;
-            gap: 12px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
         }
 
-        .brand-logo {
-            width: 38px;
-            height: 38px;
-            background: var(--accent-green);
-            color: #000;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 900;
-            font-size: 1.2rem;
-        }
-
-        .brand-text h1 {
-            font-size: 1.2rem;
-            color: #ffffff;
-            font-weight: 800;
-            letter-spacing: 0.5px;
-        }
-
-        .brand-text p {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-        }
-
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .btn-auth {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--glass-border);
-            color: var(--text-light);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            cursor: pointer;
-            min-height: 40px;
-            transition: all 0.2s;
-        }
-
-        .btn-auth:hover {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: rgba(255, 255, 255, 0.3);
-        }
-
-        .btn-cart {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--glass-border);
-            color: var(--text-light);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            min-height: 40px;
-        }
-
-        /* CATALOGO GRID */
-        .catalog-container {
-            max-width: 1200px;
-            margin: 30px auto;
-            padding: 0 20px;
+        .product-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
             gap: 20px;
+            margin-top: 30px;
         }
 
         .product-card {
-            background: var(--glass-bg);
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            padding: 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            will-change: transform;
-            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s;
         }
 
-        .product-card:hover {
-            border-color: rgba(0, 236, 118, 0.4);
-            transform: translateY(-2px);
-        }
+        .product-card h4 { margin-bottom: 8px; font-size: 1.1rem; }
+        .price-tag { font-size: 1.4rem; color: var(--accent-green); font-weight: bold; margin: 10px 0; }
 
-        .product-tag {
-            font-size: 0.7rem;
-            color: var(--accent-green);
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            margin-bottom: 6px;
-        }
-
-        .product-title {
-            font-size: 1.1rem;
-            font-weight: 800;
-            margin-bottom: 12px;
-            color: #ffffff;
-        }
-
-        .presentation-label {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-bottom: 6px;
-            display: block;
-        }
-
-        .select-presentation {
+        select, button {
             width: 100%;
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid var(--glass-border);
-            color: #ffffff;
-            padding: 10px 12px;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            outline: none;
-            margin-bottom: 16px;
-            cursor: pointer;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background: rgba(0,0,0,0.5);
+            color: white;
+            margin-top: 5px;
         }
 
         .btn-add {
-            width: 100%;
             background: var(--accent-green);
             color: #000;
+            font-weight: bold;
             border: none;
-            padding: 12px;
-            border-radius: 8px;
-            font-weight: 700;
             cursor: pointer;
-            min-height: 48px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: background 0.2s;
-        }
-
-        .btn-add:hover {
-            background: var(--accent-hover);
-        }
-
-        /* MODALES */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            z-index: 2000;
-            display: none;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-overlay.active { display: flex; }
-
-        .modal-sheet {
-            background: rgba(15, 23, 42, 0.92);
-            border: 1px solid var(--glass-border);
-            width: 100%; max-width: 420px;
-            border-radius: 20px;
-            padding: 24px;
-            animation: modalIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        @keyframes modalIn {
-            from { transform: scale(0.95); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        .form-group { margin-bottom: 14px; }
-        .form-group label { display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 4px; }
-        .form-control {
-            width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border);
-            padding: 10px; border-radius: 8px; color: #fff; font-size: 16px; outline: none;
+            margin-top: 10px;
         }
     </style>
+    <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
 
     <header>
-        <div class="brand-container">
-            <div class="brand-logo">A</div>
-            <div class="brand-text">
-                <h1>ARMM</h1>
-                <p>Productos y Accesorios de Limpieza</p>
-            </div>
-        </div>
-        <div class="header-actions">
-            <div id="authButtons" style="display: flex; gap: 8px;">
-                <button class="btn-auth" onclick="openAuthModal('register')">Registrarse</button>
-                <button class="btn-auth" onclick="openAuthModal('login')">Iniciar Sesión</button>
-            </div>
-            <div id="userInfo" style="display: none; font-size: 0.85rem; color: var(--accent-green); font-weight: 700;"></div>
-            <button class="btn-cart" onclick="openCart()">🛒 Carrito (<span id="cartCount">0</span>)</button>
+        <h2>ARMM - Productos de Limpieza</h2>
+        <div>
+            <button style="width:auto; padding:8px 16px;">Carrito (0)</button>
         </div>
     </header>
 
-    <main class="catalog-container" id="catalogGrid"></main>
-
-    <!-- Modal Autenticación -->
-    <div id="authModal" class="modal-overlay">
-        <div class="modal-sheet">
-            <h3 id="authTitle" style="margin-bottom: 16px;">Acceso</h3>
-            <div id="authFormContent"></div>
-            <button onclick="closeModal('authModal')" class="btn-auth" style="width:100%; margin-top:10px;">Cerrar</button>
-        </div>
-    </div>
+    <main class="product-grid" id="publicCatalog"></main>
 
     <script>
-        let products = [];
-        let cart = [];
+        const socket = io();
 
-        document.addEventListener('DOMContentLoaded', () => {
-            initStorage();
-            loadProducts();
-            checkSession();
-            
-            // Sincronización en tiempo real con el Admin
-            window.addEventListener('storage', (e) => {
-                if (e.key === 'armm_products') loadProducts();
-                if (e.key === 'armm_active_session') checkSession();
-            });
+        socket.on('inventario_actualizado', (productos) => {
+            renderPublicCatalog(productos);
         });
 
-        function initStorage() {
-            if (!localStorage.getItem('armm_products')) {
-                const defaults = [
-                    { id: 1, name: 'CLORO', category: 'CLOROS', saleMode: 'litros', prices: { l1: 15, l5: 65, l20: 240 } },
-                    { id: 2, name: 'PINO (VERDE)', category: 'PINOL', saleMode: 'mayoreo_menudeo', prices: { menudeo: 22, mayoreo: 18 } }
-                ];
-                localStorage.setItem('armm_products', JSON.stringify(defaults));
+        function renderPublicCatalog(prods) {
+            const container = document.getElementById('publicCatalog');
+            if(!prods || prods.length === 0) {
+                container.innerHTML = '<p>No hay productos disponibles por el momento.</p>';
+                return;
             }
-        }
 
-        function loadProducts() {
-            products = JSON.parse(localStorage.getItem('armm_products') || '[]');
-            const grid = document.getElementById('catalogGrid');
-            grid.innerHTML = '';
+            container.innerHTML = prods.map(p => {
+                const opciones = p.precios ? Object.keys(p.precios) : [];
+                const primeraOpcion = opciones[0] || '';
+                const precioInicial = p.precios ? p.precios[primeraOpcion] : 0;
 
-            products.forEach(p => {
-                let optionsHTML = '';
-                if (p.saleMode === 'litros') {
-                    optionsHTML = `
-                        <option value="1L|${p.prices.l1}">1 Litro - $${p.prices.l1} MXN</option>
-                        <option value="5L|${p.prices.l5}">5 Litros - $${p.prices.l5} MXN</option>
-                        <option value="20L|${p.prices.l20}">20 Litros - $${p.prices.l20} MXN</option>
-                    `;
-                } else {
-                    optionsHTML = `
-                        <option value="Menudeo|${p.prices.menudeo}">Menudeo - $${p.prices.menudeo} MXN</option>
-                        <option value="Mayoreo|${p.prices.mayoreo}">Mayoreo - $${p.prices.mayoreo} MXN</option>
-                    `;
-                }
+                return `
+                    <div class="product-card">
+                        <div>
+                            <small style="color:var(--accent-green);">${p.categoria || 'General'}</small>
+                            <h4>${p.nombre}</h4>
+                            
+                            ${opciones.length > 0 ? `
+                                <label style="font-size:0.8rem;">Presentación:</label>
+                                <select onchange="updatePrice(this, ${JSON.stringify(p.precios).replace(/"/g, '&quot;')})">
+                                    ${opciones.map(opt => `<option value="${opt}">${opt} - $${p.precios[opt]}</option>`).join('')}
+                                </select>
+                            ` : ''}
 
-                const card = document.createElement('div');
-                card.className = 'product-card';
-                card.innerHTML = `
-                    <div>
-                        <div class="product-tag">${p.category || 'General'}</div>
-                        <div class="product-title">${p.name}</div>
-                        <span class="presentation-label">Selecciona Presentación:</span>
-                        <select class="select-presentation" id="select-${p.id}">
-                            ${optionsHTML}
-                        </select>
+                            <div class="price-tag">$<span class="price-val">${precioInicial}</span></div>
+                        </div>
+
+                        <button class="btn-add">Agregar al Carrito</button>
                     </div>
-                    <button class="btn-add" onclick="addToCart(${p.id})">🛒 Agregar al Carrito</button>
                 `;
-                grid.appendChild(card);
-            });
+            }).join('');
         }
 
-        function addToCart(id) {
-            const select = document.getElementById(`select-${id}`);
-            const [presentation, price] = select.value.split('|');
-            const prod = products.find(p => p.id === id);
-
-            cart.push({ id: prod.id, name: prod.name, presentation, price: parseFloat(price) });
-            document.getElementById('cartCount').innerText = cart.length;
-        }
-
-        function checkSession() {
-            const session = JSON.parse(localStorage.getItem('armm_active_session'));
-            const authBtns = document.getElementById('authButtons');
-            const userInfo = document.getElementById('userInfo');
-
-            if (session) {
-                authBtns.style.display = 'none';
-                userInfo.style.display = 'block';
-                userInfo.innerText = `Hola, ${session.name}`;
-            } else {
-                authBtns.style.display = 'flex';
-                userInfo.style.display = 'none';
-            }
-        }
-
-        function openAuthModal(mode) {
-            const title = document.getElementById('authTitle');
-            const content = document.getElementById('authFormContent');
-            title.innerText = mode === 'login' ? 'Iniciar Sesión' : 'Registro de Usuario';
-
-            content.innerHTML = `
-                ${mode === 'register' ? '<div class="form-group"><label>Nombre</label><input type="text" id="authName" class="form-control"></div>' : ''}
-                <div class="form-group"><label>Correo Electrónico</label><input type="email" id="authEmail" class="form-control"></div>
-                <div class="form-group"><label>Contraseña</label><input type="password" id="authPass" class="form-control"></div>
-                <button onclick="submitAuth('${mode}')" class="btn-add" style="margin-top:10px;">${mode === 'login' ? 'Entrar' : 'Registrar'}</button>
-            `;
-            document.getElementById('authModal').classList.add('active');
-        }
-
-        function submitAuth(mode) {
-            const email = document.getElementById('authEmail').value;
-            const name = mode === 'register' ? document.getElementById('authName').value : email.split('@')[0];
-
-            if (!email) return alert('Ingresa un correo válido');
-
-            const session = { name, email };
-            localStorage.setItem('armm_active_session', JSON.stringify(session));
-            checkSession();
-            closeModal('authModal');
-        }
-
-        function closeModal(id) {
-            document.getElementById(id).classList.remove('active');
+        function updatePrice(selectElem, preciosObj) {
+            const selectedOpt = selectElem.value;
+            const priceVal = preciosObj[selectedOpt];
+            const card = selectElem.closest('.product-card');
+            card.querySelector('.price-val').innerText = priceVal;
         }
     </script>
 </body>
