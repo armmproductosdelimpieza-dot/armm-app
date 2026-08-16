@@ -3,264 +3,115 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ARMM LIMPIEZA - Panel de Administración</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <style>
-    body {
-      background-color: #0b131e;
-      color: #f8fafc;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    }
-  </style>
+  <title>Panel Administrativo ARMM</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
 </head>
-<body class="min-h-screen flex flex-col">
+<body class="admin-body">
 
-  <header class="bg-[#070c14] border-b border-slate-800 px-6 py-4 flex justify-between items-center">
-    <div class="flex items-center space-x-3">
-      <i data-lucide="shield-check" class="w-6 h-6 text-[#00ff88]"></i>
-      <div>
-        <h1 class="text-base font-bold text-white leading-tight">Panel de Administración Central</h1>
-        <p class="text-xs text-slate-400">ARMM LIMPIEZA • Control de Inventario</p>
-      </div>
+  <div id="modal-pass-admin" class="admin-modal-overlay">
+    <div class="admin-modal-box">
+      <h3><i class="fas fa-lock"></i> Acceso Administrador</h3>
+      <p>Ingresa la contraseña para desbloquear el panel:</p>
+      <input type="password" id="input-admin-pass" placeholder="Contraseña Admin">
+      <button class="btn-submit" onclick="validarClaveAdmin()">Ingresar</button>
+      <div id="admin-pass-error" class="error-msg"></div>
     </div>
-    <a href="index.html" class="bg-slate-800 hover:bg-slate-700 text-xs text-slate-200 font-bold px-3.5 py-2 rounded-lg transition border border-slate-700">
-      ← Ir a la Tienda Pública
-    </a>
-  </header>
+  </div>
 
-  <main class="max-w-7xl mx-auto px-4 py-6 w-full flex-grow">
+  <div id="admin-content" style="display: none;">
     
-    <div class="flex border-b border-slate-800 space-x-2 mb-6">
-      <button onclick="switchTab('tab-products')" id="btn-tab-products" class="tab-btn px-4 py-2.5 font-bold text-xs rounded-t-lg bg-[#141e2d] text-[#00ff88] border-t-2 border-[#00ff88]">
-        📦 Gestión de Productos
-      </button>
-      <button onclick="switchTab('tab-orders')" id="btn-tab-orders" class="tab-btn px-4 py-2.5 font-bold text-xs text-slate-400 hover:text-white">
-        🛒 Pedidos
-      </button>
-      <button onclick="switchTab('tab-clients')" id="btn-tab-clients" class="tab-btn px-4 py-2.5 font-bold text-xs text-slate-400 hover:text-white">
-        👥 Clientes
-      </button>
-      <button onclick="switchTab('tab-support')" id="btn-tab-support" class="tab-btn px-4 py-2.5 font-bold text-xs text-slate-400 hover:text-white">
-        💬 Soporte
-      </button>
-    </div>
-
-    <div id="tab-products" class="tab-content grid grid-cols-1 lg:grid-cols-12 gap-8">
-      
-      <div class="lg:col-span-5 bg-[#141e2d] p-5 rounded-xl border border-slate-800 shadow-lg">
-        <h3 class="text-sm font-bold text-white mb-4 flex items-center gap-2">
-          <i data-lucide="plus-circle" class="w-4 h-4 text-[#00ff88]"></i> Registrar / Editar Producto
-        </h3>
-
-        <form id="product-form" onsubmit="saveProduct(event)" class="space-y-4">
-          <input type="hidden" id="form-id">
-
-          <div>
-            <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1">Nombre del Producto</label>
-            <input type="text" id="form-name" required class="w-full bg-[#0b131e] border border-slate-700 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-[#00ff88]">
-          </div>
-
-          <div>
-            <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1">Categoría</label>
-            <select id="form-category" class="w-full bg-[#0b131e] border border-slate-700 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-[#00ff88]">
-              <option value="CLOROS">CLOROS</option>
-              <option value="PINOL">PINOL</option>
-              <option value="BASES">BASES</option>
-              <option value="DETERGENTES">DETERGENTES</option>
-              <option value="VANISH">VANISH</option>
-              <option value="SUAVIZANTES">SUAVIZANTES</option>
-              <option value="LAVAMANOS">LAVAMANOS</option>
-              <option value="LAVATRASTES">LAVATRASTES</option>
-              <option value="CARROS">CARROS</option>
-              <option value="LIMPIEZA PROFUNDA">LIMPIEZA PROFUNDA</option>
-              <option value="REPELENTES Y CONTROL">REPELENTES Y CONTROL</option>
-              <option value="CUIDADO PERSONAL">CUIDADO PERSONAL</option>
-            </select>
-          </div>
-
-          <div>
-            <label class="block text-[11px] font-bold text-slate-400 uppercase mb-1">Modo de Venta</label>
-            <select id="form-mode" onchange="toggleFormFields()" class="w-full bg-[#0b131e] border border-slate-700 rounded-lg p-2.5 text-xs text-[#00ff88] font-bold focus:outline-none">
-              <option value="litros">Por Litros (1L, 5L, 20L)</option>
-              <option value="mayoreo">Mayoreo / Menudeo (Piezas)</option>
-            </select>
-          </div>
-
-          <div id="fields-litros" class="grid grid-cols-3 gap-2 p-3 bg-[#0b131e] rounded-lg border border-slate-800">
-            <div>
-              <label class="block text-[10px] text-slate-400">1 Litro ($)</label>
-              <input type="number" step="0.01" id="form-p1" class="w-full bg-[#141e2d] border border-slate-700 rounded p-1.5 text-xs text-white">
-            </div>
-            <div>
-              <label class="block text-[10px] text-slate-400">5 Litros ($)</label>
-              <input type="number" step="0.01" id="form-p5" class="w-full bg-[#141e2d] border border-slate-700 rounded p-1.5 text-xs text-white">
-            </div>
-            <div>
-              <label class="block text-[10px] text-slate-400">20 Litros ($)</label>
-              <input type="number" step="0.01" id="form-p20" class="w-full bg-[#141e2d] border border-slate-700 rounded p-1.5 text-xs text-white">
-            </div>
-          </div>
-
-          <div id="fields-mayoreo" class="grid grid-cols-2 gap-2 p-3 bg-[#0b131e] rounded-lg border border-slate-800 hidden">
-            <div>
-              <label class="block text-[10px] text-slate-400">Menudeo ($)</label>
-              <input type="number" step="0.01" id="form-pmenudeo" class="w-full bg-[#141e2d] border border-slate-700 rounded p-1.5 text-xs text-white">
-            </div>
-            <div>
-              <label class="block text-[10px] text-slate-400">Mayoreo ($)</label>
-              <input type="number" step="0.01" id="form-pmayoreo" class="w-full bg-[#141e2d] border border-slate-700 rounded p-1.5 text-xs text-white">
-            </div>
-          </div>
-
-          <div class="flex space-x-2 pt-2">
-            <button type="submit" class="flex-1 bg-[#00ff88] hover:bg-[#00e676] text-slate-950 font-bold py-2.5 rounded-lg text-xs transition">
-              Guardar en Catálogo
-            </button>
-            <button type="button" onclick="clearForm()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold px-4 py-2.5 rounded-lg text-xs transition border border-slate-700">
-              Limpiar
-            </button>
-          </div>
-        </form>
+    <header class="navbar admin-navbar">
+      <div class="logo">
+        <h2>ARMM - Panel Administrativo</h2>
       </div>
 
-      <div class="lg:col-span-7 bg-[#141e2d] p-5 rounded-xl border border-slate-800 shadow-lg">
-        <h3 class="text-sm font-bold text-white mb-4 flex items-center gap-2">
-          <i data-lucide="list" class="w-4 h-4 text-[#00ff88]"></i> Inventario Registrado (<span id="count-display">0</span>)
-        </h3>
-        <div id="admin-product-list" class="divide-y divide-slate-800 max-h-[500px] overflow-y-auto pr-1">
-          </div>
+      <div class="search-bar">
+        <input type="text" id="input-buscar-admin" placeholder="Buscar productos..." onkeyup="filtrarProductosAdmin()">
       </div>
-    </div>
 
-    <div id="tab-orders" class="tab-content hidden">
-      <div class="bg-[#141e2d] p-6 rounded-xl border border-slate-800">
-        <h3 class="font-bold text-white mb-2 text-sm">Registro de Pedidos</h3>
-        <p class="text-xs text-slate-400">No hay pedidos pendientes en el sistema.</p>
-      </div>
-    </div>
-
-    <div id="tab-clients" class="tab-content hidden">
-      <div class="bg-[#141e2d] p-6 rounded-xl border border-slate-800">
-        <h3 class="font-bold text-white mb-2 text-sm">Directorio de Clientes</h3>
-        <p class="text-xs text-slate-400">Historial de clientes registrado localmente.</p>
-      </div>
-    </div>
-
-    <div id="tab-support" class="tab-content hidden">
-      <div class="bg-[#141e2d] p-6 rounded-xl border border-slate-800">
-        <h3 class="font-bold text-white mb-2 text-sm">Centro de Mensajes</h3>
-        <p class="text-xs text-slate-400">Consultas de clientes en tienda.</p>
-      </div>
-    </div>
-
-  </main>
-
-  <script>
-    let adminProducts = [
-      { id: 1, name: "CLORO", category: "CLOROS", mode: "litros", p1: 14, p5: 70, p20: 220 },
-      { id: 2, name: "CLORO USO INDUSTRIAL", category: "CLOROS", mode: "litros", p1: 18, p5: 90, p20: 255 },
-      { id: 3, name: "PINO (VERDE)", category: "PINOL", mode: "litros", p1: 14, p5: 75, p20: 190 }
-    ];
-
-    window.onload = () => {
-      lucide.createIcons();
-      renderAdminList();
-    };
-
-    function switchTab(tabId) {
-      document.querySelectorAll(".tab-content").forEach(el => el.classList.add("hidden"));
-      document.querySelectorAll(".tab-btn").forEach(el => {
-        el.className = "tab-btn px-4 py-2.5 font-bold text-xs text-slate-400 hover:text-white";
-      });
-
-      document.getElementById(tabId).classList.remove("hidden");
-      const activeBtn = document.getElementById("btn-" + tabId);
-      activeBtn.className = "tab-btn px-4 py-2.5 font-bold text-xs rounded-t-lg bg-[#141e2d] text-[#00ff88] border-t-2 border-[#00ff88]";
-    }
-
-    function toggleFormFields() {
-      const mode = document.getElementById("form-mode").value;
-      document.getElementById("fields-litros").classList.toggle("hidden", mode !== "litros");
-      document.getElementById("fields-mayoreo").classList.toggle("hidden", mode !== "mayoreo");
-    }
-
-    function renderAdminList() {
-      const container = document.getElementById("admin-product-list");
-      document.getElementById("count-display").innerText = adminProducts.length;
-
-      container.innerHTML = adminProducts.map(p => `
-        <div class="py-3 flex justify-between items-center">
-          <div>
-            <h4 class="font-bold text-xs text-white">${p.name}</h4>
-            <p class="text-[10px] text-slate-400">${p.category} • ${p.mode === 'litros' ? 'Por Litros' : 'Mayoreo'}</p>
-          </div>
-          <div class="flex space-x-2">
-            <button onclick="editProd(${p.id})" class="text-[#00ff88] bg-slate-900 p-2 rounded hover:bg-slate-800 transition">
-              <i data-lucide="edit-2" class="w-3.5 h-3.5"></i>
-            </button>
-            <button onclick="deleteProd(${p.id})" class="text-red-400 bg-slate-900 p-2 rounded hover:bg-slate-800 transition">
-              <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-            </button>
-          </div>
+      <div class="header-right">
+        <div id="auth-buttons">
+          <button id="btn-login" class="btn-nav" onclick="toggleMenuLogin()">Iniciar Sesión</button>
+          <button id="btn-register" class="btn-nav btn-accent" onclick="toggleMenuRegistro()">Registrarse</button>
         </div>
-      `).join('');
-      lucide.createIcons();
-    }
 
-    function saveProduct(e) {
-      e.preventDefault();
-      const id = document.getElementById("form-id").value;
-      const mode = document.getElementById("form-mode").value;
+        <div id="user-profile" style="display: none;">
+          <button id="btn-user-menu" class="btn-user">
+            <i class="fas fa-user-shield"></i>
+            <span id="user-display-name">Admin</span>
+          </button>
+        </div>
 
-      const item = {
-        id: id ? parseInt(id) : Date.now(),
-        name: document.getElementById("form-name").value,
-        category: document.getElementById("form-category").value,
-        mode: mode,
-        p1: parseFloat(document.getElementById("form-p1").value) || 0,
-        p5: parseFloat(document.getElementById("form-p5").value) || 0,
-        p20: parseFloat(document.getElementById("form-p20").value) || 0,
-      };
+        <button class="btn-cart" onclick="toggleCarrito()">
+          <i class="fas fa-shopping-cart"></i>
+          <span id="cart-count">0</span>
+        </button>
+      </div>
+    </header>
 
-      if(id) {
-        const idx = adminProducts.findIndex(p => p.id === parseInt(id));
-        adminProducts[idx] = item;
-      } else {
-        adminProducts.unshift(item);
-      }
+    <main class="main-container">
+      
+      <section class="admin-dashboard-card">
+        <h2><i class="fas fa-tachometer-alt"></i> Panel de Control Principal</h2>
+        <p>Gestión interna del sistema, usuarios registrados y emisión de cupones.</p>
+      </section>
 
-      clearForm();
-      renderAdminList();
-    }
+      <section class="admin-section">
+        <h2><i class="fas fa-users"></i> Usuarios Registrados</h2>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Teléfono</th>
+                <th>Correo</th>
+              </tr>
+            </thead>
+            <tbody id="tabla-usuarios-body"></tbody>
+          </table>
+        </div>
+      </section>
 
-    function editProd(id) {
-      const p = adminProducts.find(item => item.id === id);
-      if(!p) return;
+      <section class="admin-section">
+        <h2><i class="fas fa-ticket-alt"></i> Crear y Gestionar Cupones</h2>
+        <form id="form-crear-cupon" onsubmit="crearCupon(event)" class="inline-form">
+          <div class="form-group">
+            <label>Código del Cupón</label>
+            <input type="text" id="cupon-codigo" placeholder="Ej. PROMO2026" style="text-transform:uppercase;" required>
+          </div>
+          <div class="form-group">
+            <label>Porcentaje (%)</label>
+            <input type="number" id="cupon-porcentaje" min="1" max="100" placeholder="15" required>
+          </div>
+          <button type="submit" class="btn-submit">Crear Cupón</button>
+        </form>
 
-      document.getElementById("form-id").value = p.id;
-      document.getElementById("form-name").value = p.name;
-      document.getElementById("form-category").value = p.category;
-      document.getElementById("form-mode").value = p.mode || "litros";
-      document.getElementById("form-p1").value = p.p1 || "";
-      document.getElementById("form-p5").value = p.p5 || "";
-      document.getElementById("form-p20").value = p.p20 || "";
+        <h3>Cupones Activos</h3>
+        <div class="table-responsive">
+          <table>
+            <thead>
+              <tr>
+                <th>Código</th>
+                <th>Descuento</th>
+                <th>Acción</th>
+              </tr>
+            </thead>
+            <tbody id="tabla-cupones-body"></tbody>
+          </table>
+        </div>
+      </section>
 
-      toggleFormFields();
-    }
+      <section class="admin-section">
+        <h2><i class="fas fa-boxes"></i> Inventario de Productos</h2>
+        <div id="grid-productos-admin" class="products-grid"></div>
+      </section>
 
-    function deleteProd(id) {
-      if(confirm("¿Eliminar producto?")) {
-        adminProducts = adminProducts.filter(p => p.id !== id);
-        renderAdminList();
-      }
-    }
+    </main>
 
-    function clearForm() {
-      document.getElementById("product-form").reset();
-      document.getElementById("form-id").value = "";
-      toggleFormFields();
-    }
-  </script>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
