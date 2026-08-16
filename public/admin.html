@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ARMM Admin - Gestión de Catálogo</title>
+    <title>ARMM - Dashboard de Administración</title>
     <style>
         :root {
             --bg-dark: #060913;
@@ -17,14 +17,46 @@
         }
 
         body {
-            font-family: system-ui, sans-serif;
+            font-family: system-ui, -apple-system, sans-serif;
             background: var(--bg-dark);
             color: var(--text-main);
-            padding: 20px;
+            margin: 0; padding: 20px;
         }
 
-        .container { max-width: 1200px; margin: 0 auto; }
-        .grid { display: grid; grid-template-columns: 350px 1fr; gap: 20px; }
+        .header-admin {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .tab-btn.active {
+            background: var(--accent-green);
+            color: #000;
+        }
+
+        .panel-section { display: none; }
+        .panel-section.active { display: block; }
+
+        .grid-2 { display: grid; grid-template-columns: 350px 1fr; gap: 20px; }
 
         .card {
             background: var(--card-bg);
@@ -40,7 +72,8 @@
             color: white;
             padding: 10px;
             border-radius: 6px;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            box-sizing: border-box;
         }
 
         .btn {
@@ -61,24 +94,52 @@
             padding: 12px;
             border-bottom: 1px solid var(--border-color);
         }
+
+        .img-preview {
+            width: 45px;
+            height: 45px;
+            border-radius: 6px;
+            object-fit: cover;
+            margin-right: 12px;
+            background: rgba(255,255,255,0.05);
+        }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { text-align: left; padding: 12px; border-bottom: 1px solid var(--border-color); }
+        th { color: var(--accent-green); }
     </style>
     <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h2 style="color:var(--accent-green); margin-bottom: 20px;">Control de Productos ARMM</h2>
 
-        <div class="grid">
-            <!-- FORMULARIO ALTA Y EDICIÓN -->
+    <div class="header-admin">
+        <h2 style="color:var(--accent-green); margin:0;">ARMM — Panel de Administración</h2>
+        <a href="/" style="color:var(--text-muted); text-decoration:none;">Ver Tienda Pública ↗</a>
+    </div>
+
+    <!-- NAVEGACIÓN ENTRE PANELES -->
+    <div class="nav-tabs">
+        <button class="tab-btn active" onclick="switchTab('productos')">📦 Productos</button>
+        <button class="tab-btn" onclick="switchTab('pedidos')">🛒 Pedidos</button>
+        <button class="tab-btn" onclick="switchTab('clientes')">👥 Clientes</button>
+        <button class="tab-btn" onclick="switchTab('ayuda')">💬 Soporte y Ayuda</button>
+    </div>
+
+    <!-- PANEL 1: PRODUCTOS -->
+    <div id="tab-productos" class="panel-section active">
+        <div class="grid-2">
             <div class="card">
-                <h3 id="formTitle">Agregar Nuevo Producto</h3>
+                <h3 id="formTitle">Agregar / Editar Producto</h3>
                 <input type="hidden" id="pId">
                 
                 <label>Nombre del Producto</label>
-                <input type="text" id="pName" class="form-control">
+                <input type="text" id="pName" class="form-control" placeholder="Ej. Cloro">
 
                 <label>Categoría</label>
-                <input type="text" id="pCategory" class="form-control">
+                <input type="text" id="pCategory" class="form-control" placeholder="Ej. Cloros">
+
+                <label>URL de Imagen</label>
+                <input type="text" id="pImg" class="form-control" placeholder="https://ejemplo.com/imagen.jpg">
 
                 <label>Modo de Venta</label>
                 <select id="pSaleMode" class="form-control" onchange="toggleFields()">
@@ -102,21 +163,75 @@
                     <input type="number" id="pMayoreo" class="form-control" step="0.5">
                 </div>
 
-                <button class="btn btn-green" style="width:100%; margin-top:10px;" onclick="saveProduct()">Guardar Cambios</button>
-                <button class="btn btn-danger" style="width:100%; margin-top:5px;" onclick="resetForm()">Cancelar</button>
+                <button class="btn btn-green" style="width:100%; margin-top:10px;" onclick="saveProduct()">Guardar Producto</button>
+                <button class="btn btn-danger" style="width:100%; margin-top:5px;" onclick="resetForm()">Limpiar Formulario</button>
             </div>
 
-            <!-- LISTADO CON BOTÓN EDITAR -->
             <div class="card">
                 <h3>Catálogo en Vivo (<span id="totalCount">0</span> productos)</h3>
-                <div id="productsAdminList" style="max-height: 70vh; overflow-y: auto; margin-top:10px;"></div>
+                <div id="productsAdminList" style="max-height: 70vh; overflow-y: auto;"></div>
             </div>
+        </div>
+    </div>
+
+    <!-- PANEL 2: PEDIDOS -->
+    <div id="tab-pedidos" class="panel-section">
+        <div class="card">
+            <h3>Gestión de Pedidos Registrados</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Cliente</th>
+                        <th>Fecha</th>
+                        <th>Total</th>
+                        <th>Estatus</th>
+                    </tr>
+                </thead>
+                <tbody id="pedidosTable">
+                    <tr><td colspan="5" style="color:var(--text-muted)">No hay pedidos registrados aún.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- PANEL 3: CLIENTES -->
+    <div id="tab-clientes" class="panel-section">
+        <div class="card">
+            <h3>Directorio de Clientes</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Contacto</th>
+                        <th>Compras</th>
+                    </tr>
+                </thead>
+                <tbody id="clientesTable">
+                    <tr><td colspan="3" style="color:var(--text-muted)">No hay clientes registrados.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- PANEL 4: AYUDA -->
+    <div id="tab-ayuda" class="panel-section">
+        <div class="card">
+            <h3>Solicitudes de Soporte y Ayuda</h3>
+            <div id="ayudaList" style="color:var(--text-muted);">Sin consultas pendientes.</div>
         </div>
     </div>
 
     <script>
         const socket = io();
         let currentProducts = [];
+
+        function switchTab(tab) {
+            document.querySelectorAll('.panel-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById('tab-' + tab).classList.add('active');
+            event.target.classList.add('active');
+        }
 
         socket.on('inventario_actualizado', (prods) => {
             currentProducts = prods;
@@ -134,6 +249,7 @@
             const id = document.getElementById('pId').value;
             const name = document.getElementById('pName').value;
             const category = document.getElementById('pCategory').value;
+            const img = document.getElementById('pImg').value;
             const mode = document.getElementById('pSaleMode').value;
 
             if(!name) return alert("Ingresa el nombre del producto.");
@@ -152,6 +268,7 @@
                 id: id || null,
                 nombre: name,
                 categoria: category,
+                imagen: img,
                 saleMode: mode,
                 precios: precios
             });
@@ -167,6 +284,7 @@
             document.getElementById('pId').value = prod.id;
             document.getElementById('pName').value = prod.nombre || prod.name || '';
             document.getElementById('pCategory').value = prod.categoria || prod.category || '';
+            document.getElementById('pImg').value = prod.imagen || '';
             document.getElementById('pSaleMode').value = prod.saleMode || 'litros';
 
             toggleFields();
@@ -181,7 +299,7 @@
         }
 
         function deleteProduct(id) {
-            if(confirm("¿Seguro que deseas eliminar este producto?")) {
+            if(confirm("¿Deseas eliminar este producto del inventario?")) {
                 socket.emit('eliminar_producto', id);
             }
         }
@@ -189,15 +307,19 @@
         function renderList(prods) {
             const list = document.getElementById('productsAdminList');
             list.innerHTML = prods.map(p => {
-                const descPrecio = p.precios ? Object.entries(p.precios).map(([k,v]) => `${k}: $${v}`).join(' | ') : 'Sin Precio';
+                const descPrecio = p.precios ? Object.entries(p.precios).map(([k,v]) => `${k}: $${v}`).join(' | ') : 'Sin precio';
+                const defaultImg = 'https://images.unsplash.com/photo-1585421514284-efb74c2b69ba?w=150&q=80';
                 return `
                     <div class="prod-row">
-                        <div>
-                            <strong>${p.nombre || p.name}</strong> <small style="color:var(--text-muted)">(${p.categoria || 'General'})</small>
-                            <div style="font-size:0.8rem; color:var(--accent-green); margin-top:2px;">${descPrecio}</div>
+                        <div style="display:flex; align-items:center;">
+                            <img src="${p.imagen || defaultImg}" class="img-preview" alt="prod">
+                            <div>
+                                <strong>${p.nombre || p.name}</strong> <small style="color:var(--text-muted)">(${p.categoria || 'General'})</small>
+                                <div style="font-size:0.8rem; color:var(--accent-green); margin-top:2px;">${descPrecio}</div>
+                            </div>
                         </div>
                         <div>
-                            <button class="btn btn-warning" onclick="editProduct(${p.id})">✏️ Editar</button>
+                            <button class="btn btn-warning" onclick="editProduct(${p.id})">Editar</button>
                             <button class="btn btn-danger" onclick="deleteProduct(${p.id})">🗑️</button>
                         </div>
                     </div>
@@ -206,10 +328,11 @@
         }
 
         function resetForm() {
-            document.getElementById('formTitle').innerText = 'Agregar Nuevo Producto';
+            document.getElementById('formTitle').innerText = 'Agregar / Editar Producto';
             document.getElementById('pId').value = '';
             document.getElementById('pName').value = '';
             document.getElementById('pCategory').value = '';
+            document.getElementById('pImg').value = '';
             document.getElementById('p1L').value = '';
             document.getElementById('p5L').value = '';
             document.getElementById('p20L').value = '';
