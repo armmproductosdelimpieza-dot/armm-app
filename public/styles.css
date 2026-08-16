@@ -1,4 +1,371 @@
-/* ESTILOS PARA EL PRIMER PANEL EN WEB ADMIN */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: #f4f6f8;
+  color: #333;
+}
+
+/* NAVBAR */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #1a365d;
+  color: white;
+  padding: 15px 25px;
+  position: sticky;
+  top: 0;
+  z-index: 900;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+}
+
+.search-bar input {
+  padding: 8px 15px;
+  border-radius: 20px;
+  border: none;
+  width: 250px;
+  outline: none;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.btn-nav {
+  background: transparent;
+  border: 1px solid white;
+  color: white;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-nav:hover {
+  background: white;
+  color: #1a365d;
+}
+
+.btn-accent {
+  background: #2b6cb0;
+  border-color: #2b6cb0;
+}
+
+.btn-accent:hover {
+  background: #2c5282;
+  color: white;
+}
+
+.btn-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #2b6cb0;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-cart {
+  background: #e53e3e;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: bold;
+}
+
+/* MENÚS DESPLEGABLES LATERALES */
+.sliding-menu {
+  position: fixed;
+  top: 0;
+  right: -380px;
+  width: 350px;
+  height: 100vh;
+  background-color: #ffffff;
+  box-shadow: -4px 0 15px rgba(0,0,0,0.2);
+  transition: right 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  z-index: 1000;
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.sliding-menu.active {
+  right: 0 !important;
+}
+
+.menu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 15px;
+  margin-bottom: 20px;
+}
+
+.btn-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #718096;
+}
+
+/* FORMULARIOS Y ELEMENTOS */
+.form-group {
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #4a5568;
+}
+
+.form-group input {
+  padding: 10px;
+  border: 1px solid #cbd5e0;
+  border-radius: 6px;
+  outline: none;
+}
+
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-with-icon input {
+  width: 100%;
+  padding-right: 35px;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 12px;
+  cursor: pointer;
+  color: #718096;
+}
+
+.form-options {
+  margin-bottom: 15px;
+  text-align: right;
+}
+
+.form-options a {
+  color: #3182ce;
+  font-size: 13px;
+  text-decoration: none;
+}
+
+.btn-submit {
+  width: 100%;
+  background: #319795;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-top: 5px;
+}
+
+.btn-submit:hover {
+  background: #2c7a7b;
+}
+
+/* ALERTAS Y PAGO SPEI */
+.alerta-registro {
+  background: #fff5f5;
+  border: 1px solid #feb2b2;
+  color: #c53030;
+  padding: 12px;
+  border-radius: 6px;
+  text-align: center;
+  margin-top: 15px;
+}
+
+.pago-spei-box {
+  background: #f7fafc;
+  border: 1px solid #e2e8f0;
+  padding: 12px;
+  border-radius: 6px;
+  margin-top: 15px;
+}
+
+.pago-spei-box h4 {
+  color: #2b6cb0;
+  margin-bottom: 8px;
+}
+
+.datos-banco {
+  font-size: 13px;
+  margin-bottom: 10px;
+  background: white;
+  padding: 8px;
+  border-radius: 4px;
+}
+
+.cupon-section {
+  border-top: 1px solid #e2e8f0;
+  padding-top: 15px;
+  margin-bottom: 15px;
+}
+
+.cupon-input-group {
+  display: flex;
+  gap: 8px;
+  margin-top: 5px;
+}
+
+.cupon-input-group input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #cbd5e0;
+  border-radius: 4px;
+}
+
+.cupon-input-group button {
+  background: #4a5568;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.mensaje-cupon {
+  font-size: 12px;
+  margin-top: 5px;
+  color: #2b6cb0;
+}
+
+.cart-summary {
+  border-top: 2px solid #e2e8f0;
+  padding-top: 15px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.total-row {
+  font-weight: bold;
+  font-size: 16px;
+  color: #2d3748;
+  margin-bottom: 15px;
+}
+
+/* GRID Y CONTENIDO */
+.main-container {
+  padding: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #2d3748;
+}
+
+.categories-filter {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+}
+
+.btn-cat {
+  padding: 8px 16px;
+  border: 1px solid #cbd5e0;
+  background: white;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.btn-cat.active, .btn-cat:hover {
+  background: #3182ce;
+  color: white;
+  border-color: #3182ce;
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.product-card {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.product-card h4 {
+  color: #2d3748;
+  margin-bottom: 8px;
+}
+
+.product-card .category-tag {
+  font-size: 11px;
+  background: #edf2f7;
+  padding: 3px 8px;
+  border-radius: 12px;
+  width: fit-content;
+  color: #4a5568;
+  margin-bottom: 12px;
+}
+
+.price-list {
+  font-size: 13px;
+}
+
+.price-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.price-row button {
+  background: #319795;
+  color: white;
+  border: none;
+  padding: 2px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* PRIMER PANEL ADMINISTRATIVO EN WEB ADMIN */
 .admin-dashboard-panel {
   background: white;
   border-radius: 10px;
@@ -130,4 +497,65 @@
 
 .btn-action-outline:hover {
   background: #ebf8ff;
+}
+
+.admin-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.admin-modal-box {
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  width: 320px;
+  text-align: center;
+}
+
+.admin-modal-box input {
+  width: 100%;
+  padding: 10px;
+  margin: 15px 0;
+  border: 1px solid #cbd5e0;
+  border-radius: 4px;
+}
+
+.error-msg {
+  color: #e53e3e;
+  font-size: 13px;
+  margin-top: 10px;
+}
+
+.admin-section {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.inline-form {
+  display: flex;
+  gap: 15px;
+  align-items: flex-end;
+  margin-bottom: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table th, table td {
+  border: 1px solid #e2e8f0;
+  padding: 10px;
+  text-align: left;
 }
