@@ -1,1469 +1,527 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ARMM - Productos y Accesorios de Limpieza</title>
-  <!-- Tailwind CSS & Lucide Icons -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <style>
-    :root {
-      --bg-main: #0a0f1d;
-      --card-glass: rgba(16, 24, 40, 0.75);
-      --card-border: rgba(0, 255, 157, 0.18);
-      --accent-green: #00ff9d;
-      --accent-green-hover: #00cc7d;
-    }
-    body {
-      background-color: var(--bg-main);
-      color: #f1f5f9;
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      overflow-x: hidden;
-    }
-    .glass-card {
-      background: var(--card-glass);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid var(--card-border);
-      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-    }
-    .glass-input {
-      background: rgba(15, 23, 42, 0.8);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      color: #fff;
-    }
-    .glass-input:focus {
-      border-color: var(--accent-green);
-      outline: none;
-      box-shadow: 0 0 10px rgba(0, 255, 157, 0.3);
-    }
-    .btn-emerald {
-      background-color: var(--accent-green);
-      color: #04120c;
-      font-weight: 700;
-      transition: all 0.25s ease;
-    }
-    .btn-emerald:hover {
-      background-color: var(--accent-green-hover);
-      box-shadow: 0 0 15px rgba(0, 255, 157, 0.4);
-      transform: translateY(-1px);
-    }
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: #0a0f1d; }
-    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: var(--accent-green); }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - ARMM</title>
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --card-bg: #161b22;
+            --border-color: #30363d;
+            --accent-green: #00e676;
+            --accent-hover: #00c853;
+            --text-main: #f0f6fc;
+            --text-muted: #8b949e;
+            --danger-color: #f85149;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 250px;
+            background-color: var(--card-bg);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .sidebar h2 {
+            font-size: 1.2rem;
+            color: var(--accent-green);
+            margin-bottom: 30px;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            padding: 12px 15px;
+            text-align: left;
+            font-size: 0.95rem;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 8px;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            background-color: rgba(0, 230, 118, 0.1);
+            color: var(--accent-green);
+        }
+
+        .badge {
+            background-color: var(--danger-color);
+            color: white;
+            font-size: 0.75rem;
+            padding: 2px 7px;
+            border-radius: 12px;
+            font-weight: bold;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        /* Cards & Container Styles */
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            margin-top: 0;
+            color: var(--accent-green);
+        }
+
+        /* Stats Section */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--accent-green);
+            margin-top: 10px;
+        }
+
+        /* Chats Section Layout */
+        .chats-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 20px;
+            height: 500px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .chat-list {
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+        }
+
+        .chat-user-item {
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .chat-user-item:hover, .chat-user-item.active {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .chat-user-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .chat-user-last-msg {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chat-messages-area {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+        }
+
+        .messages-box {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding-right: 10px;
+        }
+
+        .message-bubble {
+            max-width: 70%;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .message-bubble.client {
+            background-color: #21262d;
+            align-self: flex-start;
+            border: 1px solid var(--border-color);
+        }
+
+        .message-bubble.admin {
+            background-color: var(--accent-green);
+            color: #000;
+            align-self: flex-end;
+            font-weight: 500;
+        }
+
+        .chat-input-area {
+            display: flex;
+            gap: 10px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            background-color: #0d1117;
+            border: 1px solid var(--border-color);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            outline: none;
+        }
+
+        button.btn-send {
+            background-color: var(--accent-green);
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button.btn-send:hover {
+            background-color: var(--accent-hover);
+        }
+
+        /* Notifications List */
+        .notification-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notification-item .time {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+    </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between">
+<body>
 
-  <!-- NAVEGACIÓN SUPERIOR GLOBAL -->
-  <header class="sticky top-0 z-40 glass-card border-b border-emerald-900/30 px-4 py-3">
-    <div class="max-w-7xl mx-auto flex items-center justify-between gap-2">
-      <!-- Logo y Nombre -->
-      <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('home')">
-        <div class="w-10 h-10 rounded-full bg-emerald-500 text-slate-950 font-black flex items-center justify-center text-xl shadow-lg shadow-emerald-500/20">
-          A
-        </div>
-        <div>
-          <h1 class="text-xl font-black tracking-wider text-white leading-none">ARMM</h1>
-          <p class="text-[10px] text-emerald-400 font-medium tracking-widest uppercase">Productos y Accesorios de Limpieza</p>
-        </div>
-      </div>
-
-      <!-- Botones de Acción Horizontal (Top Right) -->
-      <div id="navButtons" class="flex items-center space-x-2 text-sm">
-        <!-- Generado dinámicamente -->
-      </div>
-    </div>
-  </header>
-
-  <!-- CONTENIDO PRINCIPAL -->
-  <main class="max-w-7xl mx-auto px-3 py-6 w-full flex-1">
-
-    <!-- SECCIÓN: WEB PÚBLICA -->
-    <div id="publicView" class="space-y-8">
-
-      <!-- BLOQUE 1: PORTADA Y ESLOGAN -->
-      <section class="glass-card rounded-2xl p-6 md:p-10 text-center relative overflow-hidden border border-emerald-500/20">
-        <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
-        <h2 class="text-3xl md:text-5xl font-black mb-3 text-white">
-          La mejor calidad para una <span class="text-emerald-400">limpieza total</span>
-        </h2>
-        <p class="text-slate-300 max-w-2xl mx-auto text-sm md:text-base font-light mb-6">
-          Soluciones efectivas e industriales adaptadas a tu hogar y negocio.
-        </p>
-        <div class="inline-block bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 text-xs md:text-sm font-semibold px-4 py-2.5 rounded-full shadow-inner">
-          💡 Regístrate para realizar tu pedido o hazlo directamente a nuestro WhatsApp
-        </div>
-      </section>
-
-      <!-- BLOQUE 2: BARRA BUSCADORA -->
-      <section class="max-w-2xl mx-auto">
-        <div class="relative">
-          <i data-lucide="search" class="absolute left-4 top-3.5 text-slate-400 w-5 h-5"></i>
-          <input type="text" id="searchInput" oninput="renderProducts()" placeholder="Buscar aromatizante, cloro, jarquería o categoría..." class="w-full pl-12 pr-4 py-3 rounded-xl glass-input text-sm">
-        </div>
-      </section>
-
-      <!-- BLOQUE 3: CATEGORÍAS Y PRODUCTOS -->
-      <section>
-        <div class="flex items-center justify-between mb-4">
-          <h3 class="text-xl font-bold text-white flex items-center gap-2">
-            <i data-lucide="shopping-bag" class="text-emerald-400 w-5 h-5"></i> Nuestros Productos
-          </h3>
-          <span id="productCount" class="text-xs text-slate-400"></span>
-        </div>
-        
-        <!-- Grid de Productos -->
-        <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          <!-- Render dinámico -->
-        </div>
-      </section>
-
-      <!-- BLOQUE 4: SOBRE LA EMPRESA & RESEÑAS -->
-      <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="glass-card p-6 rounded-2xl space-y-3">
-          <h4 class="text-lg font-bold text-emerald-400 flex items-center gap-2">
-            <i data-lucide="info" class="w-5 h-5"></i> Sobre Nosotros
-          </h4>
-          <p class="text-sm text-slate-300 leading-relaxed">
-            Nuestra empresa tiene como propósito ofrecerte todo para la limpieza y llevarlo hasta la puerta de tu hogar. Contamos con más de <strong>3 años trabajando para una limpieza mejor</strong> con los más altos estándares.
-          </p>
-          <div class="pt-2 text-xs text-slate-400 space-y-1">
-            <p><strong>WhatsApp Directo:</strong> 3351097726</p>
-            <p><strong>Correo Electrónico:</strong> armmproductosdelimpieza@gamail.com</p>
-          </div>
-        </div>
-
-        <div class="glass-card p-6 rounded-2xl space-y-3">
-          <h4 class="text-lg font-bold text-emerald-400 flex items-center gap-2">
-            <i data-lucide="star" class="w-5 h-5"></i> Reseñas de Clientes
-          </h4>
-          <div class="space-y-2 text-xs">
-            <div class="bg-slate-900/60 p-3 rounded-lg border border-slate-800">
-              <p class="text-slate-200">"Excelente servicio a domicilio y el cloro rendidor de 20L es fantástico."</p>
-              <span class="text-emerald-400 font-semibold mt-1 block">- María R.</span>
-            </div>
-            <div class="bg-slate-900/60 p-3 rounded-lg border border-slate-800">
-              <p class="text-slate-200">"Los pino de aromas huelen muy bien y duran mucho tiempo."</p>
-              <span class="text-emerald-400 font-semibold mt-1 block">- Carlos M.</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-    </div>
-
-    <!-- SECCIÓN: WEB ADMIN -->
-    <div id="adminView" class="hidden space-y-6">
-      
-      <!-- HEADER ADMIN -->
-      <div class="glass-card p-4 rounded-xl flex flex-wrap items-center justify-between gap-3 border-emerald-500/40">
-        <div class="flex items-center space-x-3">
-          <div class="p-2 bg-emerald-500/20 text-emerald-400 rounded-lg">
-            <i data-lucide="shield-check" class="w-6 h-6"></i>
-          </div>
-          <div>
-            <h2 class="text-lg font-bold text-white">Panel de Administración ARMM</h2>
-            <p class="text-xs text-slate-400">Gestiona productos, usuarios, pedidos y notificaciones en tiempo real</p>
-          </div>
-        </div>
-        <button onclick="logoutAdmin()" class="px-3 py-1.5 bg-red-500/20 text-red-300 border border-red-500/40 text-xs rounded-lg hover:bg-red-500/30">
-          Cerrar Sesión Admin
+    <!-- Menú Lateral -->
+    <div class="sidebar">
+        <h2>ARMM Panel</h2>
+        <button class="nav-btn active" onclick="switchSection('dashboard')">Dashboard</button>
+        <button class="nav-btn" onclick="switchSection('chats')">
+            Chats <span id="chatBadge" class="badge" style="display:none;">0</span>
         </button>
-      </div>
-
-      <!-- MENÚ DE SECCIONES ADMIN -->
-      <div class="flex overflow-x-auto gap-2 pb-2 text-xs border-b border-slate-800">
-        <button onclick="setAdminTab('orders')" class="admin-tab-btn px-4 py-2 rounded-lg bg-emerald-500 text-slate-950 font-bold whitespace-nowrap">1. Pedidos</button>
-        <button onclick="setAdminTab('products')" class="admin-tab-btn px-4 py-2 rounded-lg bg-slate-800 text-slate-300 whitespace-nowrap">2. Gestión Productos</button>
-        <button onclick="setAdminTab('users')" class="admin-tab-btn px-4 py-2 rounded-lg bg-slate-800 text-slate-300 whitespace-nowrap">3. Usuarios Registrados</button>
-        <button onclick="setAdminTab('support')" class="admin-tab-btn px-4 py-2 rounded-lg bg-slate-800 text-slate-300 whitespace-nowrap">4. Centro de Ayuda</button>
-        <button onclick="setAdminTab('coupons')" class="admin-tab-btn px-4 py-2 rounded-lg bg-slate-800 text-slate-300 whitespace-nowrap">5. Cupones</button>
-        <button onclick="setAdminTab('chats')" class="admin-tab-btn px-4 py-2 rounded-lg bg-slate-800 text-slate-300 whitespace-nowrap">6. Chats de Ayuda</button>
-        <button onclick="setAdminTab('notifications')" class="admin-tab-btn px-4 py-2 rounded-lg bg-slate-800 text-slate-300 whitespace-nowrap relative">
-          7. Notificaciones para Ti
-          <span id="adminNotifBadge" class="hidden absolute -top-1 -right-1 bg-red-500 text-white text-[9px] px-1.5 py-0.5 rounded-full">0</span>
+        <button class="nav-btn" onclick="switchSection('notifications')">
+            Notificaciones <span id="notifBadge" class="badge" style="display:none;">0</span>
         </button>
-      </div>
+    </div>
 
-      <!-- VISTA ADMIN 1: PEDIDOS -->
-      <div id="adminTab-orders" class="admin-section glass-card p-5 rounded-2xl space-y-4">
-        <h3 class="text-md font-bold text-emerald-400">Pedidos Hechos desde la Web Pública</h3>
-        <div id="adminOrdersList" class="space-y-3"></div>
-      </div>
+    <!-- Área Principal -->
+    <div class="main-content">
 
-      <!-- VISTA ADMIN 2: PRODUCTOS -->
-      <div id="adminTab-products" class="admin-section hidden glass-card p-5 rounded-2xl space-y-6">
-        
-        <!-- Crear Nuevo Producto -->
-        <div class="border-b border-slate-800 pb-5">
-          <h3 class="text-md font-bold text-emerald-400 mb-3">Agregar / Modificar Producto</h3>
-          <form id="productForm" onsubmit="saveProduct(event)" class="space-y-4">
-            <input type="hidden" id="prodId">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
-              <div>
-                <label class="block text-slate-400 mb-1">Nombre del Producto</label>
-                <input type="text" id="prodName" required placeholder="Ej. Cloro Industrial" class="w-full p-2.5 rounded-lg glass-input">
-              </div>
-              <div>
-                <label class="block text-slate-400 mb-1">Categoría</label>
-                <input type="text" id="prodCategory" required placeholder="Ej. CLOROS" class="w-full p-2.5 rounded-lg glass-input">
-              </div>
-              <div>
-                <label class="block text-slate-400 mb-1">Modo de Venta / Presentación</label>
-                <select id="prodMode" onchange="togglePresentationFields()" class="w-full p-2.5 rounded-lg glass-input bg-slate-900">
-                  <option value="litro">Por Litros (1L, 5L, 20L)</option>
-                  <option value="mayoreo_menudeo">Mayoreo y Menudeo</option>
-                  <option value="piezas">Por Pieza / Único</option>
-                </select>
-              </div>
+        <!-- DASHBOARD SECTION -->
+        <div id="dashboard" class="section active">
+            <h2>Panel de Control</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div>Visualizaciones del Sitio</div>
+                    <div id="siteViews" class="stat-number">0</div>
+                </div>
+                <div class="stat-card">
+                    <div>Usuarios Registrados</div>
+                    <div id="userCount" class="stat-number">0</div>
+                </div>
+                <div class="stat-card">
+                    <div>Mensajes Recibidos</div>
+                    <div id="msgCount" class="stat-number">0</div>
+                </div>
             </div>
+        </div>
 
-            <!-- Campos dinámicos de precios -->
-            <div id="presentationFields" class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs bg-slate-900/50 p-3 rounded-lg border border-slate-800">
-              <!-- Dinámico -->
+        <!-- CHATS SECTION (Centro de Ayuda Directa) -->
+        <div id="chats" class="section">
+            <h2>Chats de Ayuda Directa</h2>
+            <div class="chats-container">
+                <div id="chatList" class="chat-list">
+                    <!-- Lista de clientes dinámica -->
+                </div>
+                <div class="chat-messages-area">
+                    <div id="messagesBox" class="messages-box">
+                        <p style="color: var(--text-muted); text-align: center; margin-top: 50%;">Selecciona un cliente para ver la conversación.</p>
+                    </div>
+                    <div class="chat-input-area">
+                        <input type="text" id="adminMsgInput" placeholder="Escribe una respuesta..." disabled>
+                        <button class="btn-send" onclick="sendAdminMessage()" disabled id="btnSend">Enviar</button>
+                    </div>
+                </div>
             </div>
-
-            <button type="submit" class="px-5 py-2.5 btn-emerald rounded-lg text-xs font-bold">Guardar Producto</button>
-          </form>
         </div>
 
-        <!-- Lista de Productos para Editar / Eliminar -->
-        <div>
-          <h3 class="text-md font-bold text-white mb-3">Productos Registrados</h3>
-          <div id="adminProductsList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs"></div>
+        <!-- NOTIFICATIONS SECTION -->
+        <div id="notifications" class="section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2>Registro de Notificaciones</h2>
+                <button onclick="requestNotificationPermission()" class="btn-send">Activar Notificaciones de Escritorio</button>
+            </div>
+            <div class="card" id="notificationsList">
+                <p style="color: var(--text-muted);">No hay notificaciones recientes.</p>
+            </div>
         </div>
-      </div>
-
-      <!-- VISTA ADMIN 3: USUARIOS REGISTRADOS -->
-      <div id="adminTab-users" class="admin-section hidden glass-card p-5 rounded-2xl space-y-4">
-        <h3 class="text-md font-bold text-emerald-400">Usuarios Registrados en el Sistema</h3>
-        <div id="adminUsersList" class="overflow-x-auto">
-          <table class="w-full text-left text-xs border-collapse">
-            <thead>
-              <tr class="border-b border-slate-800 text-slate-400">
-                <th class="p-2">Nombre</th>
-                <th class="p-2">Correo</th>
-                <th class="p-2">Teléfono</th>
-                <th class="p-2">Dirección</th>
-                <th class="p-2">Contraseña</th>
-              </tr>
-            </thead>
-            <tbody id="adminUsersTableBody"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- VISTA ADMIN 4: CENTRO DE AYUDA -->
-      <div id="adminTab-support" class="admin-section hidden glass-card p-5 rounded-2xl space-y-4">
-        <h3 class="text-md font-bold text-emerald-400">Solicitudes de Recuperación de Contraseña</h3>
-        <div id="adminSupportList" class="space-y-3"></div>
-      </div>
-
-      <!-- VISTA ADMIN 5: CUPONES -->
-      <div id="adminTab-coupons" class="admin-section hidden glass-card p-5 rounded-2xl space-y-6">
-        <form onsubmit="saveCoupon(event)" class="space-y-3 text-xs border-b border-slate-800 pb-4">
-          <h3 class="text-md font-bold text-emerald-400">Crear Nuevo Cupón</h3>
-          <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
-            <input type="text" id="coupCode" placeholder="Código (ej. LIMPIEZA10)" required class="p-2 rounded glass-input">
-            <input type="number" id="coupDiscount" placeholder="Descuento en $" required class="p-2 rounded glass-input">
-            <input type="date" id="coupExpire" required class="p-2 rounded glass-input">
-            <select id="coupConditionType" class="p-2 rounded glass-input bg-slate-900">
-              <option value="amount">Monto Mínimo de Compra</option>
-              <option value="category">Categoría Específica</option>
-            </select>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <input type="text" id="coupConditionValue" placeholder="Monto ($) o Nombre de Categoría Exacta" required class="p-2 rounded glass-input">
-            <input type="text" id="coupDesc" placeholder="Descripción breve del cupón" required class="p-2 rounded glass-input">
-          </div>
-          <button type="submit" class="px-4 py-2 btn-emerald rounded text-xs font-bold">Generar Cupón</button>
-        </form>
-
-        <div>
-          <h4 class="text-xs font-bold text-white mb-2">Cupones Activos</h4>
-          <div id="adminCouponsList" class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs"></div>
-        </div>
-      </div>
-
-      <!-- VISTA ADMIN 6: CHATS DE AYUDA -->
-      <div id="adminTab-chats" class="admin-section hidden glass-card p-5 rounded-2xl space-y-4">
-        <h3 class="text-md font-bold text-emerald-400">Chats de Ayuda de Clientes</h3>
-        <div id="adminChatsList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-      </div>
-
-      <!-- VISTA ADMIN 7: NOTIFICACIONES PARA TI -->
-      <div id="adminTab-notifications" class="admin-section hidden glass-card p-5 rounded-2xl space-y-4">
-        <div class="flex items-center justify-between">
-          <h3 class="text-md font-bold text-emerald-400">Notificaciones para Ti (Eventos Admin)</h3>
-          <button onclick="clearAdminNotifications()" class="text-xs text-red-400 hover:underline">Limpiar Notificaciones</button>
-        </div>
-        <div id="adminNotificationsHistory" class="space-y-2 text-xs"></div>
-      </div>
 
     </div>
 
-  </main>
-
-  <!-- FOOTER -->
-  <footer class="glass-card border-t border-slate-800 text-center py-4 text-xs text-slate-500 mt-8">
-    ARMM Productos y Accesorios de Limpieza © 2026 - Todos los derechos reservados.
-  </footer>
-
-  <!-- MODALES DE LA WEB PÚBLICA -->
-
-  <!-- MODAL: REGISTRO -->
-  <div id="modalRegister" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-3 hidden">
-    <div class="glass-card max-w-md w-full p-6 rounded-2xl space-y-4 relative">
-      <button onclick="closeModal('modalRegister')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i data-lucide="x"></i></button>
-      <h3 class="text-lg font-bold text-emerald-400">Registro de Cliente</h3>
-      <form onsubmit="handleRegister(event)" class="space-y-3 text-xs">
-        <div class="grid grid-cols-2 gap-2">
-          <input type="text" id="regName" placeholder="Nombre" required class="p-2.5 rounded-lg glass-input">
-          <input type="text" id="regLastName" placeholder="Apellidos" required class="p-2.5 rounded-lg glass-input">
-        </div>
-        <input type="tel" id="regPhone" placeholder="Teléfono (WhatsApp)" required class="w-full p-2.5 rounded-lg glass-input">
-        <input type="email" id="regEmail" placeholder="Correo Electrónico" required class="w-full p-2.5 rounded-lg glass-input">
-        <input type="text" id="regAddress" placeholder="Dirección de Entrega Completa" required class="w-full p-2.5 rounded-lg glass-input">
-        
-        <div class="relative">
-          <input type="password" id="regPassword" placeholder="Generar Contraseña" required class="w-full p-2.5 pr-10 rounded-lg glass-input">
-          <button type="button" onclick="togglePass('regPassword')" class="absolute right-3 top-2.5 text-slate-400"><i data-lucide="eye"></i></button>
-        </div>
-        
-        <div class="relative">
-          <input type="password" id="regConfirmPassword" placeholder="Confirmar Contraseña" required class="w-full p-2.5 pr-10 rounded-lg glass-input">
-          <button type="button" onclick="togglePass('regConfirmPassword')" class="absolute right-3 top-2.5 text-slate-400"><i data-lucide="eye"></i></button>
-        </div>
-
-        <button type="submit" class="w-full py-3 btn-emerald rounded-lg font-bold text-xs mt-2">Registrarse</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- MODAL: INICIAR SESIÓN -->
-  <div id="modalLogin" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-3 hidden">
-    <div class="glass-card max-w-sm w-full p-6 rounded-2xl space-y-4 relative">
-      <button onclick="closeModal('modalLogin')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i data-lucide="x"></i></button>
-      <h3 class="text-lg font-bold text-emerald-400">Iniciar Sesión</h3>
-      <form onsubmit="handleLogin(event)" class="space-y-3 text-xs">
-        <input type="text" id="loginIdentifier" placeholder="Correo o Teléfono" required class="w-full p-2.5 rounded-lg glass-input">
-        <div class="relative">
-          <input type="password" id="loginPassword" placeholder="Contraseña" required class="w-full p-2.5 pr-10 rounded-lg glass-input">
-          <button type="button" onclick="togglePass('loginPassword')" class="absolute right-3 top-2.5 text-slate-400"><i data-lucide="eye"></i></button>
-        </div>
-        <button type="submit" class="w-full py-2.5 btn-emerald rounded-lg font-bold text-xs">Acceder</button>
-      </form>
-      <div class="text-center pt-2">
-        <button onclick="openModal('modalForgot'); closeModal('modalLogin');" class="text-emerald-400 hover:underline text-xs">¿Olvidaste tu contraseña?</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL: RECUPERAR CONTRASEÑA -->
-  <div id="modalForgot" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-3 hidden">
-    <div class="glass-card max-w-md w-full p-6 rounded-2xl space-y-4 relative">
-      <button onclick="closeModal('modalForgot')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i data-lucide="x"></i></button>
-      <h3 class="text-lg font-bold text-emerald-400">Recuperar Contraseña</h3>
-      <form onsubmit="handleForgot(event)" class="space-y-3 text-xs">
-        <div class="grid grid-cols-2 gap-2">
-          <input type="text" id="recName" placeholder="Nombre" required class="p-2.5 rounded-lg glass-input">
-          <input type="text" id="recLastName" placeholder="Apellido" required class="p-2.5 rounded-lg glass-input">
-        </div>
-        <input type="email" id="recEmail" placeholder="Correo Registrado" required class="w-full p-2.5 rounded-lg glass-input">
-        <input type="tel" id="recPhone" placeholder="Teléfono Registrado" required class="w-full p-2.5 rounded-lg glass-input">
-        
-        <p class="text-[11px] text-slate-400">Te estaremos informando la situación de tu cuenta por tu WhatsApp.</p>
-        <button type="submit" class="w-full py-3 btn-emerald rounded-lg font-bold text-xs">Enviar al Centro de Atención</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- MODAL: CARRITO -->
-  <div id="modalCart" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-3 hidden">
-    <div class="glass-card max-w-md w-full p-6 rounded-2xl space-y-4 relative max-h-[90vh] overflow-y-auto">
-      <button onclick="closeModal('modalCart')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i data-lucide="x"></i></button>
-      <h3 class="text-lg font-bold text-emerald-400 flex items-center gap-2">
-        <i data-lucide="shopping-cart"></i> Mi Carrito de Compras
-      </h3>
-
-      <div id="cartItemsList" class="space-y-2 text-xs divide-y divide-slate-800"></div>
-
-      <div class="border-t border-slate-800 pt-3 space-y-2 text-xs">
-        <div class="flex justify-between font-bold text-white text-sm">
-          <span>Subtotal:</span>
-          <span id="cartSubtotal">$0.00 MXN</span>
-        </div>
-
-        <!-- Sección Cupones -->
-        <button onclick="toggleCouponsView()" class="text-emerald-400 hover:underline text-xs flex items-center gap-1 font-semibold">
-          <i data-lucide="tag" class="w-3.5 h-3.5"></i> Ver cupones disponibles
-        </button>
-
-        <div id="couponsContainer" class="hidden bg-slate-900/80 p-3 rounded-lg border border-slate-800 space-y-2">
-          <div id="availableCouponsList" class="space-y-1.5"></div>
-          <p id="couponMsg" class="text-[11px] text-amber-400 hidden"></p>
-        </div>
-
-        <div class="flex justify-between font-black text-emerald-400 text-base pt-2 border-t border-slate-800">
-          <span>Total Final:</span>
-          <span id="cartTotal">$0.00 MXN</span>
-        </div>
-      </div>
-
-      <!-- Métodos de Pago y Checkout -->
-      <div class="space-y-2 pt-2 border-t border-slate-800">
-        <button onclick="processSPEI()" class="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-lg flex items-center justify-center gap-2">
-          <i data-lucide="qr-code" class="w-4 h-4"></i> PAGAR CON SPEI
-        </button>
-        
-        <div class="bg-slate-900/60 p-3 rounded-lg border border-slate-800 space-y-2 text-xs">
-          <span class="block font-bold text-slate-300">Realizar pedido y pagar al recibirlo:</span>
-          <div class="flex items-center space-x-4 text-slate-300">
-            <label class="flex items-center space-x-1">
-              <input type="radio" name="payMethod" value="Efectivo" checked> <span>Efectivo</span>
-            </label>
-            <label class="flex items-center space-x-1">
-              <input type="radio" name="payMethod" value="Tarjeta"> <span>Pago con Tarjeta</span>
-            </label>
-          </div>
-          <button onclick="processPayOnDelivery()" class="w-full py-2.5 btn-emerald rounded-lg font-bold text-xs mt-2">
-            Realizar Pedido
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL: MENÚ DEL USUARIO ("MONITO") -->
-  <div id="modalUserMenu" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-3 hidden">
-    <div class="glass-card max-w-lg w-full p-6 rounded-2xl space-y-4 relative max-h-[90vh] overflow-y-auto">
-      <button onclick="closeModal('modalUserMenu')" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i data-lucide="x"></i></button>
-      
-      <div class="flex items-center space-x-3 border-b border-slate-800 pb-3">
-        <div class="p-2 bg-emerald-500/20 text-emerald-400 rounded-full">
-          <i data-lucide="user" class="w-6 h-6"></i>
-        </div>
-        <div>
-          <h3 id="userNameHeading" class="text-md font-bold text-white"></h3>
-          <p class="text-xs text-slate-400">Panel Personal de Cliente</p>
-        </div>
-      </div>
-
-      <!-- Submenús Horizontalmente adaptados -->
-      <div class="flex overflow-x-auto gap-2 pb-2 text-xs border-b border-slate-800">
-        <button onclick="setUserSubTab('data')" class="user-subtab-btn px-3 py-1.5 rounded-lg bg-emerald-500 text-slate-950 font-bold whitespace-nowrap">Datos Personales</button>
-        <button onclick="setUserSubTab('orders')" class="user-subtab-btn px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 whitespace-nowrap">Pedidos / Seguimiento</button>
-        <button onclick="setUserSubTab('notifs')" class="user-subtab-btn px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 whitespace-nowrap">Notificaciones</button>
-        <button onclick="setUserSubTab('favs')" class="user-subtab-btn px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 whitespace-nowrap">Favoritos</button>
-        <button onclick="setUserSubTab('chat')" class="user-subtab-btn px-3 py-1.5 rounded-lg bg-slate-800 text-slate-300 whitespace-nowrap">Chat de Ayuda</button>
-      </div>
-
-      <!-- DATOS PERSONALES -->
-      <div id="userSubTab-data" class="user-subtab-content space-y-3 text-xs">
-        <div id="userPersonalData" class="space-y-1 text-slate-300 bg-slate-900/60 p-3 rounded-lg"></div>
-
-        <button onclick="toggleChangePassForm()" class="text-emerald-400 hover:underline font-semibold block">Cambiar Contraseña</button>
-        
-        <form id="changePassForm" onsubmit="handleChangePassword(event)" class="hidden space-y-2 bg-slate-900/80 p-3 rounded-lg border border-slate-800">
-          <div class="relative">
-            <input type="password" id="currPass" placeholder="Contraseña Actual" required class="w-full p-2 pr-8 rounded glass-input">
-            <button type="button" onclick="togglePass('currPass')" class="absolute right-2 top-2 text-slate-400"><i data-lucide="eye" class="w-4 h-4"></i></button>
-          </div>
-          <button type="button" onclick="openModal('modalForgot'); closeModal('modalUserMenu');" class="text-[11px] text-emerald-400 hover:underline">¿Olvidaste tu contraseña?</button>
-          <div class="relative">
-            <input type="password" id="newPass" placeholder="Contraseña Nueva" required class="w-full p-2 pr-8 rounded glass-input">
-            <button type="button" onclick="togglePass('newPass')" class="absolute right-2 top-2 text-slate-400"><i data-lucide="eye" class="w-4 h-4"></i></button>
-          </div>
-          <div class="relative">
-            <input type="password" id="confirmNewPass" placeholder="Confirmar Contraseña" required class="w-full p-2 pr-8 rounded glass-input">
-            <button type="button" onclick="togglePass('confirmNewPass')" class="absolute right-2 top-2 text-slate-400"><i data-lucide="eye" class="w-4 h-4"></i></button>
-          </div>
-          <button type="submit" class="px-3 py-1.5 btn-emerald rounded font-bold">Actualizar Contraseña</button>
-        </form>
-      </div>
-
-      <!-- PEDIDOS / SEGUIMIENTO -->
-      <div id="userSubTab-orders" class="user-subtab-content hidden space-y-3 text-xs">
-        <div id="userOrdersList" class="space-y-2"></div>
-      </div>
-
-      <!-- NOTIFICACIONES -->
-      <div id="userSubTab-notifs" class="user-subtab-content hidden space-y-2 text-xs">
-        <div id="userNotifsList" class="space-y-2"></div>
-      </div>
-
-      <!-- FAVORITOS -->
-      <div id="userSubTab-favs" class="user-subtab-content hidden text-xs text-slate-400">
-        <p>Tus productos guardados aparecierán aquí.</p>
-      </div>
-
-      <!-- CHAT DE AYUDA DIRECTA -->
-      <div id="userSubTab-chat" class="user-subtab-content hidden space-y-3 text-xs">
-        <div id="userChatBox" class="h-48 overflow-y-auto bg-slate-950 p-3 rounded-lg border border-slate-800 space-y-2"></div>
-        <form onsubmit="sendUserChatMessage(event)" class="flex gap-2">
-          <input type="text" id="userChatMsg" placeholder="Escribe tu mensaje..." required class="flex-1 p-2 rounded glass-input">
-          <button type="submit" class="px-4 py-2 btn-emerald rounded font-bold">Enviar</button>
-        </form>
-      </div>
-
-      <div class="border-t border-slate-800 pt-3">
-        <button onclick="logoutUser()" class="w-full py-2 bg-red-500/20 text-red-300 border border-red-500/40 rounded-lg text-xs font-bold hover:bg-red-500/30">Cerrar Sesión</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- SCRIPT LOGICA Y BASE DE DATOS LOCAL -->
-  <script>
-    // BASE DE DATOS INICIAL PERSISTENTE
-    const DEFAULT_PRODUCTS = [
-      { id: 1, name: "CLORO", category: "CLOROS", mode: "litro", prices: { "1L": 20, "5L": 90, "20L": 300 } },
-      { id: 2, name: "CLORO USO INDUSTRIAL", category: "CLOROS", mode: "litro", prices: { "1L": 25, "5L": 110, "20L": 380 } },
-      { id: 3, name: "PASTILLAS DE CLORO (1KG)", category: "CLOROS", mode: "mayoreo_menudeo", prices: { menudeo: 120, mayoreo: 100 } },
-      { id: 4, name: "PINO (VERDE)", category: "PINOL", mode: "litro", prices: { "1L": 22, "5L": 100, "20L": 350 } },
-      { id: 5, name: "PINOL C/EXCEDENTE", category: "PINOL", mode: "litro", prices: { "1L": 24, "5L": 105, "20L": 370 } },
-      { id: 6, name: "PINOL AROMAS", category: "PINOL", mode: "litro", prices: { "1L": 25, "5L": 110, "20L": 390 } },
-      { id: 7, name: "BASE CLORO USO INDUSTRIAL", category: "BASES", mode: "litro", prices: { "1L": 30, "5L": 130, "20L": 450 } },
-      { id: 8, name: "BASE CLORO PARA 20 LTS", category: "BASES", mode: "piezas", prices: { unico: 180 } },
-      { id: 9, name: "MULTIUSOS AROMA PERFUME", category: "BASES", mode: "litro", prices: { "1L": 28, "5L": 120, "20L": 420 } }
-    ];
-
-    // INICIALIZACIÓN
-    function getDB(key, defaultVal) {
-      const data = localStorage.getItem('armm_' + key);
-      return data ? JSON.parse(data) : defaultVal;
-    }
-    function setDB(key, val) {
-      localStorage.setItem('armm_' + key, JSON.stringify(val));
-    }
-
-    let products = getDB('products', DEFAULT_PRODUCTS);
-    let users = getDB('users', []);
-    let orders = getDB('orders', []);
-    let supportRequests = getDB('support', []);
-    let coupons = getDB('coupons', []);
-    let chats = getDB('chats', {});
-    let adminNotifications = getDB('admin_notifications', []);
-    let currentUser = getDB('currentUser', null);
-    let cart = getDB('cart', []);
-    let activeCoupon = null;
-
-    // ESCUCHAR CAMBIOS EN TIEMPO REAL ENTRE PESTAÑAS Y CELULAR
-    window.addEventListener('storage', (e) => {
-      products = getDB('products', DEFAULT_PRODUCTS);
-      users = getDB('users', []);
-      orders = getDB('orders', []);
-      supportRequests = getDB('support', []);
-      coupons = getDB('coupons', []);
-      chats = getDB('chats', {});
-      adminNotifications = getDB('admin_notifications', []);
-      renderAll();
-    });
-
-    // PUSH NOTIFICATIONS ADMIN
-    function notifyAdmin(title, body) {
-      const notifObj = { title, body, date: new Date().toLocaleString() };
-      adminNotifications.unshift(notifObj);
-      setDB('admin_notifications', adminNotifications);
-      
-      if ("Notification" in window && Notification.permission === "granted") {
-        new Notification(title, { body });
-      }
-      renderAdminNotifications();
-    }
-
-    function requestNotificationPermission() {
-      if ("Notification" in window && Notification.permission === "default") {
-        Notification.requestPermission();
-      }
-    }
-
-    // INICIALIZAR Y RENDERIZAR TODO
-    window.onload = () => {
-      renderNavButtons();
-      renderProducts();
-      renderCart();
-      renderAll();
-      lucide.createIcons();
-    };
-
-    function renderAll() {
-      renderProducts();
-      renderCart();
-      renderAdminOrders();
-      renderAdminProducts();
-      renderAdminUsers();
-      renderAdminSupport();
-      renderAdminCoupons();
-      renderAdminChats();
-      renderAdminNotifications();
-      renderUserOrders();
-      renderUserNotifs();
-      renderUserChat();
-    }
-
-    // NAVEGACIÓN DE BOTONES SUPERIORES (RESPONSIVO Y HORIZONTAL)
-    function renderNavButtons() {
-      const nav = document.getElementById('navButtons');
-      if (currentUser) {
-        nav.innerHTML = `
-          <button onclick="openModal('modalUserMenu')" class="px-3 py-1.5 bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 rounded-full font-bold flex items-center space-x-1.5 hover:bg-emerald-500/30">
-            <i data-lucide="user" class="w-4 h-4"></i>
-            <span>${currentUser.name}</span>
-          </button>
-          <button onclick="openModal('modalCart')" class="px-3 py-1.5 glass-card rounded-full font-bold text-white flex items-center space-x-1 hover:border-emerald-500">
-            <i data-lucide="shopping-cart" class="w-4 h-4 text-emerald-400"></i>
-            <span>Carrito (${cart.reduce((a,b)=>a+b.qty,0)})</span>
-          </button>
-        `;
-      } else {
-        nav.innerHTML = `
-          <button onclick="openModal('modalRegister')" class="px-3 py-1.5 glass-card rounded-full font-bold text-white hover:border-emerald-500">Registrarse</button>
-          <button onclick="openModal('modalLogin')" class="px-3 py-1.5 glass-card rounded-full font-bold text-white hover:border-emerald-500">Iniciar Sesión</button>
-          <button onclick="openModal('modalCart')" class="px-3 py-1.5 glass-card rounded-full font-bold text-white flex items-center space-x-1 hover:border-emerald-500">
-            <i data-lucide="shopping-cart" class="w-4 h-4 text-emerald-400"></i>
-            <span>Carrito (${cart.reduce((a,b)=>a+b.qty,0)})</span>
-          </button>
-        `;
-      }
-      lucide.createIcons();
-    }
-
-    // SWITCH TAB PRINCIPAL (HOME / ADMIN ARMM123)
-    function switchTab(tab) {
-      if (tab === 'home') {
-        document.getElementById('publicView').classList.remove('hidden');
-        document.getElementById('adminView').classList.add('hidden');
-      }
-    }
-
-    function checkAdminPass() {
-      const pass = prompt("Ingrese la contraseña de administración:");
-      if (pass === "ARMM123") {
-        requestNotificationPermission();
-        document.getElementById('publicView').classList.add('hidden');
-        document.getElementById('adminView').classList.remove('hidden');
-        renderAll();
-      } else if(pass !== null) {
-        alert("Contraseña incorrecta");
-      }
-    }
-
-    function logoutAdmin() {
-      switchTab('home');
-    }
-
-    // MOSTRAR/OCULTAR CONTRASEÑA CON ÍCONO DE OJO
-    function togglePass(id) {
-      const input = document.getElementById(id);
-      input.type = input.type === 'password' ? 'text' : 'password';
-    }
-
-    // REGISTRO DE USUARIO
-    function handleRegister(e) {
-      e.preventDefault();
-      const name = document.getElementById('regName').value;
-      const lastName = document.getElementById('regLastName').value;
-      const phone = document.getElementById('regPhone').value;
-      const email = document.getElementById('regEmail').value;
-      const address = document.getElementById('regAddress').value;
-      const pass = document.getElementById('regPassword').value;
-      const confirmPass = document.getElementById('regConfirmPassword').value;
-
-      if (pass !== confirmPass) {
-        alert("Las contraseñas no coinciden");
-        return;
-      }
-
-      if (users.some(u => u.email === email || u.phone === phone)) {
-        alert("El usuario con este correo o teléfono ya existe");
-        return;
-      }
-
-      const newUser = { id: Date.now(), name, lastName, phone, email, address, password: pass };
-      users.push(newUser);
-      setDB('users', users);
-
-      currentUser = newUser;
-      setDB('currentUser', currentUser);
-
-      notifyAdmin("Nuevo Usuario Registrado", `${name} ${lastName} (${email}) se ha registrado.`);
-
-      closeModal('modalRegister');
-      renderNavButtons();
-      renderAll();
-      alert("¡Registro exitoso! Ya has iniciado sesión.");
-    }
-
-    // INICIAR SESIÓN
-    function handleLogin(e) {
-      e.preventDefault();
-      const identifier = document.getElementById('loginIdentifier').value;
-      const pass = document.getElementById('loginPassword').value;
-
-      const user = users.find(u => (u.email === identifier || u.phone === identifier) && u.password === pass);
-      if (user) {
-        currentUser = user;
-        setDB('currentUser', currentUser);
-        closeModal('modalLogin');
-        renderNavButtons();
-        renderAll();
-        alert(`Bienvenido de nuevo, ${user.name}`);
-      } else {
-        alert("Credenciales incorrectas o usuario inexistente");
-      }
-    }
-
-    function logoutUser() {
-      currentUser = null;
-      setDB('currentUser', null);
-      closeModal('modalUserMenu');
-      renderNavButtons();
-    }
-
-    // RECUPERAR CONTRASEÑA / CENTRO DE ATENCIÓN
-    function handleForgot(e) {
-      e.preventDefault();
-      const req = {
-        id: Date.now(),
-        name: document.getElementById('recName').value,
-        lastName: document.getElementById('recLastName').value,
-        email: document.getElementById('recEmail').value,
-        phone: document.getElementById('recPhone').value,
-        date: new Date().toLocaleString()
-      };
-      supportRequests.push(req);
-      setDB('support', supportRequests);
-
-      notifyAdmin("Solicitud de Recuperación", `${req.name} ${req.lastName} ha solicitado acceso.`);
-
-      closeModal('modalForgot');
-      alert("Solicitud enviada al Centro de Atención. Te informaremos por WhatsApp.");
-    }
-
-    // RENDERIZAR PRODUCTOS EN LA WEB PÚBLICA
-    function renderProducts() {
-      const search = document.getElementById('searchInput').value.toLowerCase();
-      const grid = document.getElementById('productsGrid');
-      grid.innerHTML = '';
-
-      const filtered = products.filter(p => p.name.toLowerCase().includes(search) || p.category.toLowerCase().includes(search));
-      document.getElementById('productCount').innerText = `${filtered.length} productos`;
-
-      filtered.forEach(p => {
-        let priceOptionsHTML = '';
-        if (p.mode === 'litro') {
-          priceOptionsHTML = `
-            <option value="1L">1 Litro - $${p.prices['1L'] || 0} MXN</option>
-            <option value="5L">5 Litros - $${p.prices['5L'] || 0} MXN</option>
-            <option value="20L">20 Litros - $${p.prices['20L'] || 0} MXN</option>
-          `;
-        } else if (p.mode === 'mayoreo_menudeo') {
-          priceOptionsHTML = `
-            <option value="menudeo">Menudeo - $${p.prices.menudeo || 0} MXN</option>
-            <option value="mayoreo">Mayoreo - $${p.prices.mayoreo || 0} MXN</option>
-          `;
-        } else {
-          priceOptionsHTML = `<option value="unico">Pieza / Único - $${p.prices.unico || 0} MXN</option>`;
-        }
-
-        grid.innerHTML += `
-          <div class="glass-card rounded-2xl p-5 space-y-3 border border-slate-800 flex flex-col justify-between hover:border-emerald-500/40 transition">
-            <div>
-              <span class="text-[10px] font-extrabold tracking-wider bg-emerald-950 text-emerald-400 px-2 py-0.5 rounded uppercase border border-emerald-500/30">${p.category}</span>
-              <h4 class="text-base font-bold text-white mt-2">${p.name}</h4>
-              <label class="block text-[11px] text-slate-400 mt-3 mb-1">Selecciona Presentación:</label>
-              <select id="select-p-${p.id}" class="w-full p-2 text-xs rounded-lg glass-input bg-slate-900">
-                ${priceOptionsHTML}
-              </select>
-            </div>
-            <button onclick="addToCart(${p.id})" class="w-full py-2.5 btn-emerald rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 mt-4">
-              <i data-lucide="shopping-bag" class="w-4 h-4"></i> Agregar al Carrito
-            </button>
-          </div>
-        `;
-      });
-      lucide.createIcons();
-    }
-
-    // GESTIÓN DEL CARRITO
-    function addToCart(productId) {
-      const p = products.find(prod => prod.id === productId);
-      const sel = document.getElementById(`select-p-${productId}`);
-      const presentationKey = sel.value;
-      const price = p.prices[presentationKey];
-
-      const itemInCart = cart.find(c => c.id === productId && c.presentation === presentationKey);
-      if (itemInCart) {
-        itemInCart.qty++;
-      } else {
-        cart.push({ id: p.id, name: p.name, presentation: presentationKey, price, qty: 1 });
-      }
-      setDB('cart', cart);
-      renderNavButtons();
-      renderCart();
-      alert("Producto agregado al carrito");
-    }
-
-    function renderCart() {
-      const container = document.getElementById('cartItemsList');
-      container.innerHTML = '';
-      let subtotal = 0;
-
-      cart.forEach((item, index) => {
-        const itemTotal = item.price * item.qty;
-        subtotal += itemTotal;
-        container.innerHTML += `
-          <div class="flex items-center justify-between py-2">
-            <div>
-              <span class="font-bold text-white">${item.name}</span>
-              <p class="text-[10px] text-slate-400">Pres: ${item.presentation} x ${item.qty}</p>
-            </div>
-            <div class="flex items-center space-x-2">
-              <span class="font-bold text-emerald-400">$${itemTotal}</span>
-              <button onclick="removeFromCart(${index})" class="text-red-400 hover:text-red-300"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-            </div>
-          </div>
-        `;
-      });
-
-      document.getElementById('cartSubtotal').innerText = `$${subtotal.toFixed(2)} MXN`;
-
-      let finalTotal = subtotal;
-      if (activeCoupon) {
-        finalTotal = Math.max(0, subtotal - activeCoupon.discount);
-      }
-      document.getElementById('cartTotal').innerText = `$${finalTotal.toFixed(2)} MXN`;
-      lucide.createIcons();
-    }
-
-    function removeFromCart(index) {
-      cart.splice(index, 1);
-      setDB('cart', cart);
-      renderNavButtons();
-      renderCart();
-    }
-
-    // CUPONES EN CARRITO
-    function toggleCouponsView() {
-      const container = document.getElementById('couponsContainer');
-      container.classList.toggle('hidden');
-      renderAvailableCoupons();
-    }
-
-    function renderAvailableCoupons() {
-      const list = document.getElementById('availableCouponsList');
-      list.innerHTML = '';
-      const now = new Date().toISOString().split('T')[0];
-
-      const activeList = coupons.filter(c => c.expire >= now);
-      if (activeList.length === 0) {
-        list.innerHTML = '<p class="text-[11px] text-slate-400">No hay cupones disponibles actualmente.</p>';
-        return;
-      }
-
-      activeList.forEach(c => {
-        list.innerHTML += `
-          <div class="p-2 bg-slate-950 rounded border border-slate-800 flex justify-between items-center">
-            <div>
-              <span class="font-bold text-emerald-400">${c.code}</span> (-$${c.discount})
-              <p class="text-[10px] text-slate-400">${c.desc}</p>
-            </div>
-            <button onclick="applyCoupon('${c.code}')" class="px-2 py-1 bg-emerald-500 text-slate-950 text-[10px] font-bold rounded">Aplicar</button>
-          </div>
-        `;
-      });
-    }
-
-    function applyCoupon(code) {
-      const coup = coupons.find(c => c.code === code);
-      const subtotal = cart.reduce((a, b) => a + (b.price * b.qty), 0);
-      const msg = document.getElementById('couponMsg');
-
-      if (coup.conditionType === 'amount') {
-        if (subtotal < parseFloat(coup.conditionValue)) {
-          msg.innerText = "Su compra no cumple con las condiciones del cupón, revise la descripción de cada cupón.";
-          msg.classList.remove('hidden');
-          return;
-        }
-      } else if (coup.conditionType === 'category') {
-        const hasCategory = cart.some(item => {
-          const prod = products.find(p => p.id === item.id);
-          return prod && prod.category.toLowerCase() === coup.conditionValue.toLowerCase();
-        });
-        if (!hasCategory) {
-          msg.innerText = "Su compra no cumple con las condiciones del cupón, revise la descripción de cada cupón.";
-          msg.classList.remove('hidden');
-          return;
-        }
-      }
-
-      activeCoupon = coup;
-      msg.classList.add('hidden');
-      alert(`¡Cupón ${code} aplicado exitosamente!`);
-      renderCart();
-    }
-
-    // CHECKOUT Y METODOS DE PAGO
-    function checkUserRegisteredForOrder() {
-      if (!currentUser) {
-        openModal('modalRegister');
-        alert("Regístrate para poder realizar tu pedido.");
-        return false;
-      }
-      if (cart.length === 0) {
-        alert("Tu carrito está vacío.");
-        return false;
-      }
-      return true;
-    }
-
-    function processSPEI() {
-      if (!checkUserRegisteredForOrder()) return;
-
-      const orderId = 'ORD-' + Math.floor(100000 + Math.random() * 900000);
-      const subtotal = cart.reduce((a, b) => a + (b.price * b.qty), 0);
-      const total = activeCoupon ? Math.max(0, subtotal - activeCoupon.discount) : subtotal;
-
-      const newOrder = {
-        id: orderId,
-        user: currentUser,
-        items: [...cart],
-        total,
-        paymentMethod: 'SPEI',
-        status: 'Pendiente de Pago SPEI',
-        estimatedDate: 'Por confirmar',
-        date: new Date().toLocaleString()
-      };
-
-      orders.unshift(newOrder);
-      setDB('orders', orders);
-
-      notifyAdmin("Nuevo Pedido SPEI", `Pedido ${orderId} realizado por ${currentUser.name}`);
-
-      cart = [];
-      setDB('cart', cart);
-      closeModal('modalCart');
-      renderNavButtons();
-      renderAll();
-
-      const waMsg = `Hola ARMM, realizé mi pedido ${orderId} por $${total} MXN vía SPEI. Adjunto mi comprobante de pago.`;
-      window.open(`https://wa.me/523351097726?text=${encodeURIComponent(waMsg)}`, '_blank');
-    }
-
-    function processPayOnDelivery() {
-      if (!checkUserRegisteredForOrder()) return;
-
-      const method = document.querySelector('input[name="payMethod"]:checked').value;
-      const orderId = 'ORD-' + Math.floor(100000 + Math.random() * 900000);
-      const subtotal = cart.reduce((a, b) => a + (b.price * b.qty), 0);
-      const total = activeCoupon ? Math.max(0, subtotal - activeCoupon.discount) : subtotal;
-
-      const newOrder = {
-        id: orderId,
-        user: currentUser,
-        items: [...cart],
-        total,
-        paymentMethod: `Contra Entrega (${method})`,
-        status: 'Pedido Recibido / En Preparación',
-        estimatedDate: 'Por confirmar',
-        date: new Date().toLocaleString()
-      };
-
-      orders.unshift(newOrder);
-      setDB('orders', orders);
-
-      notifyAdmin("Nuevo Pedido Contra Entrega", `Pedido ${orderId} (${method}) por ${currentUser.name}`);
-
-      cart = [];
-      setDB('cart', cart);
-      closeModal('modalCart');
-      renderNavButtons();
-      renderAll();
-
-      openModal('modalUserMenu');
-      setUserSubTab('orders');
-      alert(`¡Pedido ${orderId} registrado con éxito! Puedes darle seguimiento en tu menú.`);
-    }
-
-    // VISTAS DEL MENÚ DEL USUARIO
-    function setUserSubTab(tab) {
-      document.querySelectorAll('.user-subtab-btn').forEach(b => b.classList.replace('bg-emerald-500', 'bg-slate-800'));
-      document.querySelectorAll('.user-subtab-content').forEach(c => c.classList.add('hidden'));
-
-      document.getElementById(`userSubTab-${tab}`).classList.remove('hidden');
-    }
-
-    function renderUserOrders() {
-      if (!currentUser) return;
-      document.getElementById('userNameHeading').innerText = `${currentUser.name} ${currentUser.lastName}`;
-
-      document.getElementById('userPersonalData').innerHTML = `
-        <p><strong>Nombre:</strong> ${currentUser.name} ${currentUser.lastName}</p>
-        <p><strong>Correo:</strong> ${currentUser.email}</p>
-        <p><strong>Teléfono:</strong> ${currentUser.phone}</p>
-        <p><strong>Dirección:</strong> ${currentUser.address}</p>
-      `;
-
-      const list = document.getElementById('userOrdersList');
-      list.innerHTML = '';
-
-      const myOrders = orders.filter(o => o.user.email === currentUser.email);
-      if (myOrders.length === 0) {
-        list.innerHTML = '<p class="text-slate-400">No tienes pedidos realizados aún.</p>';
-        return;
-      }
-
-      myOrders.forEach(o => {
-        list.innerHTML += `
-          <div class="p-3 bg-slate-900 rounded-lg border border-slate-800 space-y-1">
-            <div class="flex justify-between font-bold text-white">
-              <span>${o.id}</span>
-              <span class="text-emerald-400">$${o.total} MXN</span>
-            </div>
-            <p><strong>Estado:</strong> <span class="text-emerald-300">${o.status}</span></p>
-            <p><strong>Entrega Estimada:</strong> ${o.estimatedDate}</p>
-            <p><strong>Método:</strong> ${o.paymentMethod}</p>
-          </div>
-        `;
-      });
-    }
-
-    function toggleChangePassForm() {
-      document.getElementById('changePassForm').classList.toggle('hidden');
-    }
-
-    function handleChangePassword(e) {
-      e.preventDefault();
-      const curr = document.getElementById('currPass').value;
-      const newP = document.getElementById('newPass').value;
-      const confP = document.getElementById('confirmNewPass').value;
-
-      if (curr !== currentUser.password) {
-        alert("La contraseña actual es incorrecta");
-        return;
-      }
-      if (newP !== confP) {
-        alert("Las contraseñas nuevas no coinciden");
-        return;
-      }
-
-      currentUser.password = newP;
-      setDB('currentUser', currentUser);
-
-      const uIdx = users.findIndex(u => u.id === currentUser.id);
-      if (uIdx !== -1) {
-        users[uIdx].password = newP;
-        setDB('users', users);
-      }
-
-      alert("Contraseña actualizada exitosamente.");
-      toggleChangePassForm();
-    }
-
-    // CHAT DEL USUARIO
-    function renderUserChat() {
-      if (!currentUser) return;
-      const box = document.getElementById('userChatBox');
-      box.innerHTML = '';
-
-      const myChat = chats[currentUser.email] || [];
-      myChat.forEach(c => {
-        box.innerHTML += `
-          <div class="flex flex-col ${c.sender === 'user' ? 'items-end' : 'items-start'}">
-            <div class="max-w-[80%] p-2 rounded-lg text-xs ${c.sender === 'user' ? 'bg-emerald-600 text-white' : 'bg-slate-800 text-slate-200'}">
-              ${c.text}
-            </div>
-            <span class="text-[9px] text-slate-500 mt-0.5">${c.time}</span>
-          </div>
-        `;
-      });
-      box.scrollTop = box.scrollHeight;
-    }
-
-    function sendUserChatMessage(e) {
-      e.preventDefault();
-      const input = document.getElementById('userChatMsg');
-      const text = input.value;
-
-      if (!chats[currentUser.email]) chats[currentUser.email] = [];
-      chats[currentUser.email].push({ sender: 'user', text, time: new Date().toLocaleTimeString() });
-      setDB('chats', chats);
-
-      notifyAdmin("Nuevo Mensaje de Chat", `${currentUser.name}: ${text}`);
-
-      input.value = '';
-      renderUserChat();
-      renderAdminChats();
-    }
-
-    function renderUserNotifs() {
-      const list = document.getElementById('userNotifsList');
-      list.innerHTML = '<p class="text-slate-400">No tienes notificaciones pendientes.</p>';
-    }
-
-    // LÓGICA VISTAS ADMIN
-    function setAdminTab(tab) {
-      document.querySelectorAll('.admin-tab-btn').forEach(b => b.classList.replace('bg-emerald-500', 'bg-slate-800'));
-      document.querySelectorAll('.admin-section').forEach(s => s.classList.add('hidden'));
-
-      document.getElementById(`adminTab-${tab}`).classList.remove('hidden');
-    }
-
-    function renderAdminOrders() {
-      const list = document.getElementById('adminOrdersList');
-      list.innerHTML = '';
-
-      if (orders.length === 0) {
-        list.innerHTML = '<p class="text-slate-400 text-xs">No hay pedidos registrados.</p>';
-        return;
-      }
-
-      orders.forEach((o, index) => {
-        list.innerHTML += `
-          <div class="p-4 bg-slate-900 rounded-xl border border-slate-800 text-xs space-y-2">
-            <div class="flex justify-between items-center font-bold text-white">
-              <span>Pedido ${o.id} - ${o.user.name} ${o.user.lastName}</span>
-              <span class="text-emerald-400">$${o.total} MXN</span>
-            </div>
-            <p><strong>Dirección:</strong> ${o.user.address} | <strong>Tel:</strong> ${o.user.phone}</p>
-            <p><strong>Método de Pago:</strong> ${o.paymentMethod}</p>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-2 pt-2">
-              <div>
-                <label class="block text-[10px] text-slate-400">Estado del Pedido:</label>
-                <input type="text" value="${o.status}" onchange="updateOrderStatus(${index}, 'status', this.value)" class="w-full p-1.5 rounded glass-input">
-              </div>
-              <div>
-                <label class="block text-[10px] text-slate-400">Fecha Estimada Entrega:</label>
-                <input type="text" value="${o.estimatedDate}" onchange="updateOrderStatus(${index}, 'estimatedDate', this.value)" class="w-full p-1.5 rounded glass-input">
-              </div>
-            </div>
-          </div>
-        `;
-      });
-    }
-
-    function updateOrderStatus(index, field, value) {
-      orders[index][field] = value;
-      setDB('orders', orders);
-      renderUserOrders();
-      alert("Pedido actualizado");
-    }
-
-    // FORMULARIO DINÁMICO PRODUCTOS ADMIN
-    function togglePresentationFields() {
-      const mode = document.getElementById('prodMode').value;
-      const fields = document.getElementById('presentationFields');
-      fields.innerHTML = '';
-
-      if (mode === 'litro') {
-        fields.innerHTML = `
-          <div><label>Precio 1L ($)</label><input type="number" id="price1L" required class="w-full p-2 rounded glass-input"></div>
-          <div><label>Precio 5L ($)</label><input type="number" id="price5L" required class="w-full p-2 rounded glass-input"></div>
-          <div><label>Precio 20L ($)</label><input type="number" id="price20L" required class="w-full p-2 rounded glass-input"></div>
-        `;
-      } else if (mode === 'mayoreo_menudeo') {
-        fields.innerHTML = `
-          <div><label>Precio Menudeo ($)</label><input type="number" id="priceMenudeo" required class="w-full p-2 rounded glass-input"></div>
-          <div><label>Precio Mayoreo ($)</label><input type="number" id="priceMayoreo" required class="w-full p-2 rounded glass-input"></div>
-        `;
-      } else {
-        fields.innerHTML = `
-          <div><label>Precio Único / Pieza ($)</label><input type="number" id="priceUnico" required class="w-full p-2 rounded glass-input"></div>
-        `;
-      }
-    }
-
-    function saveProduct(e) {
-      e.preventDefault();
-      const id = document.getElementById('prodId').value;
-      const name = document.getElementById('prodName').value;
-      const category = document.getElementById('prodCategory').value;
-      const mode = document.getElementById('prodMode').value;
-
-      let prices = {};
-      if (mode === 'litro') {
-        prices = {
-          "1L": parseFloat(document.getElementById('price1L').value),
-          "5L": parseFloat(document.getElementById('price5L').value),
-          "20L": parseFloat(document.getElementById('price20L').value)
-        };
-      } else if (mode === 'mayoreo_menudeo') {
-        prices = {
-          menudeo: parseFloat(document.getElementById('priceMenudeo').value),
-          mayoreo: parseFloat(document.getElementById('priceMayoreo').value)
-        };
-      } else {
-        prices = { unico: parseFloat(document.getElementById('priceUnico').value) };
-      }
-
-      if (id) {
-        const idx = products.findIndex(p => p.id == id);
-        products[idx] = { id: parseInt(id), name, category, mode, prices };
-      } else {
-        products.push({ id: Date.now(), name, category, mode, prices });
-      }
-
-      setDB('products', products);
-      renderProducts();
-      renderAdminProducts();
-      document.getElementById('productForm').reset();
-      document.getElementById('prodId').value = '';
-      alert("Producto guardado con éxito");
-    }
-
-    function renderAdminProducts() {
-      togglePresentationFields();
-      const list = document.getElementById('adminProductsList');
-      list.innerHTML = '';
-
-      products.forEach(p => {
-        list.innerHTML += `
-          <div class="p-3 bg-slate-900 rounded-lg border border-slate-800 space-y-2">
-            <div class="flex justify-between items-center">
-              <span class="font-bold text-emerald-400">${p.name}</span>
-              <span class="text-[10px] text-slate-400 uppercase">${p.category}</span>
-            </div>
-            <div class="flex gap-2">
-              <button onclick="editProduct(${p.id})" class="px-2 py-1 bg-blue-600 text-white rounded text-[10px]">Editar</button>
-              <button onclick="deleteProduct(${p.id})" class="px-2 py-1 bg-red-600 text-white rounded text-[10px]">Borrar</button>
-            </div>
-          </div>
-        `;
-      });
-    }
-
-    function deleteProduct(id) {
-      if (confirm("¿Seguro de borrar este producto?")) {
-        products = products.filter(p => p.id !== id);
-        setDB('products', products);
-        renderProducts();
-        renderAdminProducts();
-      }
-    }
-
-    function editProduct(id) {
-      const p = products.find(prod => prod.id === id);
-      document.getElementById('prodId').value = p.id;
-      document.getElementById('prodName').value = p.name;
-      document.getElementById('prodCategory').value = p.category;
-      document.getElementById('prodMode').value = p.mode;
-
-      togglePresentationFields();
-
-      if (p.mode === 'litro') {
-        document.getElementById('price1L').value = p.prices['1L'] || '';
-        document.getElementById('price5L').value = p.prices['5L'] || '';
-        document.getElementById('price20L').value = p.prices['20L'] || '';
-      } else if (p.mode === 'mayoreo_menudeo') {
-        document.getElementById('priceMenudeo').value = p.prices.menudeo || '';
-        document.getElementById('priceMayoreo').value = p.prices.mayoreo || '';
-      } else {
-        document.getElementById('priceUnico').value = p.prices.unico || '';
-      }
-    }
-
-    // TABLA DE USUARIOS ADMIN
-    function renderAdminUsers() {
-      const tbody = document.getElementById('adminUsersTableBody');
-      tbody.innerHTML = '';
-
-      users.forEach(u => {
-        tbody.innerHTML += `
-          <tr class="border-b border-slate-800 text-slate-300">
-            <td class="p-2">${u.name} ${u.lastName}</td>
-            <td class="p-2">${u.email}</td>
-            <td class="p-2">${u.phone}</td>
-            <td class="p-2">${u.address}</td>
-            <td class="p-2 font-mono text-emerald-400">${u.password}</td>
-          </tr>
-        `;
-      });
-    }
-
-    // CENTRO DE AYUDA ADMIN
-    function renderAdminSupport() {
-      const list = document.getElementById('adminSupportList');
-      list.innerHTML = '';
-
-      if (supportRequests.length === 0) {
-        list.innerHTML = '<p class="text-slate-400 text-xs">No hay solicitudes pendientes.</p>';
-        return;
-      }
-
-      supportRequests.forEach((req, index) => {
-        list.innerHTML += `
-          <div class="p-4 bg-slate-900 rounded-xl border border-slate-800 text-xs space-y-2">
-            <p><strong>Solicitante:</strong> ${req.name} ${req.lastName}</p>
-            <p><strong>Correo:</strong> ${req.email} | <strong>Teléfono:</strong> ${req.phone}</p>
-            <div class="flex gap-2 pt-2">
-              <button onclick="grantSupportAccess(${index})" class="px-3 py-1.5 bg-emerald-500 text-slate-950 font-bold rounded">Dar Acceso</button>
-              <button onclick="denySupportAccess(${index})" class="px-3 py-1.5 bg-red-500 text-white font-bold rounded">Denegar Acceso</button>
-            </div>
-          </div>
-        `;
-      });
-    }
-
-    function grantSupportAccess(index) {
-      const req = supportRequests[index];
-      const user = users.find(u => u.email === req.email || u.phone === req.phone);
-
-      const pass = user ? user.password : 'ARMM' + Math.floor(100 + Math.random() * 900);
-      if (!user) {
-        users.push({ id: Date.now(), name: req.name, lastName: req.lastName, phone: req.phone, email: req.email, address: 'Por actualizar', password: pass });
-        setDB('users', users);
-        renderAdminUsers();
-      }
-
-      const msg = `Hola ${req.name}, tus accesos a ARMM son: Usuario: ${req.email} | Contraseña: ${pass}`;
-      window.open(`https://wa.me/52${req.phone}?text=${encodeURIComponent(msg)}`, '_blank');
-
-      supportRequests.splice(index, 1);
-      setDB('support', supportRequests);
-      renderAdminSupport();
-    }
-
-    function denySupportAccess(index) {
-      const req = supportRequests[index];
-      const msg = `Los datos de tu cuenta no coinciden con los registrados, crea una cuenta nueva o comunícate con nosotros al tel: 3351097726`;
-      window.open(`https://wa.me/52${req.phone}?text=${encodeURIComponent(msg)}`, '_blank');
-
-      supportRequests.splice(index, 1);
-      setDB('support', supportRequests);
-      renderAdminSupport();
-    }
-
-    // CUPONES ADMIN
-    function saveCoupon(e) {
-      e.preventDefault();
-      const code = document.getElementById('coupCode').value.toUpperCase();
-      const discount = parseFloat(document.getElementById('coupDiscount').value);
-      const expire = document.getElementById('coupExpire').value;
-      const conditionType = document.getElementById('coupConditionType').value;
-      const conditionValue = document.getElementById('coupConditionValue').value;
-      const desc = document.getElementById('coupDesc').value;
-
-      coupons.push({ id: Date.now(), code, discount, expire, conditionType, conditionValue, desc });
-      setDB('coupons', coupons);
-      renderAdminCoupons();
-      alert("Cupón generado exitosamente");
-    }
-
-    function renderAdminCoupons() {
-      const list = document.getElementById('adminCouponsList');
-      list.innerHTML = '';
-
-      coupons.forEach((c, idx) => {
-        list.innerHTML += `
-          <div class="p-3 bg-slate-900 rounded-lg border border-slate-800 space-y-1">
-            <div class="flex justify-between font-bold text-emerald-400">
-              <span>${c.code} (-$${c.discount})</span>
-              <button onclick="deleteCoupon(${idx})" class="text-red-400 text-xs">Eliminar</button>
-            </div>
-            <p><strong>Vence:</strong> ${c.expire}</p>
-            <p><strong>Regla:</strong> ${c.conditionType === 'amount' ? 'Monto Min: $' : 'Categoría: '}${c.conditionValue}</p>
-            <p class="text-slate-400">${c.desc}</p>
-          </div>
-        `;
-      });
-    }
-
-    function deleteCoupon(idx) {
-      coupons.splice(idx, 1);
-      setDB('coupons', coupons);
-      renderAdminCoupons();
-    }
-
-    // CHATS ADMIN
-    function renderAdminChats() {
-      const list = document.getElementById('adminChatsList');
-      list.innerHTML = '';
-
-      const chatKeys = Object.keys(chats);
-      if (chatKeys.length === 0) {
-        list.innerHTML = '<p class="text-slate-400 text-xs">No hay chats activos.</p>';
-        return;
-      }
-
-      chatKeys.forEach(email => {
-        const userChat = chats[email];
-        let messagesHTML = '';
-        userChat.forEach(c => {
-          messagesHTML += `<div><strong>${c.sender}:</strong> ${c.text}</div>`;
+    <script>
+        let selectedClientId = null;
+
+        // Inicialización y Carga de Datos al Abrir
+        document.addEventListener('DOMContentLoaded', () => {
+            initData();
+            renderDashboard();
+            renderChats();
+            renderNotifications();
+            listenToStorageEvents();
         });
 
-        list.innerHTML += `
-          <div class="p-3 bg-slate-900 rounded-lg border border-slate-800 space-y-2 text-xs">
-            <h4 class="font-bold text-emerald-400">Cliente: ${email}</h4>
-            <div class="h-32 overflow-y-auto bg-slate-950 p-2 rounded space-y-1 text-slate-300">
-              ${messagesHTML}
-            </div>
-            <div class="flex gap-1">
-              <input type="text" id="adminReply-${email}" placeholder="Responder..." class="flex-1 p-1 rounded glass-input text-xs">
-              <button onclick="sendAdminReply('${email}')" class="px-2 py-1 btn-emerald rounded text-xs">Enviar</button>
-            </div>
-          </div>
-        `;
-      });
-    }
+        // Activar Notificaciones del Navegador (Fuera de la Web)
+        function requestNotificationPermission() {
+            if ("Notification" in window) {
+                Notification.requestPermission().then(permission => {
+                    if (permission === "granted") {
+                        alert("Notificaciones del navegador activadas correctamente.");
+                    }
+                });
+            } else {
+                alert("Este navegador no soporta notificaciones de escritorio.");
+            }
+        }
 
-    function sendAdminReply(email) {
-      const input = document.getElementById(`adminReply-${email}`);
-      const text = input.value;
-      if (!text) return;
+        // Lanza la Notificación fuera de la Web (Sistema Operativo)
+        function triggerDesktopNotification(title, body) {
+            if ("Notification" in window && Notification.permission === "granted") {
+                new Notification(title, {
+                    body: body,
+                    icon: "https://armm-app.onrender.com/favicon.ico"
+                });
+            }
+        }
 
-      chats[email].push({ sender: 'admin', text, time: new Date().toLocaleTimeString() });
-      setDB('chats', chats);
+        // Inicializar LocalStorage si está vacío
+        function initData() {
+            if (!localStorage.getItem('armm_views')) localStorage.setItem('armm_views', '0');
+            if (!localStorage.getItem('armm_users')) localStorage.setItem('armm_users', JSON.stringify([]));
+            if (!localStorage.getItem('armm_chats')) localStorage.setItem('armm_chats', JSON.stringify({}));
+            if (!localStorage.getItem('armm_notifications')) localStorage.setItem('armm_notifications', JSON.stringify([]));
+        }
 
-      input.value = '';
-      renderAdminChats();
-      renderUserChat();
-    }
+        // Escuchador de Sincronización en Tiempo Real
+        function listenToStorageEvents() {
+            window.addEventListener('storage', (e) => {
+                // Se ejecuta cuando el cliente realiza acciones desde la otra pestaña de la tienda
+                if (['armm_views', 'armm_users', 'armm_chats', 'armm_notifications'].includes(e.key)) {
+                    renderDashboard();
+                    renderChats();
+                    renderNotifications();
 
-    // HISTORIAL DE NOTIFICACIONES ADMIN
-    function renderAdminNotifications() {
-      const history = document.getElementById('adminNotificationsHistory');
-      const badge = document.getElementById('adminNotifBadge');
+                    // Detectar si fue una nueva notificación para alertar fuera de la web
+                    if (e.key === 'armm_notifications') {
+                        const notifs = JSON.parse(e.newValue || '[]');
+                        if (notifs.length > 0) {
+                            const latest = notifs[0];
+                            triggerDesktopNotification(latest.title, latest.message);
+                        }
+                    }
+                }
+            });
+        }
 
-      badge.innerText = adminNotifications.length;
-      if (adminNotifications.length > 0) badge.classList.remove('hidden');
+        // Agregar Notificación al Registro Global e Historial
+        function addNotification(title, message) {
+            let notifs = JSON.parse(localStorage.getItem('armm_notifications') || '[]');
+            const newNotif = {
+                id: Date.now(),
+                title: title,
+                message: message,
+                timestamp: new Date().toLocaleTimeString()
+            };
+            notifs.unshift(newNotif);
+            localStorage.setItem('armm_notifications', JSON.stringify(notifs));
+            
+            renderNotifications();
+            triggerDesktopNotification(title, message);
+        }
 
-      history.innerHTML = '';
-      if (adminNotifications.length === 0) {
-        history.innerHTML = '<p class="text-slate-400">No hay notificaciones registradas.</p>';
-        return;
-      }
+        // Renderizar Métricas del Dashboard
+        function renderDashboard() {
+            const views = localStorage.getItem('armm_views') || '0';
+            const users = JSON.parse(localStorage.getItem('armm_users') || '[]');
+            const chats = JSON.parse(localStorage.getItem('armm_chats') || '{}');
 
-      adminNotifications.forEach(n => {
-        history.innerHTML += `
-          <div class="p-3 bg-slate-900 rounded-lg border border-slate-800">
-            <div class="flex justify-between text-emerald-400 font-bold">
-              <span>${n.title}</span>
-              <span class="text-[10px] text-slate-500">${n.date}</span>
-            </div>
-            <p class="text-slate-300">${n.body}</p>
-          </div>
-        `;
-      });
-    }
+            let totalMsgs = 0;
+            Object.values(chats).forEach(chat => {
+                totalMsgs += chat.messages ? chat.messages.length : 0;
+            });
 
-    function clearAdminNotifications() {
-      adminNotifications = [];
-      setDB('admin_notifications', []);
-      renderAdminNotifications();
-    }
+            document.getElementById('siteViews').innerText = views;
+            document.getElementById('userCount').innerText = users.length;
+            document.getElementById('msgCount').innerText = totalMsgs;
+        }
 
-    // CONTROL DE MODALES
-    function openModal(id) {
-      document.getElementById(id).classList.remove('hidden');
-    }
-    function closeModal(id) {
-      document.getElementById(id).classList.add('hidden');
-    }
-  </script>
+        // Renderizar Lista de Chats (Centro de Ayuda Directa)
+        function renderChats() {
+            const chats = JSON.parse(localStorage.getItem('armm_chats') || '{}');
+            const chatListEl = document.getElementById('chatList');
+            chatListEl.innerHTML = '';
+
+            const clientIds = Object.keys(chats);
+
+            if (clientIds.length === 0) {
+                chatListEl.innerHTML = '<p style="padding: 15px; color: var(--text-muted);">Sin chats activos.</p>';
+                return;
+            }
+
+            clientIds.forEach(id => {
+                const chat = chats[id];
+                const lastMsg = chat.messages && chat.messages.length > 0 
+                    ? chat.messages[chat.messages.length - 1].text 
+                    : 'Sin mensajes';
+
+                const item = document.createElement('div');
+                item.className = `chat-user-item ${selectedClientId === id ? 'active' : ''}`;
+                item.onclick = () => selectChat(id);
+                item.innerHTML = `
+                    <div class="chat-user-name">${chat.userName || 'Cliente ' + id}</div>
+                    <div class="chat-user-last-msg">${lastMsg}</div>
+                `;
+                chatListEl.appendChild(item);
+            });
+
+            if (selectedClientId) {
+                renderMessages(selectedClientId);
+            }
+        }
+
+        // Seleccionar un cliente para desglosar el chat
+        function selectChat(clientId) {
+            selectedClientId = clientId;
+            document.getElementById('adminMsgInput').disabled = false;
+            document.getElementById('btnSend').disabled = false;
+            
+            renderChats();
+            renderMessages(clientId);
+        }
+
+        // Renderizar Historial de Mensajes de un Cliente
+        function renderMessages(clientId) {
+            const chats = JSON.parse(localStorage.getItem('armm_chats') || '{}');
+            const chat = chats[clientId];
+            const box = document.getElementById('messagesBox');
+            box.innerHTML = '';
+
+            if (chat && chat.messages) {
+                chat.messages.forEach(msg => {
+                    const bubble = document.createElement('div');
+                    bubble.className = `message-bubble ${msg.sender}`;
+                    bubble.innerText = msg.text;
+                    box.appendChild(bubble);
+                });
+                box.scrollTop = box.scrollHeight;
+            }
+        }
+
+        // Enviar respuesta desde el Admin al cliente
+        function sendAdminMessage() {
+            const input = document.getElementById('adminMsgInput');
+            const text = input.value.trim();
+            if (!text || !selectedClientId) return;
+
+            let chats = JSON.parse(localStorage.getItem('armm_chats') || '{}');
+            if (!chats[selectedClientId]) return;
+
+            chats[selectedClientId].messages.push({
+                sender: 'admin',
+                text: text,
+                time: new Date().toLocaleTimeString()
+            });
+
+            localStorage.setItem('armm_chats', JSON.stringify(chats));
+            input.value = '';
+            renderMessages(selectedClientId);
+        }
+
+        // Renderizar la Sección de Notificaciones
+        function renderNotifications() {
+            const notifs = JSON.parse(localStorage.getItem('armm_notifications') || '[]');
+            const container = document.getElementById('notificationsList');
+
+            if (notifs.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-muted);">No hay notificaciones recientes.</p>';
+                return;
+            }
+
+            container.innerHTML = notifs.map(n => `
+                <div class="notification-item">
+                    <div>
+                        <strong>${n.title}</strong>
+                        <div>${n.message}</div>
+                    </div>
+                    <span class="time">${n.timestamp}</span>
+                </div>
+            `).join('');
+        }
+
+        // Cambiar entre Pestañas del Panel
+        function switchSection(sectionId) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+
+            document.getElementById(sectionId).classList.add('active');
+            event.target.classList.add('active');
+        }
+    </script>
 </body>
 </html>
