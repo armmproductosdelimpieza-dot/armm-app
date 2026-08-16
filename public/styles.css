@@ -89,7 +89,7 @@ body {
   font-weight: bold;
 }
 
-/* MENÚS DESPLEGABLES SLIDING */
+/* MENÚS DESPLEGABLES LATERALES */
 .sliding-menu {
   position: fixed;
   top: 0;
@@ -107,7 +107,7 @@ body {
 }
 
 .sliding-menu.active {
-  right: 0;
+  right: 0 !important;
 }
 
 .menu-header {
@@ -127,7 +127,7 @@ body {
   color: #718096;
 }
 
-/* FORMULARIOS CON ICONO DE OJO */
+/* FORMULARIOS Y EYE ICON */
 .form-group {
   margin-bottom: 15px;
   display: flex;
@@ -187,25 +187,43 @@ body {
   font-weight: bold;
   cursor: pointer;
   transition: background 0.2s;
+  margin-top: 5px;
 }
 
 .btn-submit:hover {
   background: #2c7a7b;
 }
 
-/* CARRITO Y CUPONES */
-.cart-items-container {
-  flex: 1;
-  overflow-y: auto;
-  margin-bottom: 15px;
+/* ALERTAS Y PAGO SPEI EN CARRITO */
+.alerta-registro {
+  background: #fff5f5;
+  border: 1px solid #feb2b2;
+  color: #c53030;
+  padding: 12px;
+  border-radius: 6px;
+  text-align: center;
+  margin-top: 15px;
 }
 
-.cart-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 0;
-  border-bottom: 1px solid #edf2f7;
+.pago-spei-box {
+  background: #f7fafc;
+  border: 1px solid #e2e8f0;
+  padding: 12px;
+  border-radius: 6px;
+  margin-top: 15px;
+}
+
+.pago-spei-box h4 {
+  color: #2b6cb0;
+  margin-bottom: 8px;
+}
+
+.datos-banco {
+  font-size: 13px;
+  margin-bottom: 10px;
+  background: white;
+  padding: 8px;
+  border-radius: 4px;
 }
 
 .cupon-section {
@@ -261,7 +279,7 @@ body {
   margin-bottom: 15px;
 }
 
-/* CATÁLOGO Y GRID DE PRODUCTOS */
+/* GRID DE PRODUCTOS */
 .main-container {
   padding: 30px;
   max-width: 1200px;
@@ -288,7 +306,6 @@ body {
   background: white;
   border-radius: 20px;
   cursor: pointer;
-  transition: all 0.2s;
 }
 
 .btn-cat.active, .btn-cat:hover {
@@ -330,27 +347,65 @@ body {
 
 .price-list {
   font-size: 13px;
-  margin-bottom: 15px;
 }
 
 .price-row {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 4px;
+  align-items: center;
+  margin-bottom: 6px;
 }
 
-/* TABLAS WEB ADMIN */
+.price-row button {
+  background: #319795;
+  color: white;
+  border: none;
+  padding: 2px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* MODAL DE CLAVE EN ADMIN */
+.admin-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.admin-modal-box {
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  width: 320px;
+  text-align: center;
+}
+
+.admin-modal-box input {
+  width: 100%;
+  padding: 10px;
+  margin: 15px 0;
+  border: 1px solid #cbd5e0;
+  border-radius: 4px;
+}
+
+.error-msg {
+  color: #e53e3e;
+  font-size: 13px;
+  margin-top: 10px;
+}
+
 .admin-section {
   background: white;
   padding: 20px;
   border-radius: 8px;
   margin-bottom: 30px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-}
-
-.admin-section h2 {
-  margin-bottom: 15px;
-  color: #1a365d;
 }
 
 .inline-form {
@@ -360,23 +415,13 @@ body {
   margin-bottom: 20px;
 }
 
-.table-responsive {
-  overflow-x: auto;
-}
-
 table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 10px;
 }
 
 table th, table td {
   border: 1px solid #e2e8f0;
   padding: 10px;
   text-align: left;
-  font-size: 14px;
-}
-
-table th {
-  background-color: #f7fafc;
 }
