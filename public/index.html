@@ -3,179 +3,152 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Panel Administrativo ARMM</title>
+  <title>Productos de Limpieza ARMM - Tienda Pública</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <link rel="stylesheet" href="styles.css">
 </head>
-<body class="admin-body">
+<body>
 
-  <div id="modal-pass-admin" class="admin-modal-overlay">
-    <div class="admin-modal-box">
-      <h3><i class="fas fa-lock"></i> Acceso Administrador</h3>
-      <p>Por favor ingresa la contraseña para acceder al panel:</p>
-      <input type="password" id="input-admin-pass" placeholder="Contraseña Admin">
-      <button class="btn-submit" onclick="validarClaveAdmin()">Ingresar</button>
-      <div id="admin-pass-error" class="error-msg"></div>
+  <header class="navbar">
+    <div class="logo">
+      <h2>ARMM</h2>
     </div>
-  </div>
 
-  <div id="admin-content" style="display: none;">
-    
-    <header class="navbar admin-navbar">
-      <div class="logo">
-        <h2>ARMM - Admin</h2>
+    <div class="search-bar">
+      <input type="text" id="input-buscar" placeholder="Buscar productos..." onkeyup="filtrarProductos()">
+    </div>
+
+    <div class="header-right">
+      <div id="auth-buttons">
+        <button id="btn-login" class="btn-nav" onclick="toggleMenuLogin()">Iniciar Sesión</button>
+        <button id="btn-register" class="btn-nav btn-accent" onclick="toggleMenuRegistro()">Registrarse</button>
       </div>
 
-      <div class="search-bar">
-        <input type="text" id="input-buscar-admin" placeholder="Buscar productos..." onkeyup="filtrarProductosAdmin()">
-      </div>
-
-      <div class="header-right">
-        <div id="auth-buttons">
-          <button id="btn-login" class="btn-nav" onclick="toggleMenuLogin()">Iniciar Sesión</button>
-          <button id="btn-register" class="btn-nav btn-accent" onclick="toggleMenuRegistro()">Registrarse</button>
-        </div>
-
-        <div id="user-profile" style="display: none;">
-          <button id="btn-user-menu" class="btn-user">
-            <i class="fas fa-user-alt"></i>
-            <span id="user-display-name">Admin</span>
-          </button>
-        </div>
-
-        <button class="btn-cart" onclick="toggleCarrito()">
-          <i class="fas fa-shopping-cart"></i>
-          <span id="cart-count">0</span>
+      <div id="user-profile" style="display: none;">
+        <button id="btn-user-menu" class="btn-user">
+          <i class="fas fa-user-alt"></i>
+          <span id="user-display-name">Usuario</span>
         </button>
       </div>
-    </header>
 
-    <div id="menu-login" class="sliding-menu">
-      <div class="menu-header">
-        <h3>Iniciar Sesión</h3>
-        <button class="btn-close" onclick="toggleMenuLogin()">&times;</button>
-      </div>
-      <form id="form-login" onsubmit="procesarInicioSesion(event)">
-        <div class="form-group">
-          <label>Correo o Teléfono</label>
-          <input type="text" id="login-identificador" required placeholder="Correo o teléfono">
-        </div>
-        <div class="form-group password-field">
-          <label>Contraseña</label>
-          <div class="input-with-icon">
-            <input type="password" id="login-pass" required placeholder="Tu contraseña">
-            <i class="fas fa-eye toggle-password" onclick="toggleVerPassword('login-pass', this)"></i>
-          </div>
-        </div>
-        <button type="submit" class="btn-submit">Ingresar</button>
-      </form>
+      <button class="btn-cart" onclick="toggleCarrito()">
+        <i class="fas fa-shopping-cart"></i>
+        <span id="cart-count">0</span>
+      </button>
     </div>
+  </header>
 
-    <div id="menu-registro" class="sliding-menu">
-      <div class="menu-header">
-        <h3>Registro de Usuario</h3>
-        <button class="btn-close" onclick="toggleMenuRegistro()">&times;</button>
-      </div>
-      <form id="form-registro" onsubmit="guardarRegistro(event)">
-        <div class="form-group"><label>Nombre</label><input type="text" id="reg-nombre" required></div>
-        <div class="form-group"><label>Apellido</label><input type="text" id="reg-apellido" required></div>
-        <div class="form-group"><label>Teléfono</label><input type="tel" id="reg-telefono" required></div>
-        <div class="form-group"><label>Correo Electrónico</label><input type="email" id="reg-correo" required></div>
-        <div class="form-group password-field">
-          <label>Contraseña</label>
-          <div class="input-with-icon">
-            <input type="password" id="reg-pass" required>
-            <i class="fas fa-eye toggle-password" onclick="toggleVerPassword('reg-pass', this)"></i>
-          </div>
-        </div>
-        <div class="form-group password-field">
-          <label>Confirmar Contraseña</label>
-          <div class="input-with-icon">
-            <input type="password" id="reg-confirm-pass" required>
-            <i class="fas fa-eye toggle-password" onclick="toggleVerPassword('reg-confirm-pass', this)"></i>
-          </div>
-        </div>
-        <button type="submit" class="btn-submit">Registrarse</button>
-      </form>
+  <div id="menu-login" class="sliding-menu">
+    <div class="menu-header">
+      <h3>Iniciar Sesión</h3>
+      <button class="btn-close" onclick="toggleMenuLogin()">&times;</button>
     </div>
-
-    <div id="menu-carrito" class="sliding-menu">
-      <div class="menu-header">
-        <h3>Carrito de Compras</h3>
-        <button class="btn-close" onclick="toggleCarrito()">&times;</button>
+    <form id="form-login" onsubmit="procesarInicioSesion(event)">
+      <div class="form-group">
+        <label>Correo o Teléfono</label>
+        <input type="text" id="login-identificador" required placeholder="Correo o teléfono">
       </div>
-      <div id="items-carrito" class="cart-items-container"></div>
-      <div class="cupon-section">
-        <label>Cupón de Descuento:</label>
-        <div class="cupon-input-group">
-          <input type="text" id="input-cupon-cliente" placeholder="CÓDIGO DE CUPÓN" style="text-transform: uppercase;">
-          <button onclick="aplicarCuponCliente()">Aplicar</button>
+      <div class="form-group password-field">
+        <label>Contraseña</label>
+        <div class="input-with-icon">
+          <input type="password" id="login-pass" required placeholder="Tu contraseña">
+          <i class="fas fa-eye toggle-password" onclick="toggleVerPassword('login-pass', this)"></i>
         </div>
-        <div id="mensaje-cupon" class="mensaje-cupon"></div>
       </div>
-      <div class="cart-summary">
-        <div class="summary-row"><span>Subtotal:</span> $<span id="subtotal-precio">0.00</span></div>
-        <div class="summary-row"><span>Descuento:</span> -$<span id="descuento-precio">0.00</span></div>
-        <div class="summary-row total-row"><span>Total:</span> $<span id="total-precio">0.00</span></div>
+      <div class="form-options">
+        <a href="#" onclick="alert('Instrucciones enviadas.'); return false;">¿Olvidaste tu contraseña?</a>
       </div>
-    </div>
-
-    <main class="main-container">
-      
-      <section class="admin-section">
-        <h2><i class="fas fa-users"></i> Usuarios Registrados</h2>
-        <div class="table-responsive">
-          <table>
-            <thead>
-              <tr>
-                <th>Nombre</th>
-                <th>Apellido</th>
-                <th>Teléfono</th>
-                <th>Correo</th>
-              </tr>
-            </thead>
-            <tbody id="tabla-usuarios-body"></tbody>
-          </table>
-        </div>
-      </section>
-
-      <section class="admin-section">
-        <h2><i class="fas fa-ticket-alt"></i> Panel de Creación de Cupones</h2>
-        <form id="form-crear-cupon" onsubmit="crearCupon(event)" class="inline-form">
-          <div class="form-group">
-            <label>Código del Cupón</label>
-            <input type="text" id="cupon-codigo" placeholder="Ej. DESCUENTO10" style="text-transform:uppercase;" required>
-          </div>
-          <div class="form-group">
-            <label>Porcentaje (%)</label>
-            <input type="number" id="cupon-porcentaje" min="1" max="100" placeholder="10" required>
-          </div>
-          <button type="submit" class="btn-submit">Crear Cupón</button>
-        </form>
-
-        <h3>Cupones Activos</h3>
-        <div class="table-responsive">
-          <table>
-            <thead>
-              <tr>
-                <th>Código</th>
-                <th>Descuento</th>
-                <th>Acción</th>
-              </tr>
-            </thead>
-            <tbody id="tabla-cupones-body"></tbody>
-          </table>
-        </div>
-      </section>
-
-      <section class="admin-section">
-        <h2><i class="fas fa-boxes"></i> Todos los Productos</h2>
-        <div id="grid-productos-admin" class="products-grid"></div>
-      </section>
-
-    </main>
-
+      <button type="submit" class="btn-submit">Ingresar</button>
+    </form>
   </div>
+
+  <div id="menu-registro" class="sliding-menu">
+    <div class="menu-header">
+      <h3>Registro de Usuario</h3>
+      <button class="btn-close" onclick="toggleMenuRegistro()">&times;</button>
+    </div>
+    <form id="form-registro" onsubmit="guardarRegistro(event)">
+      <div class="form-group"><label>Nombre</label><input type="text" id="reg-nombre" required placeholder="Tu nombre"></div>
+      <div class="form-group"><label>Apellido</label><input type="text" id="reg-apellido" required placeholder="Tu apellido"></div>
+      <div class="form-group"><label>Teléfono</label><input type="tel" id="reg-telefono" required placeholder="Número telefónico"></div>
+      <div class="form-group"><label>Correo Electrónico</label><input type="email" id="reg-correo" required placeholder="ejemplo@correo.com"></div>
+      <div class="form-group password-field">
+        <label>Contraseña</label>
+        <div class="input-with-icon">
+          <input type="password" id="reg-pass" required placeholder="Crea una contraseña">
+          <i class="fas fa-eye toggle-password" onclick="toggleVerPassword('reg-pass', this)"></i>
+        </div>
+      </div>
+      <div class="form-group password-field">
+        <label>Confirmar Contraseña</label>
+        <div class="input-with-icon">
+          <input type="password" id="reg-confirm-pass" required placeholder="Repite tu contraseña">
+          <i class="fas fa-eye toggle-password" onclick="toggleVerPassword('reg-confirm-pass', this)"></i>
+        </div>
+      </div>
+      <button type="submit" class="btn-submit">Registrarse</button>
+    </form>
+  </div>
+
+  <div id="menu-carrito" class="sliding-menu">
+    <div class="menu-header">
+      <h3>Carrito de Compras</h3>
+      <button class="btn-close" onclick="toggleCarrito()">&times;</button>
+    </div>
+    
+    <div id="items-carrito" class="cart-items-container"></div>
+
+    <div class="cupon-section">
+      <label>Cupón de Descuento:</label>
+      <div class="cupon-input-group">
+        <input type="text" id="input-cupon-cliente" placeholder="CÓDIGO DE CUPÓN" style="text-transform: uppercase;">
+        <button onclick="aplicarCuponCliente()">Aplicar</button>
+      </div>
+      <div id="mensaje-cupon" class="mensaje-cupon"></div>
+    </div>
+
+    <div class="cart-summary">
+      <div class="summary-row"><span>Subtotal:</span> $<span id="subtotal-precio">0.00</span></div>
+      <div class="summary-row"><span>Descuento:</span> -$<span id="descuento-precio">0.00</span></div>
+      <div class="summary-row total-row"><span>Total:</span> $<span id="total-precio">0.00</span></div>
+
+      <div id="bloque-pedido-invitado" class="alerta-registro">
+        <p><strong>Regístrate para hacer un pedido</strong></p>
+        <button class="btn-submit" onclick="toggleMenuRegistro()">Registrarse Ahora</button>
+      </div>
+
+      <div id="bloque-pago-spei" style="display: none;" class="pago-spei-box">
+        <h4><i class="fas fa-university"></i> Pago vía SPEI</h4>
+        <div class="datos-banco">
+          <p><strong>Banco:</strong> BBVA</p>
+          <p><strong>CLABE:</strong> 012180001234567890</p>
+          <p><strong>Beneficiario:</strong> Productos ARMM</p>
+        </div>
+        <div class="form-group">
+          <label>Subir Comprobante (Imagen/PDF):</label>
+          <input type="file" id="comprobante-file" accept="image/*,.pdf">
+        </div>
+        <button class="btn-submit" onclick="realizarPedidoSPEI()">Realizar Pedido y Enviar Comprobante</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="main-container">
+    <h1 class="title">Catálogo de Productos ARMM</h1>
+    
+    <div class="categories-filter">
+      <button onclick="filtrarCategoria('TODOS')" class="btn-cat active">Todos</button>
+      <button onclick="filtrarCategoria('CLOROS')" class="btn-cat">Cloros</button>
+      <button onclick="filtrarCategoria('PINOL')" class="btn-cat">Pinol</button>
+      <button onclick="filtrarCategoria('BASES')" class="btn-cat">Bases</button>
+      <button onclick="filtrarCategoria('DETERGENTES')" class="btn-cat">Detergentes</button>
+      <button onclick="filtrarCategoria('AUTOMOTRIZ')" class="btn-cat">Automotriz</button>
+      <button onclick="filtrarCategoria('LIMPIEZA PROFUNDA')" class="btn-cat">Limpieza Profunda</button>
+      <button onclick="filtrarCategoria('JARCERÍA')" class="btn-cat">Jarcería</button>
+    </div>
+
+    <div id="grid-productos" class="products-grid"></div>
+  </main>
 
   <script src="script.js"></script>
 </body>
