@@ -12,7 +12,7 @@
   <div id="modal-pass-admin" class="admin-modal-overlay">
     <div class="admin-modal-box">
       <h3><i class="fas fa-lock"></i> Acceso Administrador</h3>
-      <p>Por favor ingresa la contraseña para acceder al panel:</p>
+      <p>Ingresa la contraseña para desbloquear el panel:</p>
       <input type="password" id="input-admin-pass" placeholder="Contraseña Admin">
       <button class="btn-submit" onclick="validarClaveAdmin()">Ingresar</button>
       <div id="admin-pass-error" class="error-msg"></div>
@@ -23,7 +23,7 @@
     
     <header class="navbar admin-navbar">
       <div class="logo">
-        <h2>ARMM - Admin</h2>
+        <h2>ARMM - Panel Administrativo</h2>
       </div>
 
       <div class="search-bar">
@@ -38,7 +38,7 @@
 
         <div id="user-profile" style="display: none;">
           <button id="btn-user-menu" class="btn-user">
-            <i class="fas fa-user-alt"></i>
+            <i class="fas fa-user-shield"></i>
             <span id="user-display-name">Admin</span>
           </button>
         </div>
@@ -50,79 +50,64 @@
       </div>
     </header>
 
-    <div id="menu-login" class="sliding-menu">
-      <div class="menu-header">
-        <h3>Iniciar Sesión</h3>
-        <button class="btn-close" onclick="toggleMenuLogin()">&times;</button>
-      </div>
-      <form id="form-login" onsubmit="procesarInicioSesion(event)">
-        <div class="form-group">
-          <label>Correo o Teléfono</label>
-          <input type="text" id="login-identificador" required placeholder="Correo o teléfono">
-        </div>
-        <div class="form-group password-field">
-          <label>Contraseña</label>
-          <div class="input-with-icon">
-            <input type="password" id="login-pass" required placeholder="Tu contraseña">
-            <i class="fas fa-eye toggle-password" onclick="toggleVerPassword('login-pass', this)"></i>
-          </div>
-        </div>
-        <button type="submit" class="btn-submit">Ingresar</button>
-      </form>
-    </div>
-
-    <div id="menu-registro" class="sliding-menu">
-      <div class="menu-header">
-        <h3>Registro de Usuario</h3>
-        <button class="btn-close" onclick="toggleMenuRegistro()">&times;</button>
-      </div>
-      <form id="form-registro" onsubmit="guardarRegistro(event)">
-        <div class="form-group"><label>Nombre</label><input type="text" id="reg-nombre" required></div>
-        <div class="form-group"><label>Apellido</label><input type="text" id="reg-apellido" required></div>
-        <div class="form-group"><label>Teléfono</label><input type="tel" id="reg-telefono" required></div>
-        <div class="form-group"><label>Correo Electrónico</label><input type="email" id="reg-correo" required></div>
-        <div class="form-group password-field">
-          <label>Contraseña</label>
-          <div class="input-with-icon">
-            <input type="password" id="reg-pass" required>
-            <i class="fas fa-eye toggle-password" onclick="toggleVerPassword('reg-pass', this)"></i>
-          </div>
-        </div>
-        <div class="form-group password-field">
-          <label>Confirmar Contraseña</label>
-          <div class="input-with-icon">
-            <input type="password" id="reg-confirm-pass" required>
-            <i class="fas fa-eye toggle-password" onclick="toggleVerPassword('reg-confirm-pass', this)"></i>
-          </div>
-        </div>
-        <button type="submit" class="btn-submit">Registrarse</button>
-      </form>
-    </div>
-
-    <div id="menu-carrito" class="sliding-menu">
-      <div class="menu-header">
-        <h3>Carrito de Compras</h3>
-        <button class="btn-close" onclick="toggleCarrito()">&times;</button>
-      </div>
-      <div id="items-carrito" class="cart-items-container"></div>
-      <div class="cupon-section">
-        <label>Cupón de Descuento:</label>
-        <div class="cupon-input-group">
-          <input type="text" id="input-cupon-cliente" placeholder="CÓDIGO DE CUPÓN" style="text-transform: uppercase;">
-          <button onclick="aplicarCuponCliente()">Aplicar</button>
-        </div>
-        <div id="mensaje-cupon" class="mensaje-cupon"></div>
-      </div>
-      <div class="cart-summary">
-        <div class="summary-row"><span>Subtotal:</span> $<span id="subtotal-precio">0.00</span></div>
-        <div class="summary-row"><span>Descuento:</span> -$<span id="descuento-precio">0.00</span></div>
-        <div class="summary-row total-row"><span>Total:</span> $<span id="total-precio">0.00</span></div>
-      </div>
-    </div>
-
     <main class="main-container">
       
-      <section class="admin-section">
+      <section class="admin-dashboard-panel">
+        <div class="panel-header" onclick="togglePanelAdmin()">
+          <div class="panel-title">
+            <i class="fas fa-user-shield panel-icon"></i>
+            <div>
+              <h2>Panel de Administración</h2>
+              <p>Control interno del sistema, gestión de usuarios, cupones e inventario.</p>
+            </div>
+          </div>
+          <button class="btn-toggle-panel" id="btn-panel-toggle">
+            <i class="fas fa-chevron-up"></i>
+          </button>
+        </div>
+
+        <div class="panel-body" id="contenido-primer-panel">
+          <div class="panel-stats-grid">
+            <div class="stat-card">
+              <i class="fas fa-users"></i>
+              <div>
+                <span class="stat-number" id="stat-usuarios-count">0</span>
+                <span class="stat-label">Usuarios Registrados</span>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <i class="fas fa-ticket-alt"></i>
+              <div>
+                <span class="stat-number" id="stat-cupones-count">0</span>
+                <span class="stat-label">Cupones Activos</span>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <i class="fas fa-boxes"></i>
+              <div>
+                <span class="stat-number" id="stat-productos-count">54</span>
+                <span class="stat-label">Productos en Catálogo</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel-actions">
+            <button class="btn-action" onclick="scrollASeccion('sec-usuarios')">
+              <i class="fas fa-user-friends"></i> Ver Usuarios
+            </button>
+            <button class="btn-action" onclick="scrollASeccion('sec-cupones')">
+              <i class="fas fa-plus-circle"></i> Crear Cupón
+            </button>
+            <button class="btn-action btn-action-outline" onclick="scrollASeccion('sec-inventario')">
+              <i class="fas fa-clipboard-list"></i> Administrar Inventario
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section id="sec-usuarios" class="admin-section">
         <h2><i class="fas fa-users"></i> Usuarios Registrados</h2>
         <div class="table-responsive">
           <table>
@@ -139,16 +124,16 @@
         </div>
       </section>
 
-      <section class="admin-section">
-        <h2><i class="fas fa-ticket-alt"></i> Panel de Creación de Cupones</h2>
+      <section id="sec-cupones" class="admin-section">
+        <h2><i class="fas fa-ticket-alt"></i> Crear y Gestionar Cupones</h2>
         <form id="form-crear-cupon" onsubmit="crearCupon(event)" class="inline-form">
           <div class="form-group">
             <label>Código del Cupón</label>
-            <input type="text" id="cupon-codigo" placeholder="Ej. DESCUENTO10" style="text-transform:uppercase;" required>
+            <input type="text" id="cupon-codigo" placeholder="Ej. PROMO2026" style="text-transform:uppercase;" required>
           </div>
           <div class="form-group">
             <label>Porcentaje (%)</label>
-            <input type="number" id="cupon-porcentaje" min="1" max="100" placeholder="10" required>
+            <input type="number" id="cupon-porcentaje" min="1" max="100" placeholder="15" required>
           </div>
           <button type="submit" class="btn-submit">Crear Cupón</button>
         </form>
@@ -168,8 +153,8 @@
         </div>
       </section>
 
-      <section class="admin-section">
-        <h2><i class="fas fa-boxes"></i> Todos los Productos</h2>
+      <section id="sec-inventario" class="admin-section">
+        <h2><i class="fas fa-boxes"></i> Inventario de Productos</h2>
         <div id="grid-productos-admin" class="products-grid"></div>
       </section>
 
