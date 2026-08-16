@@ -6,17 +6,15 @@
     <title>ARMM - Productos de Limpieza</title>
     <style>
         :root {
-            --glass-bg: rgba(255, 255, 255, 0.15);
-            --glass-border: rgba(255, 255, 255, 0.25);
+            --dark-bg: #060913;
+            --glass-bg: rgba(15, 23, 42, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.12);
             --glass-blur: blur(16px) saturate(180%);
             --accent-green: #00e676;
             --accent-hover: #00c853;
-            --dark-bg: #0d1117;
-            --text-light: #f0f6fc;
-            --text-dark: #1f2937;
-            --text-muted: #9ca3af;
-            --danger-color: #f85149;
-            --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+            --danger-color: #ef4444;
         }
 
         * {
@@ -29,161 +27,105 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            background: radial-gradient(circle at top, #0f172a 0%, #060913 100%);
             color: var(--text-light);
             min-height: 100vh;
             padding-bottom: 60px;
         }
 
-        /* HEADER GLASSMORPHIC FIXED */
+        /* HEADER GLASSMORPHIC */
         header {
             position: sticky;
             top: 0;
             z-index: 1000;
-            background: var(--glass-bg);
+            background: rgba(6, 9, 19, 0.75);
             backdrop-filter: var(--glass-blur);
             -webkit-backdrop-filter: var(--glass-blur);
             border-bottom: 1px solid var(--glass-border);
-            padding: 15px 20px;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            padding: 14px 24px;
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
 
-        header.scrolled {
-            padding: 10px 20px;
-            background: rgba(15, 23, 42, 0.85);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-        }
-
-        .brand-container h1 {
-            font-size: 1.4rem;
-            color: var(--accent-green);
-            font-weight: 800;
-        }
-
-        .brand-container p {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-        }
-
-        .header-actions {
+        .brand-container {
             display: flex;
             align-items: center;
             gap: 12px;
         }
 
-        .icon-btn {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            color: white;
-            width: 44px;
-            height: 44px;
+        .brand-logo {
+            width: 38px;
+            height: 38px;
+            background: var(--accent-green);
+            color: #000;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
+            font-weight: 900;
             font-size: 1.2rem;
-            position: relative;
-            transition: transform 0.2s;
         }
 
-        .icon-btn:active {
-            transform: scale(0.95);
+        .brand-text h1 {
+            font-size: 1.2rem;
+            color: #ffffff;
+            font-weight: 800;
+            letter-spacing: 0.5px;
         }
 
-        .badge-count {
-            position: absolute;
-            top: -2px;
-            right: -2px;
-            background: var(--danger-color);
-            color: white;
+        .brand-text p {
             font-size: 0.7rem;
-            font-weight: bold;
-            padding: 2px 6px;
-            border-radius: 10px;
+            color: var(--text-muted);
+            text-transform: uppercase;
         }
 
-        /* HERO & BANNER */
-        .hero-banner {
-            padding: 30px 20px;
-            text-align: center;
-            background: rgba(255, 255, 255, 0.03);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .hero-banner h2 {
-            font-size: 1.6rem;
-            margin-bottom: 8px;
-        }
-
-        .hero-banner p.legend {
-            font-size: 0.85rem;
-            color: var(--accent-green);
-            background: rgba(0, 230, 118, 0.1);
-            display: inline-block;
-            padding: 6px 12px;
-            border-radius: 20px;
-            margin-top: 10px;
-        }
-
-        /* BUSQUEDA Y FILTROS */
-        .search-section {
-            padding: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .search-box {
-            width: 100%;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            padding: 14px 18px;
-            border-radius: 12px;
-            color: white;
-            font-size: 1rem;
-            outline: none;
-            backdrop-filter: var(--glass-blur);
-        }
-
-        .pills-container {
+        .header-actions {
             display: flex;
+            align-items: center;
             gap: 10px;
-            overflow-x: auto;
-            padding: 15px 0 5px 0;
-            scrollbar-width: none;
         }
 
-        .pills-container::-webkit-scrollbar {
-            display: none;
-        }
-
-        .pill {
-            background: rgba(255, 255, 255, 0.08);
+        .btn-auth {
+            background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--glass-border);
+            color: var(--text-light);
             padding: 8px 16px;
             border-radius: 20px;
             font-size: 0.85rem;
-            white-space: nowrap;
+            font-weight: 600;
             cursor: pointer;
+            min-height: 40px;
             transition: all 0.2s;
         }
 
-        .pill.active, .pill:hover {
-            background: var(--accent-green);
-            color: #000;
+        .btn-auth:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-cart {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            color: var(--text-light);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
             font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            min-height: 40px;
         }
 
         /* CATALOGO GRID */
         .catalog-container {
             max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
+            margin: 30px auto;
+            padding: 0 20px;
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
             gap: 20px;
         }
 
@@ -193,54 +135,53 @@
             -webkit-backdrop-filter: var(--glass-blur);
             border: 1px solid var(--glass-border);
             border-radius: 16px;
-            padding: 16px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             will-change: transform;
-            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s, border-color 0.25s;
+            transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s;
         }
 
-        /* Animaciones diferenciadas */
-        @media (hover: hover) {
-            .product-card:hover {
-                transform: translateY(-4px);
-                border-color: rgba(255, 255, 255, 0.5);
-                box-shadow: 0 12px 40px rgba(0, 230, 118, 0.15);
-            }
+        .product-card:hover {
+            border-color: rgba(0, 236, 118, 0.4);
+            transform: translateY(-2px);
         }
 
-        .product-card:active {
-            transform: scale(0.97);
-        }
-
-        .product-img {
-            width: 100%;
-            height: 160px;
-            object-fit: cover;
-            border-radius: 10px;
-            margin-bottom: 12px;
-            background: rgba(0,0,0,0.2);
-        }
-
-        .product-title {
-            font-size: 1rem;
+        .product-tag {
+            font-size: 0.7rem;
+            color: var(--accent-green);
             font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
             margin-bottom: 6px;
         }
 
-        .product-desc {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-bottom: 10px;
-            line-height: 1.3;
+        .product-title {
+            font-size: 1.1rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: #ffffff;
         }
 
-        .product-price {
-            font-size: 1.2rem;
-            font-weight: 800;
-            color: var(--accent-green);
-            margin-bottom: 12px;
+        .presentation-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .select-presentation {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--glass-border);
+            color: #ffffff;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            outline: none;
+            margin-bottom: 16px;
+            cursor: pointer;
         }
 
         .btn-add {
@@ -248,698 +189,206 @@
             background: var(--accent-green);
             color: #000;
             border: none;
-            padding: 10px;
+            padding: 12px;
             border-radius: 8px;
             font-weight: 700;
             cursor: pointer;
             min-height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background 0.2s;
         }
 
-        /* MODALES Y BOTTOM SHEETS */
+        .btn-add:hover {
+            background: var(--accent-hover);
+        }
+
+        /* MODALES */
         .modal-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(8px);
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             z-index: 2000;
             display: none;
-            justify-content: flex-end;
-            align-items: flex-end;
+            justify-content: center;
+            align-items: center;
         }
 
-        .modal-overlay.active {
-            display: flex;
-        }
+        .modal-overlay.active { display: flex; }
 
         .modal-sheet {
-            background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: var(--glass-blur);
+            background: rgba(15, 23, 42, 0.92);
             border: 1px solid var(--glass-border);
-            width: 100%;
-            max-width: 450px;
-            height: 85vh;
-            border-top-left-radius: 24px;
-            border-top-right-radius: 24px;
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-            transform: translateY(100%);
-            animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-
-        @keyframes slideUp {
-            to { transform: translateY(0); }
-        }
-
-        @media (min-width: 640px) {
-            .modal-overlay {
-                align-items: center;
-                justify-content: center;
-            }
-            .modal-sheet {
-                height: auto;
-                max-height: 90vh;
-                border-radius: 24px;
-            }
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            border-bottom: 1px solid var(--glass-border);
-            padding-bottom: 10px;
-        }
-
-        .close-btn {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
-        /* FORMULARIOS */
-        .form-group {
-            margin-bottom: 16px;
-            position: relative;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 0.85rem;
-            margin-bottom: 6px;
-            color: var(--text-muted);
-        }
-
-        .form-control {
-            width: 100%;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--glass-border);
-            padding: 12px 16px;
-            border-radius: 8px;
-            color: white;
-            font-size: 16px;
-            outline: none;
-        }
-
-        .pwd-container {
-            position: relative;
-        }
-
-        .eye-icon {
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            user-select: none;
-        }
-
-        /* SECCIONES Y CARRITO */
-        .cart-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--glass-border);
-        }
-
-        .coupon-block {
-            margin: 15px 0;
-            background: rgba(255,255,255,0.03);
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px dashed var(--glass-border);
-        }
-
-        .coupon-msg {
-            font-size: 0.8rem;
-            margin-top: 6px;
-        }
-        .coupon-msg.error { color: var(--danger-color); }
-        .coupon-msg.success { color: var(--accent-green); }
-
-        /* FOOTER SOBRE NOSOTROS */
-        .info-footer {
-            max-width: 1200px;
-            margin: 40px auto 0;
-            padding: 30px 20px;
-            background: var(--glass-bg);
+            width: 100%; max-width: 420px;
             border-radius: 20px;
-            border: 1px solid var(--glass-border);
+            padding: 24px;
+            animation: modalIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes modalIn {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .form-group { margin-bottom: 14px; }
+        .form-group label { display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 4px; }
+        .form-control {
+            width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border);
+            padding: 10px; border-radius: 8px; color: #fff; font-size: 16px; outline: none;
         }
     </style>
 </head>
 <body>
 
-    <!-- HEADER FIXED GLASSMORPHIC -->
-    <header id="mainHeader">
+    <header>
         <div class="brand-container">
-            <h1>ARMM</h1>
-            <p>Limpieza a tu puerta</p>
+            <div class="brand-logo">A</div>
+            <div class="brand-text">
+                <h1>ARMM</h1>
+                <p>Productos y Accesorios de Limpieza</p>
+            </div>
         </div>
         <div class="header-actions">
-            <button class="icon-btn" onclick="openModal('cartModal')">
-                🛒 <span id="cartBadge" class="badge-count" style="display:none;">0</span>
-            </button>
-            <button class="icon-btn" onclick="openModal('userModal')">👤</button>
+            <div id="authButtons" style="display: flex; gap: 8px;">
+                <button class="btn-auth" onclick="openAuthModal('register')">Registrarse</button>
+                <button class="btn-auth" onclick="openAuthModal('login')">Iniciar Sesión</button>
+            </div>
+            <div id="userInfo" style="display: none; font-size: 0.85rem; color: var(--accent-green); font-weight: 700;"></div>
+            <button class="btn-cart" onclick="openCart()">🛒 Carrito (<span id="cartCount">0</span>)</button>
         </div>
     </header>
 
-    <!-- PORTADA Y LEYENDA -->
-    <section class="hero-banner">
-        <h2>Todo para la limpieza de tu hogar e industria</h2>
-        <p>3+ años trabajando para una limpieza mejor</p>
-        <div>
-            <span class="legend">Regístrate para realizar un pedido o realízalo directamente a nuestro WhatsApp</span>
-        </div>
-    </section>
+    <main class="catalog-container" id="catalogGrid"></main>
 
-    <!-- BUSQUEDA Y FILTROS INTELIGENTES -->
-    <section class="search-section">
-        <input type="text" id="searchInput" class="search-box" placeholder="Buscar productos o categorías..." oninput="debouncedSearch()">
-        <div class="pills-container">
-            <div class="pill active" onclick="filterByPill('Todos', this)">Todos</div>
-            <div class="pill" onclick="filterByPill('Superficies difíciles', this)">Superficies difíciles</div>
-            <div class="pill" onclick="filterByPill('Desinfección', this)">Desinfección</div>
-            <div class="pill" onclick="filterByPill('Aroma duradero', this)">Aroma duradero</div>
-            <div class="pill" onclick="filterByPill('Uso industrial', this)">Uso industrial</div>
-        </div>
-    </section>
-
-    <!-- CATALOGO RESPONSIVO -->
-    <main class="catalog-container" id="catalogGrid">
-        <!-- Productos generados dinámicamente -->
-    </main>
-
-    <!-- SOBRE LA EMPRESA Y RESEÑAS -->
-    <section class="info-footer">
-        <h3>Sobre ARMM Productos de Limpieza</h3>
-        <p style="margin: 10px 0; color: var(--text-muted); font-size:0.9rem;">
-            Ofrecerte todo para la limpieza hasta la puerta de tu hogar.
-        </p>
-        <p style="font-size:0.85rem;"><strong>Contacto Directo:</strong></p>
-        <p style="font-size:0.85rem; color: var(--accent-green);">armmproductosdelimpieza@gmail.com</p>
-        <a href="https://wa.me/5210000000000" target="_blank" style="display:inline-block; margin-top:10px; color:var(--accent-green); text-decoration:none; font-weight:bold;">
-            💬 Contactar por WhatsApp
-        </a>
-
-        <h4 style="margin-top: 25px; margin-bottom: 12px;">Reseñas de Clientes</h4>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
-            <div style="background: rgba(255,255,255,0.05); padding:10px; border-radius:8px;">
-                <div>⭐⭐⭐⭐⭐</div>
-                <p style="font-size:0.8rem; margin-top:5px;">Excelente calidad en los desengrasantes. Muy recomendado.</p>
-                <small style="color:var(--text-muted);">- María G.</small>
-            </div>
-            <div style="background: rgba(255,255,255,0.05); padding:10px; border-radius:8px;">
-                <div>⭐⭐⭐⭐⭐</div>
-                <p style="font-size:0.8rem; margin-top:5px;">El aroma dura todo el día en mi negocio.</p>
-                <small style="color:var(--text-muted);">- Carlos R.</small>
-            </div>
-        </div>
-    </section>
-
-    <!-- MODAL MENU DEL USUARIO ("MONITO") -->
-    <div id="userModal" class="modal-overlay">
+    <!-- Modal Autenticación -->
+    <div id="authModal" class="modal-overlay">
         <div class="modal-sheet">
-            <div class="modal-header">
-                <h3>Mi Cuenta</h3>
-                <button class="close-btn" onclick="closeModal('userModal')">&times;</button>
-            </div>
-            
-            <div id="userSessionContent">
-                <!-- Se llena dinámicamente con Login/Registro o Menú desplegado -->
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL CARRITO DE COMPRAS -->
-    <div id="cartModal" class="modal-overlay">
-        <div class="modal-sheet">
-            <div class="modal-header">
-                <h3>Carrito de Compras</h3>
-                <button class="close-btn" onclick="closeModal('cartModal')">&times;</button>
-            </div>
-            <div id="cartList" style="flex:1; overflow-y:auto;">
-                <!-- Elementos del carrito -->
-            </div>
-
-            <!-- CUPONES -->
-            <div class="coupon-block">
-                <button class="pill" onclick="toggleCouponsView()" style="width:100%; text-align:center;">Ver cupones disponibles</button>
-                <div id="couponsList" style="display:none; margin-top:10px;"></div>
-                <div id="couponStatus" class="coupon-msg"></div>
-            </div>
-
-            <div style="border-top: 1px solid var(--glass-border); padding-top: 15px;">
-                <div style="display:flex; justify-content:space-between; margin-bottom: 10px;">
-                    <span>Total:</span>
-                    <strong id="cartTotal" style="color: var(--accent-green); font-size:1.2rem;">$0.00</strong>
-                </div>
-
-                <div class="form-group">
-                    <label>Modalidad de Pago:</label>
-                    <select id="paymentMethod" class="form-control">
-                        <option value="Efectivo">Pago al Recibir (Efectivo)</option>
-                        <option value="Tarjeta">Pago al Recibir (Tarjeta)</option>
-                        <option value="SPEI">Transferencia SPEI</option>
-                    </select>
-                </div>
-
-                <div class="form-group" style="display:flex; align-items:center; gap:8px;">
-                    <input type="checkbox" id="subRecurring">
-                    <label for="subRecurring" style="margin:0;">Programar pedido periódico (Mensual)</label>
-                </div>
-
-                <button class="btn-add" onclick="processOrderCheckout()">Realizar Pedido</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- FICHA TECNICA CONVERTIBA Y 3D RENDER -->
-    <div id="techModal" class="modal-overlay">
-        <div class="modal-sheet">
-            <div class="modal-header">
-                <h3 id="techTitle">Ficha Técnica</h3>
-                <button class="close-btn" onclick="closeModal('techModal')">&times;</button>
-            </div>
-            <div id="techContent">
-                <!-- Detalle extendido -->
-            </div>
+            <h3 id="authTitle" style="margin-bottom: 16px;">Acceso</h3>
+            <div id="authFormContent"></div>
+            <button onclick="closeModal('authModal')" class="btn-auth" style="width:100%; margin-top:10px;">Cerrar</button>
         </div>
     </div>
 
     <script>
-        // ESTADO GLOBAL
         let products = [];
         let cart = [];
-        let activeCoupon = null;
-        let debounceTimer;
 
-        // INICIALIZACION
         document.addEventListener('DOMContentLoaded', () => {
-            initLocalStorage();
+            initStorage();
             loadProducts();
-            updateHeaderScroll();
-            renderUserMenu();
-            listenStorageEvents();
-        });
-
-        // SCROLL INTERACTIVO EN HEADER
-        window.addEventListener('scroll', updateHeaderScroll);
-        function updateHeaderScroll() {
-            const header = document.getElementById('mainHeader');
-            if (window.scrollY > 20) {
-                header.classList.add('scrolled');
-            } else {
-                header.classList.remove('scrolled');
-            }
-        }
-
-        // BASE DE DATOS Y STORAGE
-        function initLocalStorage() {
-            if (!localStorage.getItem('armm_products')) {
-                const defaultProds = [
-                    { id: 1, name: 'Cloro Concentrado', category: 'Desinfección', price: 45, desc: 'Elimina 99.9% de gérmenes.', yield: 'Rinde para 150 m²', tag: 'Desinfección' },
-                    { id: 2, name: 'Desengrasante Industrial', category: 'Uso industrial', price: 120, desc: 'Fórmula pesada para grasa difícil.', yield: 'Rinde para 80 m²', tag: 'Superficies difíciles' },
-                    { id: 3, name: 'Limpiador Multiusos Lavanda', category: 'Aroma duradero', price: 38, desc: 'Aroma que se mantiene por 24 horas.', yield: 'Rinde para 20 lavados', tag: 'Aroma duradero' }
-                ];
-                localStorage.setItem('armm_products', JSON.stringify(defaultProds));
-            }
-            if (!localStorage.getItem('armm_users')) localStorage.setItem('armm_users', JSON.stringify([]));
-            if (!localStorage.getItem('armm_orders')) localStorage.setItem('armm_orders', JSON.stringify([]));
-            if (!localStorage.getItem('armm_coupons')) localStorage.setItem('armm_coupons', JSON.stringify([]));
-            if (!localStorage.getItem('armm_help_requests')) localStorage.setItem('armm_help_requests', JSON.stringify([]));
-        }
-
-        function listenStorageEvents() {
+            checkSession();
+            
+            // Sincronización en tiempo real con el Admin
             window.addEventListener('storage', (e) => {
                 if (e.key === 'armm_products') loadProducts();
+                if (e.key === 'armm_active_session') checkSession();
             });
+        });
+
+        function initStorage() {
+            if (!localStorage.getItem('armm_products')) {
+                const defaults = [
+                    { id: 1, name: 'CLORO', category: 'CLOROS', saleMode: 'litros', prices: { l1: 15, l5: 65, l20: 240 } },
+                    { id: 2, name: 'PINO (VERDE)', category: 'PINOL', saleMode: 'mayoreo_menudeo', prices: { menudeo: 22, mayoreo: 18 } }
+                ];
+                localStorage.setItem('armm_products', JSON.stringify(defaults));
+            }
         }
 
-        // CARGA Y FILTRADO DE PRODUCTOS
-        function loadProducts(filtered = null) {
+        function loadProducts() {
             products = JSON.parse(localStorage.getItem('armm_products') || '[]');
-            const list = filtered || products;
             const grid = document.getElementById('catalogGrid');
             grid.innerHTML = '';
 
-            list.forEach(p => {
+            products.forEach(p => {
+                let optionsHTML = '';
+                if (p.saleMode === 'litros') {
+                    optionsHTML = `
+                        <option value="1L|${p.prices.l1}">1 Litro - $${p.prices.l1} MXN</option>
+                        <option value="5L|${p.prices.l5}">5 Litros - $${p.prices.l5} MXN</option>
+                        <option value="20L|${p.prices.l20}">20 Litros - $${p.prices.l20} MXN</option>
+                    `;
+                } else {
+                    optionsHTML = `
+                        <option value="Menudeo|${p.prices.menudeo}">Menudeo - $${p.prices.menudeo} MXN</option>
+                        <option value="Mayoreo|${p.prices.mayoreo}">Mayoreo - $${p.prices.mayoreo} MXN</option>
+                    `;
+                }
+
                 const card = document.createElement('div');
                 card.className = 'product-card';
                 card.innerHTML = `
                     <div>
-                        <div class="product-img" style="display:flex;align-items:center;justify-content:center;font-size:3rem;">🧴</div>
+                        <div class="product-tag">${p.category || 'General'}</div>
                         <div class="product-title">${p.name}</div>
-                        <div class="product-desc">${p.desc}</div>
+                        <span class="presentation-label">Selecciona Presentación:</span>
+                        <select class="select-presentation" id="select-${p.id}">
+                            ${optionsHTML}
+                        </select>
                     </div>
-                    <div>
-                        <div class="product-price">$${p.price.toFixed(2)}</div>
-                        <button class="pill" style="width:100%; margin-bottom:8px;" onclick="openTechSheet(${p.id})">📋 Ficha / Rendimiento</button>
-                        <button class="btn-add" onclick="addToCart(${p.id})">Agregar al Carrito</button>
-                    </div>
+                    <button class="btn-add" onclick="addToCart(${p.id})">🛒 Agregar al Carrito</button>
                 `;
                 grid.appendChild(card);
             });
         }
 
-        // DEBOUNCE SEARCH
-        function debouncedSearch() {
-            clearTimeout(debounceTimer);
-            debounceTimer = setTimeout(() => {
-                const query = document.getElementById('searchInput').value.toLowerCase();
-                const filtered = products.filter(p => p.name.toLowerCase().includes(query) || p.category.toLowerCase().includes(query));
-                loadProducts(filtered);
-            }, 250);
-        }
-
-        function filterByPill(tag, el) {
-            document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
-            el.classList.add('active');
-            if (tag === 'Todos') {
-                loadProducts();
-            } else {
-                const filtered = products.filter(p => p.tag === tag || p.category === tag);
-                loadProducts(filtered);
-            }
-        }
-
-        // FICHA TECNICA Y RENDER 3D VIRTUAL
-        function openTechSheet(id) {
-            const p = products.find(prod => prod.id === id);
-            if (!p) return;
-            document.getElementById('techTitle').innerText = p.name;
-            document.getElementById('techContent').innerHTML = `
-                <div style="text-align:center; padding:20px; background:rgba(0,0,0,0.3); border-radius:12px; margin-bottom:15px;">
-                    <div style="font-size:4rem; animation: spin 8s linear infinite;">📦</div>
-                    <small style="color:var(--text-muted)">[ Render 3D Interactivo ]</small>
-                </div>
-                <p><strong>Categoría:</strong> ${p.category}</p>
-                <p style="margin-top:8px;"><strong>Calculadora de Rendimiento:</strong></p>
-                <div style="background:rgba(0,230,118,0.1); color:var(--accent-green); padding:10px; border-radius:8px; margin-top:5px;">
-                    💡 ${p.yield || 'Rinde para 100 m² por litro.'}
-                </div>
-            `;
-            openModal('techModal');
-        }
-
-        // CARRITO DE COMPRAS
         function addToCart(id) {
-            const p = products.find(prod => prod.id === id);
-            const item = cart.find(c => c.id === id);
-            if (item) {
-                item.qty++;
-            } else {
-                cart.push({ ...p, qty: 1 });
-            }
-            updateCartUI();
+            const select = document.getElementById(`select-${id}`);
+            const [presentation, price] = select.value.split('|');
+            const prod = products.find(p => p.id === id);
+
+            cart.push({ id: prod.id, name: prod.name, presentation, price: parseFloat(price) });
+            document.getElementById('cartCount').innerText = cart.length;
         }
 
-        function updateCartUI() {
-            const badge = document.getElementById('cartBadge');
-            const list = document.getElementById('cartList');
-            const totalEl = document.getElementById('cartTotal');
-            
-            const count = cart.reduce((acc, c) => acc + c.qty, 0);
-            badge.innerText = count;
-            badge.style.display = count > 0 ? 'block' : 'none';
-
-            list.innerHTML = '';
-            let subtotal = 0;
-
-            cart.forEach(item => {
-                subtotal += item.price * item.qty;
-                const div = document.createElement('div');
-                div.className = 'cart-item';
-                div.innerHTML = `
-                    <div>
-                        <strong>${item.name}</strong>
-                        <div style="font-size:0.8rem; color:var(--text-muted);">$${item.price} x ${item.qty}</div>
-                    </div>
-                    <div style="display:flex; gap:6px; align-items:center;">
-                        <button class="pill" onclick="changeQty(${item.id}, -1)">-</button>
-                        <span>${item.qty}</span>
-                        <button class="pill" onclick="changeQty(${item.id}, 1)">+</button>
-                    </div>
-                `;
-                list.appendChild(div);
-            });
-
-            if (activeCoupon) {
-                subtotal = subtotal - (subtotal * (activeCoupon.discount / 100));
-            }
-
-            totalEl.innerText = `$${subtotal.toFixed(2)}`;
-        }
-
-        function changeQty(id, delta) {
-            const item = cart.find(c => c.id === id);
-            if (!item) return;
-            item.qty += delta;
-            if (item.qty <= 0) {
-                cart = cart.filter(c => c.id !== id);
-            }
-            updateCartUI();
-        }
-
-        // CUPONES
-        function toggleCouponsView() {
-            const div = document.getElementById('couponsList');
-            const coupons = JSON.parse(localStorage.getItem('armm_coupons') || '[]');
-            
-            if (coupons.length === 0) {
-                div.innerHTML = '<p style="font-size:0.8rem; color:var(--text-muted);">No hay cupones activos.</p>';
-            } else {
-                div.innerHTML = coupons.map(c => `
-                    <div style="padding:8px; background:rgba(255,255,255,0.05); margin-top:5px; border-radius:6px; font-size:0.8rem; display:flex; justify-content:space-between;">
-                        <span><strong>${c.code}</strong> (${c.discount}% OFF)</span>
-                        <button class="pill" onclick="applyCoupon('${c.code}')">Aplicar</button>
-                    </div>
-                `).join('');
-            }
-            div.style.display = div.style.display === 'none' ? 'block' : 'none';
-        }
-
-        function applyCoupon(code) {
-            const coupons = JSON.parse(localStorage.getItem('armm_coupons') || '[]');
-            const status = document.getElementById('couponStatus');
-            const coupon = coupons.find(c => c.code === code);
-            const rawSubtotal = cart.reduce((acc, c) => acc + c.price * c.qty, 0);
-
-            if (coupon && rawSubtotal >= (coupon.minAmount || 0)) {
-                activeCoupon = coupon;
-                status.className = "coupon-msg success";
-                status.innerText = `¡Cupón ${coupon.code} aplicado con éxito!`;
-                updateCartUI();
-            } else {
-                status.className = "coupon-msg error";
-                status.innerText = "Su compra no cumple con las condiciones del cupón, revise la descripción de cada cupón";
-            }
-        }
-
-        // PROCESO DE CHECKOUT CON CONTROL DE REGISTRO
-        function processOrderCheckout() {
-            const currentUser = JSON.parse(localStorage.getItem('armm_active_session'));
-            if (!currentUser) {
-                closeModal('cartModal');
-                alert("Regístrate para poder realizar tu pedido");
-                renderRegistrationForm();
-                openModal('userModal');
-                return;
-            }
-
-            if (cart.length === 0) {
-                alert("El carrito está vacío.");
-                return;
-            }
-
-            const method = document.getElementById('paymentMethod').value;
-            const isRecurring = document.getElementById('subRecurring').checked;
-
-            const order = {
-                id: 'ORD-' + Date.now(),
-                user: currentUser.name + ' ' + currentUser.lastname,
-                phone: currentUser.phone,
-                items: cart,
-                total: document.getElementById('cartTotal').innerText,
-                paymentMethod: method,
-                recurring: isRecurring ? 'Mensual' : 'Único',
-                status: 'Pendiente',
-                date: new Date().toLocaleDateString()
-            };
-
-            let orders = JSON.parse(localStorage.getItem('armm_orders') || '[]');
-            orders.unshift(order);
-            localStorage.setItem('armm_orders', JSON.stringify(orders));
-
-            cart = [];
-            activeCoupon = null;
-            updateCartUI();
-            closeModal('cartModal');
-
-            if (method === 'SPEI') {
-                const msg = encodeURIComponent(`Hola, envío mi comprobante para la orden #${order.id}. Total: ${order.total}`);
-                window.open(`https://wa.me/5210000000000?text=${msg}`, '_blank');
-            } else {
-                alert("¡Pedido realizado con éxito! Redirigiendo al seguimiento...");
-            }
-        }
-
-        // USUARIO & MONITO MENU
-        function renderUserMenu() {
+        function checkSession() {
             const session = JSON.parse(localStorage.getItem('armm_active_session'));
-            const container = document.getElementById('userSessionContent');
+            const authBtns = document.getElementById('authButtons');
+            const userInfo = document.getElementById('userInfo');
 
-            if (!session) {
-                renderLoginForm();
-                return;
-            }
-
-            container.innerHTML = `
-                <div style="font-size:0.9rem;">
-                    <p><strong>Usuario:</strong> ${session.name} ${session.lastname}</p>
-                    <p><strong>Correo:</strong> ${session.email}</p>
-                    <p><strong>Teléfono:</strong> ${session.phone}</p>
-                </div>
-                <hr style="border-color:var(--glass-border); margin:15px 0;">
-                <div style="display:flex; flex-direction:column; gap:8px;">
-                    <button class="pill" onclick="alert('Historial sincronizado con Admin')">📦 Pedidos y Seguimiento</button>
-                    <button class="pill" onclick="alert('Sin notificaciones nuevas')">🔔 Notificaciones</button>
-                    <button class="pill" onclick="alert('Sección Favoritos')">⭐ Favoritos</button>
-                    <button class="pill" onclick="openHelpChat()">💬 Chat de Ayuda</button>
-                    <button class="btn-add" style="background:var(--danger-color); color:white; margin-top:10px;" onclick="logout()">Cerrar Sesión</button>
-                </div>
-            `;
-        }
-
-        function renderLoginForm() {
-            const container = document.getElementById('userSessionContent');
-            container.innerHTML = `
-                <div class="form-group">
-                    <label>Correo o Teléfono</label>
-                    <input type="text" id="loginId" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label>Contraseña</label>
-                    <div class="pwd-container">
-                        <input type="password" id="loginPwd" class="form-control">
-                        <span class="eye-icon" onclick="togglePwd('loginPwd')">👁️</span>
-                    </div>
-                </div>
-                <button class="btn-add" onclick="login()">Acceder</button>
-                <div style="display:flex; justify-content:space-between; margin-top:12px; font-size:0.8rem;">
-                    <a href="#" style="color:var(--accent-green)" onclick="renderRegistrationForm()">Crear Cuenta</a>
-                    <a href="#" style="color:var(--text-muted)" onclick="renderForgotForm()">¿Olvidaste tu contraseña?</a>
-                </div>
-            `;
-        }
-
-        function renderRegistrationForm() {
-            const container = document.getElementById('userSessionContent');
-            container.innerHTML = `
-                <div class="form-group"><label>Nombre</label><input type="text" id="regName" class="form-control"></div>
-                <div class="form-group"><label>Apellidos</label><input type="text" id="regLastName" class="form-control"></div>
-                <div class="form-group"><label>Teléfono</label><input type="text" id="regPhone" class="form-control"></div>
-                <div class="form-group"><label>Dirección</label><input type="text" id="regAddress" class="form-control"></div>
-                <div class="form-group"><label>Correo</label><input type="email" id="regEmail" class="form-control"></div>
-                <div class="form-group">
-                    <label>Contraseña</label>
-                    <div class="pwd-container">
-                        <input type="password" id="regPwd" class="form-control">
-                        <span class="eye-icon" onclick="togglePwd('regPwd')">👁️</span>
-                    </div>
-                </div>
-                <button class="btn-add" onclick="registerUser()">Registrarse</button>
-            `;
-        }
-
-        function renderForgotForm() {
-            const container = document.getElementById('userSessionContent');
-            container.innerHTML = `
-                <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">Ingresa tus datos para verificar con el administrador.</p>
-                <div class="form-group"><label>Nombre y Apellido</label><input type="text" id="recName" class="form-control"></div>
-                <div class="form-group"><label>Correo Registrado</label><input type="email" id="recEmail" class="form-control"></div>
-                <div class="form-group"><label>Teléfono WhatsApp</label><input type="text" id="recPhone" class="form-control"></div>
-                <button class="btn-add" onclick="sendRecovery()">Enviar al centro de atención</button>
-                <p style="font-size:0.75rem; color:var(--accent-green); margin-top:10px; text-align:center;">
-                    Te estaremos informando la situación de tu cuenta por tu WhatsApp.
-                </p>
-            `;
-        }
-
-        function togglePwd(id) {
-            const input = document.getElementById(id);
-            input.type = input.type === 'password' ? 'text' : 'password';
-        }
-
-        function registerUser() {
-            const user = {
-                name: document.getElementById('regName').value,
-                lastname: document.getElementById('regLastName').value,
-                phone: document.getElementById('regPhone').value,
-                address: document.getElementById('regAddress').value,
-                email: document.getElementById('regEmail').value,
-                pwd: document.getElementById('regPwd').value
-            };
-
-            if (!user.name || !user.email || !user.pwd) {
-                alert("Completa los campos requeridos.");
-                return;
-            }
-
-            let users = JSON.parse(localStorage.getItem('armm_users') || '[]');
-            users.push(user);
-            localStorage.setItem('armm_users', JSON.stringify(users));
-            localStorage.setItem('armm_active_session', JSON.stringify(user));
-
-            alert("Registro exitoso.");
-            renderUserMenu();
-        }
-
-        function login() {
-            const id = document.getElementById('loginId').value;
-            const pwd = document.getElementById('loginPwd').value;
-            const users = JSON.parse(localStorage.getItem('armm_users') || '[]');
-
-            const match = users.find(u => (u.email === id || u.phone === id) && u.pwd === pwd);
-            if (match) {
-                localStorage.setItem('armm_active_session', JSON.stringify(match));
-                renderUserMenu();
+            if (session) {
+                authBtns.style.display = 'none';
+                userInfo.style.display = 'block';
+                userInfo.innerText = `Hola, ${session.name}`;
             } else {
-                alert("Credenciales incorrectas.");
+                authBtns.style.display = 'flex';
+                userInfo.style.display = 'none';
             }
         }
 
-        function logout() {
-            localStorage.removeItem('armm_active_session');
-            renderUserMenu();
+        function openAuthModal(mode) {
+            const title = document.getElementById('authTitle');
+            const content = document.getElementById('authFormContent');
+            title.innerText = mode === 'login' ? 'Iniciar Sesión' : 'Registro de Usuario';
+
+            content.innerHTML = `
+                ${mode === 'register' ? '<div class="form-group"><label>Nombre</label><input type="text" id="authName" class="form-control"></div>' : ''}
+                <div class="form-group"><label>Correo Electrónico</label><input type="email" id="authEmail" class="form-control"></div>
+                <div class="form-group"><label>Contraseña</label><input type="password" id="authPass" class="form-control"></div>
+                <button onclick="submitAuth('${mode}')" class="btn-add" style="margin-top:10px;">${mode === 'login' ? 'Entrar' : 'Registrar'}</button>
+            `;
+            document.getElementById('authModal').classList.add('active');
         }
 
-        function sendRecovery() {
-            const req = {
-                id: Date.now(),
-                name: document.getElementById('recName').value,
-                email: document.getElementById('recEmail').value,
-                phone: document.getElementById('recPhone').value,
-                status: 'Pendiente'
-            };
+        function submitAuth(mode) {
+            const email = document.getElementById('authEmail').value;
+            const name = mode === 'register' ? document.getElementById('authName').value : email.split('@')[0];
 
-            let reqs = JSON.parse(localStorage.getItem('armm_help_requests') || '[]');
-            reqs.push(req);
-            localStorage.setItem('armm_help_requests', JSON.stringify(reqs));
-            alert("Solicitud enviada al administrador.");
-            renderLoginForm();
+            if (!email) return alert('Ingresa un correo válido');
+
+            const session = { name, email };
+            localStorage.setItem('armm_active_session', JSON.stringify(session));
+            checkSession();
+            closeModal('authModal');
         }
 
-        function openModal(id) { document.getElementById(id).classList.add('active'); }
-        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
     </script>
 </body>
 </html>
