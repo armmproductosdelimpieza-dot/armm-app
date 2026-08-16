@@ -3,580 +3,210 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ARMM Panel - Control Administrativo</title>
+    <title>ARMM Admin - Gestión de Catálogo</title>
     <style>
         :root {
             --bg-dark: #060913;
-            --sidebar-bg: rgba(15, 23, 42, 0.75);
-            --card-bg: rgba(15, 23, 42, 0.65);
+            --card-bg: rgba(15, 23, 42, 0.75);
             --border-color: rgba(255, 255, 255, 0.12);
-            --glass-blur: blur(20px) saturate(180%);
             --accent-green: #00e676;
-            --accent-hover: #00c853;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --danger-color: #ef4444;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            touch-action: manipulation;
-            -webkit-tap-highlight-color: transparent;
+            --warning-color: #f59e0b;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: radial-gradient(circle at top, #0f172a 0%, #060913 100%);
-            color: var(--text-main);
-            display: flex;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        /* AUTH OVERLAY */
-        #loginOverlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            font-family: system-ui, sans-serif;
             background: var(--bg-dark);
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            color: var(--text-main);
+            padding: 20px;
         }
 
-        .login-box {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            padding: 30px;
-            border-radius: 16px;
-            width: 100%;
-            max-width: 360px;
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .grid { display: grid; grid-template-columns: 350px 1fr; gap: 20px; }
 
-        /* SIDEBAR */
-        .sidebar {
-            width: 260px;
-            background: var(--sidebar-bg);
-            border-right: 1px solid var(--border-color);
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-        }
-
-        .sidebar h2 {
-            color: var(--accent-green);
-            font-size: 1.2rem;
-            margin-bottom: 20px;
-        }
-
-        .nav-item {
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            padding: 12px 16px;
-            text-align: left;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.2s;
-        }
-
-        .nav-item.active, .nav-item:hover {
-            background: rgba(0, 230, 118, 0.1);
-            color: var(--accent-green);
-            font-weight: 700;
-        }
-
-        /* MAIN AREA */
-        .main-panel {
-            flex: 1;
-            padding: 30px;
-            overflow-y: auto;
-        }
-
-        .section-view { display: none; }
-        .section-view.active { display: block; }
-
-        .card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-
-        .metric-card {
+        .card {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             padding: 20px;
             border-radius: 12px;
-            backdrop-filter: var(--glass-blur);
-            -webkit-backdrop-filter: var(--glass-blur);
-        }
-
-        .metric-value {
-            font-size: 2.2rem;
-            font-weight: 800;
-            color: var(--accent-green);
-            margin-top: 8px;
-        }
-
-        /* TABLAS RESPONSIVAS */
-        .responsive-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
-
-        .responsive-table th, .responsive-table td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        @media (max-width: 768px) {
-            .responsive-table, .responsive-table tbody, .responsive-table tr, .responsive-table td {
-                display: block;
-                width: 100%;
-            }
-            .responsive-table tr {
-                margin-bottom: 12px;
-                background: var(--card-bg);
-                border-radius: 8px;
-                padding: 10px;
-            }
-            .responsive-table th { display: none; }
-        }
-
-        .btn-green {
-            background: var(--accent-green);
-            color: #000;
-            border: none;
-            padding: 10px 16px;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .btn-green:hover { background: var(--accent-hover); }
-
-        .btn-danger {
-            background: var(--danger-color);
-            color: #fff;
-            border: none;
-            padding: 8px 14px;
-            border-radius: 6px;
-            cursor: pointer;
         }
 
         .form-control {
             width: 100%;
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0,0,0,0.4);
             border: 1px solid var(--border-color);
             color: white;
             padding: 10px;
-            border-radius: 8px;
-            margin-top: 4px;
-            margin-bottom: 12px;
-            outline: none;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+
+        .btn {
+            padding: 8px 14px;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .btn-green { background: var(--accent-green); color: #000; }
+        .btn-warning { background: var(--warning-color); color: #000; }
+        .btn-danger { background: var(--danger-color); color: #fff; }
+
+        .prod-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
         }
     </style>
-    <!-- socket.io incluido cliente -->
     <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
+    <div class="container">
+        <h2 style="color:var(--accent-green); margin-bottom: 20px;">Control de Productos ARMM</h2>
 
-    <!-- AUTHENTICATION -->
-    <div id="loginOverlay">
-        <div class="login-box">
-            <h3 style="margin-bottom:15px; color:var(--accent-green)">Acceso Admin ARMM</h3>
-            <label style="font-size:0.8rem;">Clave de Seguridad</label>
-            <div style="position:relative; margin-top:5px; margin-bottom:15px;">
-                <input type="password" id="adminKey" class="form-control" placeholder="Ingresa clave">
-                <span onclick="toggleAdminKey()" style="position:absolute; right:10px; top:14px; cursor:pointer;">👁️</span>
+        <div class="grid">
+            <!-- FORMULARIO ALTA Y EDICIÓN -->
+            <div class="card">
+                <h3 id="formTitle">Agregar Nuevo Producto</h3>
+                <input type="hidden" id="pId">
+                
+                <label>Nombre del Producto</label>
+                <input type="text" id="pName" class="form-control">
+
+                <label>Categoría</label>
+                <input type="text" id="pCategory" class="form-control">
+
+                <label>Modo de Venta</label>
+                <select id="pSaleMode" class="form-control" onchange="toggleFields()">
+                    <option value="litros">Por Litros (1L, 5L, 20L)</option>
+                    <option value="mayoreo_menudeo">Mayoreo y Menudeo</option>
+                </select>
+
+                <div id="fieldsLitros">
+                    <label>Precio 1L ($)</label>
+                    <input type="number" id="p1L" class="form-control" step="0.5">
+                    <label>Precio 5L ($)</label>
+                    <input type="number" id="p5L" class="form-control" step="0.5">
+                    <label>Precio 20L ($)</label>
+                    <input type="number" id="p20L" class="form-control" step="0.5">
+                </div>
+
+                <div id="fieldsMayoreo" style="display:none;">
+                    <label>Precio Menudeo ($)</label>
+                    <input type="number" id="pMenudeo" class="form-control" step="0.5">
+                    <label>Precio Mayoreo ($)</label>
+                    <input type="number" id="pMayoreo" class="form-control" step="0.5">
+                </div>
+
+                <button class="btn btn-green" style="width:100%; margin-top:10px;" onclick="saveProduct()">Guardar Cambios</button>
+                <button class="btn btn-danger" style="width:100%; margin-top:5px;" onclick="resetForm()">Cancelar</button>
             </div>
-            <button class="btn-green" style="width:100%" onclick="checkAdminAccess()">Entrar al Panel</button>
+
+            <!-- LISTADO CON BOTÓN EDITAR -->
+            <div class="card">
+                <h3>Catálogo en Vivo (<span id="totalCount">0</span> productos)</h3>
+                <div id="productsAdminList" style="max-height: 70vh; overflow-y: auto; margin-top:10px;"></div>
+            </div>
         </div>
     </div>
 
-    <!-- SIDEBAR NAVIGATION -->
-    <nav class="sidebar">
-        <h2>ARMM Admin</h2>
-        <button class="nav-item active" onclick="switchNav('dashboard', this)">Dashboard Analytics</button>
-        <button class="nav-item" onclick="switchNav('orders', this)">Gestión de Pedidos</button>
-        <button class="nav-item" onclick="switchNav('catalog', this)">Catálogo & Layout</button>
-        <button class="nav-item" onclick="switchNav('users', this)">Usuarios Registrados</button>
-        <button class="nav-item" onclick="switchNav('helpCenter', this)">Solicitudes de Acceso</button>
-        <button class="nav-item" onclick="switchNav('coupons', this)">Cupones Promocionales</button>
-    </nav>
-
-    <!-- MAIN PANEL -->
-    <main class="main-panel">
-
-        <!-- DASHBOARD ANALYTICS -->
-        <section id="dashboard" class="section-view active">
-            <h2 style="margin-bottom:20px;">Panel Métrico de Rendimiento</h2>
-            <div class="card-grid">
-                <div class="metric-card">
-                    <div style="color:var(--text-muted); font-size:0.85rem;">Pedidos Totales</div>
-                    <div class="metric-value" id="mOrders">0</div>
-                </div>
-                <div class="metric-card">
-                    <div style="color:var(--text-muted); font-size:0.85rem;">Usuarios Clientes</div>
-                    <div class="metric-value" id="mUsers">0</div>
-                </div>
-                <div class="metric-card">
-                    <div style="color:var(--text-muted); font-size:0.85rem;">Solicitudes Pendientes</div>
-                    <div class="metric-value" id="mHelp">0</div>
-                </div>
-            </div>
-            <div class="metric-card" style="margin-top:20px;">
-                <h4>Alertas de Stock & Inventario</h4>
-                <div id="stockAlerts" style="margin-top:10px; font-size:0.9rem; color:var(--text-muted);">Sin alertas de inventario bajo.</div>
-            </div>
-        </section>
-
-        <!-- GESTION DE PEDIDOS -->
-        <section id="orders" class="section-view">
-            <h2>Pedidos & Rutas Logísticas</h2>
-            <button class="btn-green" style="margin:15px 0;" onclick="optimizeRoutes()">🗺️ Optimizar Agrupación por Zonas</button>
-            <table class="responsive-table">
-                <thead>
-                    <tr>
-                        <th>ID Pedido</th>
-                        <th>Cliente</th>
-                        <th>Teléfono</th>
-                        <th>Pago</th>
-                        <th>Total</th>
-                        <th>Estado</th>
-                        <th>Acción</th>
-                    </tr>
-                </thead>
-                <tbody id="ordersTable"></tbody>
-            </table>
-        </section>
-
-        <!-- CATALOGO Y LAYOUT -->
-        <section id="catalog" class="section-view">
-            <h2>Catálogo de Productos & Layout</h2>
-            <div style="display:grid; grid-template-columns: 360px 1fr; gap:20px; margin-top:20px;">
-                <div class="metric-card">
-                    <h4>Alta / Edición de Producto</h4>
-                    <input type="hidden" id="pId">
-                    
-                    <label style="font-size:0.8rem;">Nombre del Producto</label>
-                    <input type="text" id="pName" class="form-control" placeholder="Ej: CLORO">
-                    
-                    <label style="font-size:0.8rem;">Categoría / Etiqueta</label>
-                    <input type="text" id="pCategory" class="form-control" placeholder="Ej: Desinfección">
-
-                    <label style="font-size:0.8rem;">Modo de Venta</label>
-                    <select id="pSaleMode" class="form-control" onchange="toggleSaleFields()">
-                        <option value="litros">Por Litros (1L, 5L, 20L)</option>
-                        <option value="mayoreo_menudeo">Por Mayoreo y Menudeo</option>
-                    </select>
-
-                    <!-- Precios Por Litros -->
-                    <div id="fieldsLitros">
-                        <label style="font-size:0.8rem;">Precio 1L ($)</label>
-                        <input type="number" id="p1L" class="form-control" placeholder="0.00">
-                        <label style="font-size:0.8rem;">Precio 5L ($)</label>
-                        <input type="number" id="p5L" class="form-control" placeholder="0.00">
-                        <label style="font-size:0.8rem;">Precio 20L ($)</label>
-                        <input type="number" id="p20L" class="form-control" placeholder="0.00">
-                    </div>
-
-                    <!-- Precios Por Mayoreo / Menudeo -->
-                    <div id="fieldsMayoreo" style="display:none;">
-                        <label style="font-size:0.8rem;">Precio Menudeo ($)</label>
-                        <input type="number" id="pMenudeo" class="form-control" placeholder="0.00">
-                        <label style="font-size:0.8rem;">Precio Mayoreo ($)</label>
-                        <input type="number" id="pMayoreo" class="form-control" placeholder="0.00">
-                    </div>
-
-                    <button class="btn-green" style="width:100%; margin-top:10px;" onclick="saveProduct()">Guardar Producto</button>
-                </div>
-
-                <div class="metric-card">
-                    <h4>Directorio & Inventario Actual</h4>
-                    <div id="productsAdminList" style="margin-top:10px;"></div>
-                </div>
-            </div>
-        </section>
-
-        <!-- USUARIOS REGISTRADOS -->
-        <section id="users" class="section-view">
-            <h2>Directorio de Usuarios</h2>
-            <table class="responsive-table">
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Correo</th>
-                        <th>Teléfono</th>
-                        <th>Dirección</th>
-                    </tr>
-                </thead>
-                <tbody id="usersTable"></tbody>
-            </table>
-        </section>
-
-        <!-- SOLICITUDES DE ACCESO -->
-        <section id="helpCenter" class="section-view">
-            <h2>Peticiones de Recuperación de Cuenta</h2>
-            <table class="responsive-table">
-                <thead>
-                    <tr>
-                        <th>Cliente</th>
-                        <th>Correo</th>
-                        <th>Teléfono</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="helpTable"></tbody>
-            </table>
-        </section>
-
-        <!-- GESTION DE CUPONES -->
-        <section id="coupons" class="section-view">
-            <h2>Administración de Cupones Promocionales</h2>
-            <div class="metric-card" style="max-width:400px; margin-bottom:20px;">
-                <label style="font-size:0.8rem;">Código</label>
-                <input type="text" id="cCode" class="form-control">
-                <label style="font-size:0.8rem;">% Descuento</label>
-                <input type="number" id="cDiscount" class="form-control">
-                <label style="font-size:0.8rem;">Monto Mínimo ($)</label>
-                <input type="number" id="cMin" class="form-control">
-                <button class="btn-green" style="width:100%;" onclick="createCoupon()">Crear Cupón</button>
-            </div>
-            <div id="couponsAdminList"></div>
-        </section>
-
-    </main>
-
     <script>
         const socket = io();
+        let currentProducts = [];
 
-        let globalInventario = [];
-        let globalClientes = [];
-        let globalPedidos = [];
-        let globalAyuda = [];
-
-        document.addEventListener('DOMContentLoaded', () => {
-            // Sincronización mediante Socket.IO con server.js
-            socket.on('inventario_actualizado', data => {
-                globalInventario = data;
-                renderProductsAdmin(data);
-                localStorage.setItem('armm_products', JSON.stringify(data));
-            });
-
-            socket.on('lista_clientes_inicial', data => {
-                globalClientes = data;
-                document.getElementById('mUsers').innerText = data.length;
-                renderUsers(data);
-                localStorage.setItem('armm_users', JSON.stringify(data));
-            });
-
-            socket.on('lista_pedidos_inicial', data => {
-                globalPedidos = data;
-                document.getElementById('mOrders').innerText = data.length;
-                renderOrders(data);
-                localStorage.setItem('armm_orders', JSON.stringify(data));
-            });
-
-            socket.on('lista_ayuda_inicial', data => {
-                globalAyuda = data;
-                document.getElementById('mHelp').innerText = data.filter(h => !h.resuelto).length;
-                renderHelpRequests(data);
-            });
+        socket.on('inventario_actualizado', (prods) => {
+            currentProducts = prods;
+            document.getElementById('totalCount').innerText = prods.length;
+            renderList(prods);
         });
 
-        function checkAdminAccess() {
-            const key = document.getElementById('adminKey').value;
-            if (key === 'ARMM123') {
-                document.getElementById('loginOverlay').style.display = 'none';
-            } else {
-                alert("Clave incorrecta.");
-            }
-        }
-
-        function toggleAdminKey() {
-            const input = document.getElementById('adminKey');
-            input.type = input.type === 'password' ? 'text' : 'password';
-        }
-
-        function switchNav(id, btn) {
-            document.querySelectorAll('.section-view').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            btn.classList.add('active');
-        }
-
-        function toggleSaleFields() {
+        function toggleFields() {
             const mode = document.getElementById('pSaleMode').value;
             document.getElementById('fieldsLitros').style.display = mode === 'litros' ? 'block' : 'none';
             document.getElementById('fieldsMayoreo').style.display = mode === 'mayoreo_menudeo' ? 'block' : 'none';
         }
 
         function saveProduct() {
+            const id = document.getElementById('pId').value;
             const name = document.getElementById('pName').value;
             const category = document.getElementById('pCategory').value;
-            const saleMode = document.getElementById('pSaleMode').value;
+            const mode = document.getElementById('pSaleMode').value;
 
-            if (!name) return alert("Por favor ingresa el nombre del producto.");
+            if(!name) return alert("Ingresa el nombre del producto.");
 
             let precios = {};
-            if (saleMode === 'litros') {
-                precios = {
-                    "1L": parseFloat(document.getElementById('p1L').value) || 0,
-                    "5L": parseFloat(document.getElementById('p5L').value) || 0,
-                    "20L": parseFloat(document.getElementById('p20L').value) || 0
-                };
+            if(mode === 'litros') {
+                precios["1L"] = parseFloat(document.getElementById('p1L').value) || 0;
+                precios["5L"] = parseFloat(document.getElementById('p5L').value) || 0;
+                precios["20L"] = parseFloat(document.getElementById('p20L').value) || 0;
             } else {
-                precios = {
-                    "Menudeo": parseFloat(document.getElementById('pMenudeo').value) || 0,
-                    "Mayoreo": parseFloat(document.getElementById('pMayoreo').value) || 0
-                };
+                precios["Menudeo"] = parseFloat(document.getElementById('pMenudeo').value) || 0;
+                precios["Mayoreo"] = parseFloat(document.getElementById('pMayoreo').value) || 0;
             }
 
-            const nuevoProd = {
+            socket.emit('agregar_o_editar_producto', {
+                id: id || null,
                 nombre: name,
                 categoria: category,
-                saleMode: saleMode,
+                saleMode: mode,
                 precios: precios
-            };
+            });
 
-            socket.emit('agregar_nuevo_producto', nuevoProd);
             resetForm();
         }
 
-        function renderProductsAdmin(prods) {
+        function editProduct(id) {
+            const prod = currentProducts.find(p => p.id === id);
+            if(!prod) return;
+
+            document.getElementById('formTitle').innerText = 'Editar Producto #' + prod.id;
+            document.getElementById('pId').value = prod.id;
+            document.getElementById('pName').value = prod.nombre || prod.name || '';
+            document.getElementById('pCategory').value = prod.categoria || prod.category || '';
+            document.getElementById('pSaleMode').value = prod.saleMode || 'litros';
+
+            toggleFields();
+
+            if(prod.precios) {
+                document.getElementById('p1L').value = prod.precios["1L"] || '';
+                document.getElementById('p5L').value = prod.precios["5L"] || '';
+                document.getElementById('p20L').value = prod.precios["20L"] || '';
+                document.getElementById('pMenudeo').value = prod.precios["Menudeo"] || '';
+                document.getElementById('pMayoreo').value = prod.precios["Mayoreo"] || '';
+            }
+        }
+
+        function deleteProduct(id) {
+            if(confirm("¿Seguro que deseas eliminar este producto?")) {
+                socket.emit('eliminar_producto', id);
+            }
+        }
+
+        function renderList(prods) {
             const list = document.getElementById('productsAdminList');
             list.innerHTML = prods.map(p => {
-                let descPrecio = '';
-                if (p.precios) {
-                    descPrecio = Object.entries(p.precios).map(([k, v]) => `${k}: $${v}`).join(' | ');
-                } else if (p.price) {
-                    descPrecio = `$${p.price}`;
-                }
-
+                const descPrecio = p.precios ? Object.entries(p.precios).map(([k,v]) => `${k}: $${v}`).join(' | ') : 'Sin Precio';
                 return `
-                    <div style="padding:12px; background:rgba(0,0,0,0.3); margin-bottom:10px; border-radius:8px; border:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center;">
+                    <div class="prod-row">
                         <div>
-                            <strong>${p.nombre || p.name}</strong> <small style="color:var(--text-muted)">(${p.categoria || p.category})</small>
-                            <div style="font-size:0.8rem; color:var(--accent-green); margin-top:4px;">${descPrecio}</div>
+                            <strong>${p.nombre || p.name}</strong> <small style="color:var(--text-muted)">(${p.categoria || 'General'})</small>
+                            <div style="font-size:0.8rem; color:var(--accent-green); margin-top:2px;">${descPrecio}</div>
                         </div>
-                        <button class="btn-danger" onclick="deleteProduct(${p.id})">Borrar</button>
+                        <div>
+                            <button class="btn btn-warning" onclick="editProduct(${p.id})">✏️ Editar</button>
+                            <button class="btn btn-danger" onclick="deleteProduct(${p.id})">🗑️</button>
+                        </div>
                     </div>
                 `;
             }).join('');
         }
 
-        function deleteProduct(id) {
-            globalInventario = globalInventario.filter(p => p.id !== id);
-            localStorage.setItem('armm_products', JSON.stringify(globalInventario));
-            renderProductsAdmin(globalInventario);
-        }
-
-        function renderOrders(orders) {
-            const tbody = document.getElementById('ordersTable');
-            tbody.innerHTML = orders.map(o => `
-                <tr>
-                    <td>${o.id}</td>
-                    <td>${o.cliente ? (o.cliente.nombre || o.cliente) : 'Cliente'}</td>
-                    <td>${o.cliente ? (o.cliente.telefono || o.phone || 'N/A') : 'N/A'}</td>
-                    <td>${o.metodoPago || o.paymentMethod || 'Efectivo'}</td>
-                    <td>$${o.total}</td>
-                    <td><span style="color:var(--accent-green)">${o.estado || o.status}</span></td>
-                    <td>
-                        <button class="btn-green" onclick="updateOrderStatus('${o.id}')">Estado</button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        function updateOrderStatus(id) {
-            socket.emit('actualizar_estado_pedido', {
-                pedidoId: id,
-                nuevoEstado: 'En Camino',
-                fechaEstimada: 'Entregando hoy'
-            });
-        }
-
-        function renderUsers(users) {
-            const tbody = document.getElementById('usersTable');
-            tbody.innerHTML = users.map(u => `
-                <tr>
-                    <td>${u.nombre || u.name} ${u.lastname || ''}</td>
-                    <td>${u.correo || u.email}</td>
-                    <td>${u.telefono || u.phone}</td>
-                    <td>${u.direccion || u.address || 'N/A'}</td>
-                </tr>
-            `).join('');
-        }
-
-        function renderHelpRequests(help) {
-            const tbody = document.getElementById('helpTable');
-            tbody.innerHTML = help.map(h => `
-                <tr>
-                    <td>${h.nombre}</td>
-                    <td>${h.correo}</td>
-                    <td>${h.telefono}</td>
-                    <td>
-                        <button class="btn-green" onclick="resolveAccess('${h.telefono}', true)">Dar Acceso</button>
-                        <button class="btn-danger" onclick="resolveAccess('${h.telefono}', false)">Denegar</button>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        function resolveAccess(phone, granted) {
-            const msg = granted 
-                ? encodeURIComponent("Tus datos de acceso han sido convalidados. Puedes ingresar a ARMM con tu cuenta.")
-                : encodeURIComponent("Los datos de tu cuenta no coinciden con los registrados. Por favor comunícate con soporte.");
-            window.open(`https://wa.me/${phone}?text=${msg}`, '_blank');
-        }
-
-        function createCoupon() {
-            const coupon = {
-                code: document.getElementById('cCode').value.toUpperCase(),
-                discount: parseFloat(document.getElementById('cDiscount').value),
-                minAmount: parseFloat(document.getElementById('cMin').value)
-            };
-            let coupons = JSON.parse(localStorage.getItem('armm_coupons') || '[]');
-            coupons.push(coupon);
-            localStorage.setItem('armm_coupons', JSON.stringify(coupons));
-            renderCouponsAdmin(coupons);
-        }
-
-        function renderCouponsAdmin(coupons) {
-            const div = document.getElementById('couponsAdminList');
-            div.innerHTML = coupons.map(c => `
-                <div class="metric-card" style="margin-bottom:8px; display:flex; justify-content:space-between; align-items:center;">
-                    <span>Cupón: <strong>${c.code}</strong> (${c.discount}% OFF - Mínimo $${c.minAmount})</span>
-                    <button class="btn-danger" onclick="deleteCoupon('${c.code}')">Eliminar</button>
-                </div>
-            `).join('');
-        }
-
-        function deleteCoupon(code) {
-            let coupons = JSON.parse(localStorage.getItem('armm_coupons') || '[]');
-            coupons = coupons.filter(c => c.code !== code);
-            localStorage.setItem('armm_coupons', JSON.stringify(coupons));
-            renderCouponsAdmin(coupons);
-        }
-
-        function optimizeRoutes() {
-            alert("Rutas logísticas agrupadas por zonas de entrega exitosamente.");
-        }
-
         function resetForm() {
+            document.getElementById('formTitle').innerText = 'Agregar Nuevo Producto';
             document.getElementById('pId').value = '';
             document.getElementById('pName').value = '';
             document.getElementById('pCategory').value = '';
